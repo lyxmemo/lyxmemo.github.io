@@ -39,9 +39,22 @@ collections:
     output: true
 
 # Build settings
-theme: minima
+theme: jekyll-theme-chirpy
 plugins:
   - jekyll-feed
+  - jekyll-archives
+
+# Archives
+jekyll-archives:
+  enabled:
+    - categories
+  layout: category
+  permalinks:
+    category: '/categories/:name/'
+    
+# Pagination
+paginate: 10
+paginate_path: /page:num/
 
 # Exclude from processing.
 # The following items will not be processed, by default.
