@@ -26,6 +26,18 @@ url: "https://lyxmemo.github.io" # the base hostname & protocol for your site, e
 # twitter_username: N/A
 # github_username:  N/A
 
+collections:
+  liaos_writings:
+    output: true
+  n6a_memorial:
+    output: true
+  n22d_memorial:
+    output: true
+  ten_year_memorial:
+    output: true
+  battles_history:
+    output: true
+
 # Build settings
 theme: minima
 plugins:
