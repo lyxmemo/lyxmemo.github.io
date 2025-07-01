@@ -27,6 +27,8 @@ url: "https://lyxmemo.github.io" # the base hostname & protocol for your site, e
 # github_username:  N/A
 
 collections:
+  posts:
+    output: false
   liaos_writings:
     output: true
   n6a_memorial:

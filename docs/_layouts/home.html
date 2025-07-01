@@ -4,7 +4,7 @@ layout: default
 
 <div class="home">
   {% assign categories = site.collections | where_exp: "item", "item.output" | map: "label" | sort %}
-  {% assign filtered_categories = categories | reject: "Posts" %}
+  {% assign filtered_categories = categories | where_exp: "item", "item != 'posts'" %}
 
   {% for category_name in filtered_categories %}
     {% assign category_data = site.data.navigation | where: "title", category_name | first %}
