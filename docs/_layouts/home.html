@@ -4,8 +4,9 @@ layout: default
 
 <div class="home">
   {% assign categories = site.collections | where_exp: "item", "item.output" | map: "label" | sort %}
+  {% assign filtered_categories = categories | reject: "Posts" %}
 
-  {% for category_name in categories %}
+  {% for category_name in filtered_categories %}
     {% assign category_data = site.data.navigation | where: "title", category_name | first %}
     {% if category_data %}
       <h2><a href="{{ site.baseurl }}/categories/{{ category_name | slugify }}/">{{ category_data.title }}</a></h2>
