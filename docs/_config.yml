@@ -18,10 +18,9 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: General Liao Memo
+title: Memorial for General Liao Yaoxiang
 email: lyxmemo@gmail.com
-description: >- # this means to ignore newlines until "baseurl:"
-  The memorial site for General Liao Yaoxiang(Yao-Hsiang).
+description: A collection of writings and historical documents.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://lyxmemo.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: N/A
