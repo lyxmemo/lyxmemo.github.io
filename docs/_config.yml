@@ -39,7 +39,7 @@ collections:
     output: true
 
 # Build settings
-theme: jekyll-theme-chirpy
+# theme: jekyll-theme-chirpy
 plugins:
   - jekyll-feed
   - jekyll-archives
