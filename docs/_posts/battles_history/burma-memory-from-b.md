@@ -1,6 +1,5 @@
 ---
 layout: post
-title: "Liaoshen Booklist"
-date: 2025-07-01
+title: "Burma Memory from B"
 category: "Battles History"
 ---

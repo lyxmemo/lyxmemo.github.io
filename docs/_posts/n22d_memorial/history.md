@@ -1,6 +1,5 @@
 ---
 layout: post
 title: "N22D history"
-date: 2025-07-01
 category: "N22D Memorial"
 ---

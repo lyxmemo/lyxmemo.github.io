@@ -1,6 +1,5 @@
 ---
 layout: post
-title: "Burma Memory from A"
-date: 2025-07-01
+title: "Liaoshen Memory from A"
 category: "Battles History"
 ---

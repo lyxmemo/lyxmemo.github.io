@@ -1,6 +1,5 @@
 ---
 layout: post
-title: "N6A history"
-date: 2025-07-01
+title: "battle experience"
 category: "N6A Memorial"
 ---

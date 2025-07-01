@@ -1,6 +1,5 @@
 ---
 layout: post
-title: "Burma Battle"
-date: 2025-07-01
+title: "Liaoxi Battle"
 category: "Liao's Writings"
 ---

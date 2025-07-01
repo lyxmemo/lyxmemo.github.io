@@ -1,0 +1,23 @@
+---
+layout: default
+---
+
+<div class="home">
+  {% assign categories = site.collections | where_exp: "item", "item.output" | map: "label" | sort %}
+
+  {% for category_name in categories %}
+    {% assign category_data = site.data.navigation | where: "title", category_name | first %}
+    {% if category_data %}
+      <h2><a href="{{ site.baseurl }}/categories/{{ category_name | slugify }}/">{{ category_data.title }}</a></h2>
+    {% else %}
+      <h2>{{ category_name | replace: "_", " " | capitalize }}</h2>
+    {% endif %}
+
+    <ul>
+      {% assign posts_in_category = site[category_name] | sort: "title" %}
+      {% for post in posts_in_category %}
+        <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</div>

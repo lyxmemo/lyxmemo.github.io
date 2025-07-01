@@ -1,6 +1,5 @@
 ---
 layout: post
-title: "Burma Memory from B"
-date: 2025-07-01
+title: "Burma Memory from A"
 category: "Battles History"
 ---
