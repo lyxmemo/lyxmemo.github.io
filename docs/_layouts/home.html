@@ -17,34 +17,19 @@ layout: default
 
     <ul>
       {% if category_name == "battles_history" %}
-        <!-- {% assign subfolders = "india,burma,liaoshen" | split: "," %} -->
-        {% for subfolder in subfolders %}
-          <li>
-            <h3 class="sub-heading">{{ subfolder | replace: "_", " " | capitalize }}</h3>
-            <ul>
-              {% if subfolder == "liaoshen" %}
-                {% assign year_folders = "1946,1947,1948" | split: "," %}
-                {% for year in year_folders %}
-                  <li>
-                    <h4>{{ year }}</h4>
-                    <ul>
-                      {% for post in site[category_name] %}
-                        {% if post.path contains year %}
-                          <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
-                        {% endif %}
-                      {% endfor %}
-                    </ul>
-                  </li>
+        {% assign year_folders = "1942,1943,1944,1945,1946,1947,1948" | split: "," %}
+        {% for year in year_folders %}
+          {% assign posts_in_year = site[category_name] | where_exp: "post", "post.path contains year" %}
+          {% if posts_in_year.size > 0 %}
+            <li>
+              <h3 class="sub-heading">{{ year }}</h3>
+              <ul>
+                {% for post in posts_in_year %}
+                  <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
                 {% endfor %}
-              {% else %}
-                {% for post in site[category_name] %}
-                  {% if post.path contains subfolder %}
-                    <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
-            </ul>
-          </li>
+              </ul>
+            </li>
+          {% endif %}
         {% endfor %}
       {% else %}
         {% assign posts_in_category = site[category_name] | sort: "title" %}

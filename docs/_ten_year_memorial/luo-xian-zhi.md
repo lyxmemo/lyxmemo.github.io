@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[待录入]敬悼廖耀湘将军（舒适存）"
+title: "[待录入]我素敬仰的廖先生（罗先致：曾任新22师营长）"
 category: "10 Year Memorial"
 ---
 来源：廖耀湘将军逝世十周年纪念集
