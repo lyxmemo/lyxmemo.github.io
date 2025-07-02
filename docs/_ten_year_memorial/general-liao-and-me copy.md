@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[待录入]廖将军与我"
+title: "[待录入]敬悼廖耀湘将军（舒适存）"
 category: "10 Year Memorial"
 ---
 来源：廖耀湘将军逝世十周年纪念集
