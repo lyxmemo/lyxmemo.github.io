@@ -1,3 +1,5 @@
+---
+---
 /* General Body Styles */
 body {
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -147,4 +149,42 @@ table th {
     h2 {
         font-size: 1.5em;
     }
+}
+
+/* Site Description */
+.site-description {
+  font-size: 1.2em;
+  margin-bottom: 2em;
+  text-align: center;
+  color: #666;
+}
+
+/* Home Page Styles */
+.home h2 {
+  background-color: #eef;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-top: 2em;
+}
+
+.home h3 {
+  color: #444;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  margin-top: 1.5em;
+}
+
+.home ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.home a {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.home a:hover {
+  transform: translateX(5px);
+  color: #0056b3;
 }

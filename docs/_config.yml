@@ -46,6 +46,8 @@ collections:
     display_name: 战史
 
 # Build settings
+sass:
+  sass_dir: _sass
 # theme: jekyll-theme-chirpy
 plugins:
   - jekyll-feed
