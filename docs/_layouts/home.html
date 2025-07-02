@@ -17,7 +17,7 @@ layout: default
 
     <ul>
       {% if category_name == "battles_history" %}
-        {% assign subfolders = "india,burma,liaoshen" | split: "," %}
+        <!-- {% assign subfolders = "india,burma,liaoshen" | split: "," %} -->
         {% for subfolder in subfolders %}
           <li>
             <h3 class="sub-heading">{{ subfolder | replace: "_", " " | capitalize }}</h3>

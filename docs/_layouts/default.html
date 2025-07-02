@@ -1,14 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ site.lang | default: " en-US" }}">
+
 <head>
-  <meta charset="UTF-g">
+  <meta charset="UTF-8">
+  <title>{{ page.title | default: site.title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ page.title }} | {{ site.title }}</title>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+  <link rel="stylesheet" type="text/css"
+    href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+  {% seo %}
 </head>
+
 <body>
-  <div class="container">
-    {{ content }}
+  <div class="wrapper">
+    <header>
+      <h1>{{ site.title | default: site.github.repository_name }}</h1>
+      <p>{{ site.description | default: site.github.project_tagline }}</p>
+
+      <!-- {% include navigation.html %} -->
+
+    </header>
+    <section>
+
+      {{ content }}
+
+    </section>
+    <footer>
+
+      <!-- {% include contact_links.html %} -->
+
+      <p><small>欢迎贡献： <a href="https://github.com/lyxmemo">Github:lyxmemo</a></small></p>
+      <p><small>小红书：建楚bot</small></p>
+      <p><small>邮箱：lyxmemo@gmail.com</small></p>
+    </footer>
   </div>
 </body>
+
 </html>

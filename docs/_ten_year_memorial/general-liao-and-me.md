@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "廖将军与我"
+title: "[待录入]廖将军与我"
 category: "10 Year Memorial"
 ---

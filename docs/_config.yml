@@ -18,13 +18,22 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Memorial for General Liao Yaoxiang
+title: 与廖耀湘相关的文字资料合集
 email: lyxmemo@gmail.com
-description: A collection of writings and historical documents.
+description: Memorial for General Liao Yaoxiang
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://lyxmemo.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: N/A
-# github_username:  N/A
+github_username:  lyxmemo
+
+# Social media links - update or remove as needed
+social:
+  name: Jianchu Bot
+  links:
+    - name: Xiaohongshu
+      url: https://www.xiaohongshu.com/user/profile/6231a4a00000000021027a7e # Placeholder URL, please update
+    - name: GitHub
+      url: https://github.com/lyxmemo
 
 collections:
   posts:
@@ -46,10 +55,10 @@ collections:
     display_name: 战史
 
 # Build settings
-sass:
-  sass_dir: _sass
 # theme: jekyll-theme-chirpy
+remote_theme: pages-themes/minimal@v0.2.0
 plugins:
+  - jekyll-remote-theme
   - jekyll-feed
   - jekyll-archives
 

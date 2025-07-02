@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "战斗经验"
+title: "[待录入]新六军战斗经验"
 category: "N6A Memorial"
 ---

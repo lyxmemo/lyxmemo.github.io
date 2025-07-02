@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "一九四八年二月国民党军放弃法库的前前后后"
+title: "一九四八年二月国民党军放弃法库的前前后后（廖耀湘）"
 category: "Liao's Writings"
 ---
 

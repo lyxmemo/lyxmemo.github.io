@@ -1,5 +1,6 @@
 ---
 layout: post
-title: "新六军历史"
+title: "[待录入]新六军简史"
 category: "N6A Memorial"
 ---
+来源：新六军三周年纪念册
