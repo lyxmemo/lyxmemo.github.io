@@ -10,7 +10,7 @@ layout: default
   {% for category_name in custom_order %}
     {% assign collection_data = site.collections | where: "label", category_name | first %}
     {% if collection_data.display_name %}
-      <h2><a href="{{ site.baseurl }}/categories/{{ category_name | slugify }}/">{{ collection_data.display_name }}</a></h2>
+      <h2>{{ collection_data.display_name }}</h2>
     {% else %}
       <h2>{{ category_name | replace: "_", " " | capitalize }}</h2>
     {% endif %}
