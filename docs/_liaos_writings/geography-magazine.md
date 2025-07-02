@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "The congrations of a geography magazine's creation"
+title: "地理杂志创刊贺词"
 category: "Liao's Writings"
 ---

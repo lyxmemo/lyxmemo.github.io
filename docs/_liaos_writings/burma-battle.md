@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "Burma Battle"
+title: "缅甸战役"
 category: "Liao's Writings"
 ---

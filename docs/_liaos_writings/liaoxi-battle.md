@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "Liaoxi Battle"
+title: "辽西战役"
 category: "Liao's Writings"
 ---

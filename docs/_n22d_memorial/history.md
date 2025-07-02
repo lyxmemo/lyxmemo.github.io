@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "N22D history"
+title: "新二十二师历史"
 category: "N22D Memorial"
 ---

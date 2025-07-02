@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "Liaoshen Memory from A"
+title: "辽沈战役回忆录A"
 category: "Battles History"
 ---

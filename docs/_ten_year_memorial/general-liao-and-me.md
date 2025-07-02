@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "General Liao and me"
+title: "廖将军与我"
 category: "10 Year Memorial"
 ---

@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "N6A history"
+title: "新六军历史"
 category: "N6A Memorial"
 ---

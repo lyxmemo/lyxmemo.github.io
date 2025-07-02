@@ -31,14 +31,19 @@ collections:
     output: false
   liaos_writings:
     output: true
+    display_name: 文集
   n6a_memorial:
     output: true
+    display_name: 新六军纪念
   n22d_memorial:
     output: true
+    display_name: 新二十二师纪念
   ten_year_memorial:
     output: true
+    display_name: 十年祭
   battles_history:
     output: true
+    display_name: 战史
 
 # Build settings
 # theme: jekyll-theme-chirpy

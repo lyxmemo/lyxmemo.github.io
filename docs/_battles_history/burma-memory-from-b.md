@@ -1,5 +1,5 @@
 ---
 layout: post
-title: "Burma Memory from B"
+title: "缅甸战役回忆录B"
 category: "Battles History"
 ---
