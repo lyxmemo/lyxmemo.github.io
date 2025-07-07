@@ -49,7 +49,7 @@ collections:
     display_name: 新二十二师纪念
   ten_year_memorial:
     output: true
-    display_name: 十年祭
+    display_name: 廖耀湘将军逝世十周年纪念集
   battles_history:
     output: true
     display_name: 战史
