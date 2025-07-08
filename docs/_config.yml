@@ -61,6 +61,7 @@ plugins:
   - jekyll-remote-theme
   - jekyll-feed
   - jekyll-archives
+  - jekyll-sitemap
 
 # Archives
 jekyll-archives:
