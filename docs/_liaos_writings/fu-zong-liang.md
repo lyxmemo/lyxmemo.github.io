@@ -3,7 +3,7 @@ layout: post
 title: "与傅宗良书（廖耀湘）"
 category: "Liao's Writings"
 ---
-***
+
 
 <div align="right">
 宗良我兄青鉴：
