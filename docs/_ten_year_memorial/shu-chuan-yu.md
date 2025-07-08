@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "廖耀湘将军领导与指挥的特性（舒传煜）"
+title: "廖耀湘将军领导与指挥的特性（舒传煜：新22师参谋、后任第九兵团特务营营长）"
 category: "10 Year Memorial"
 ---
 
