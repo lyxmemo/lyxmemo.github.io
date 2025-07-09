@@ -38,6 +38,9 @@ social:
 collections:
   posts:
     output: false
+  liaos_tele:
+    output: true
+    display_name: 来往电报
   liaos_writings:
     output: true
     display_name: 文集

@@ -5,7 +5,7 @@ layout: default
 {{ content }}
 
 <div class="home">
-  {% assign custom_order = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history" | split: "," %}
+  {% assign custom_order = "liaos_writings,liaos_tele,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history" | split: "," %}
 
   {% for category_name in custom_order %}
     {% assign collection_data = site.collections | where: "label", category_name | first %}
