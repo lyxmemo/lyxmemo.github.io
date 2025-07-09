@@ -1,3 +1,6 @@
+# Site Address
+https://lyxmemo.github.io
+
 # What's this all about?
 This site is a digital space to remember and learn about General Liao Yaoxiang (廖耀湘). It’s a place where I'm gathering his own writings, articles from people who knew him, and other interesting historical notes. The photos are kept on a separate site where they can be tagged with names, years, and locations to make them easy to find.
 
