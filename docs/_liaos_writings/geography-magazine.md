@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "边疆建设创刊词（廖耀湘）"
+title: "1946年边疆建设创刊词（廖耀湘）"
 category: "Liao's Writings"
 ---
 ## 创刊词
