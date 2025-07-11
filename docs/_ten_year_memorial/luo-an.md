@@ -1,0 +1,6 @@
+---
+layout: post
+title: "[待录入]烽火中的知音（罗安）"
+category: "10 Year Memorial"
+---
+来源：廖耀湘将军逝世十周年纪念集
