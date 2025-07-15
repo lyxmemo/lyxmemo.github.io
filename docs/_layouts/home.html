@@ -9,13 +9,18 @@ layout: default
 
   {% for category_name in custom_order %}
     {% assign collection_data = site.collections | where: "label", category_name | first %}
-    {% if collection_data.display_name %}
-      <h2>{{ collection_data.display_name }}</h2>
+    {% if category_name == "liaos_tele" %}
+      <details>
+        <summary><h2>{{ collection_data.display_name }}</h2></summary>
+        <ul>
     {% else %}
-      <h2>{{ category_name | replace: "_", " " | capitalize }}</h2>
+      {% if collection_data.display_name %}
+        <h2>{{ collection_data.display_name }}</h2>
+      {% else %}
+        <h2>{{ category_name | replace: "_", " " | capitalize }}</h2>
+      {% endif %}
+      <ul>
     {% endif %}
-
-    <ul>
       {% if category_name == "battles_history" %}
         {% assign year_folders = "1942,1943,1944,1945,1946,1947,1948" | split: "," %}
         {% for year in year_folders %}
@@ -38,6 +43,9 @@ layout: default
         {% endfor %}
       {% endif %}
     </ul>
+    {% if category_name == "liaos_tele" %}
+      </details>
+    {% endif %}
   {% endfor %}
 
   <h2>资料下载区</h2>
