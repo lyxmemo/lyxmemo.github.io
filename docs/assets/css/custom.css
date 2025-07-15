@@ -1,0 +1,7 @@
+summary {
+  margin-bottom: 1rem;
+}
+summary h2 {
+  display: inline;
+  text-decoration: underline;
+}

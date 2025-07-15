@@ -40,7 +40,7 @@ collections:
     output: false
   liaos_tele:
     output: true
-    display_name: 来往电报
+    display_name: 来往电报（点击展开或折叠）
   liaos_writings:
     output: true
     display_name: 文集
