@@ -10,103 +10,102 @@
   <link rel="stylesheet" type="text/css" href="{{ '/assets/css/custom.css' | relative_url }}">
   {% seo %}
   <script src="{{ '/assets/js/fuse.min.js' | relative_url }}"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('search-input');
-    const resultsContainer = document.getElementById('search-results');
-    let fuse;
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('search-input');
+      const resultsContainer = document.getElementById('search-results');
+      let fuse;
 
-    // --- HELPER FUNCTION TO APPLY HIGHLIGHTS ---
-    function applyHighlights(text, indices) {
-      // Sort indices by start position
-      indices.sort((a, b) => a[0] - b[0]);
-      let result = '';
-      let lastIndex = 0;
+      function applyHighlights(text, indices) {
+        indices.sort((a, b) => a[0] - b[0]);
+        let result = '';
+        let lastIndex = 0;
 
-      indices.forEach(index => {
-        const [start, end] = index;
-        // Append text before the highlight
-        result += text.substring(lastIndex, start);
-        // Append the highlighted text
-        result += `<mark>${text.substring(start, end + 1)}</mark>`;
-        lastIndex = end + 1;
+        indices.forEach(index => {
+          const [start, end] = index;
+          result += text.substring(lastIndex, start);
+          result += `<mark>${text.substring(start, end + 1)}</mark>`;
+          lastIndex = end + 1;
+        });
+        result += text.substring(lastIndex);
+        return result;
+      }
+
+      document.addEventListener('click', (event) => {
+        if (!searchInput.contains(event.target) && !resultsContainer.contains(event.target)) {
+          resultsContainer.innerHTML = '';
+        }
       });
 
-      // Append the remaining text after the last highlight
-      result += text.substring(lastIndex);
-      return result;
-    }
+      fetch('{{ "/search.json" | relative_url }}')
+        .then(response => response.json())
+        .then(data => {
+          const options = {
+            keys: [
+              { name: 'title', weight: 2 },
+              { name: 'content', weight: 1 }
+            ],
+            includeScore: true,
+            includeMatches: true,
+            threshold: 0.4,
+            minMatchCharLength: 1,
+          };
+          fuse = new Fuse(data, options);
+        })
+        .catch(error => console.error('Error fetching or parsing search data:', error));
 
-    document.addEventListener('click', (event) => {
-      if (!searchInput.contains(event.target) && !resultsContainer.contains(event.target)) {
-        resultsContainer.innerHTML = '';
-      }
-    });
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value;
 
-    fetch('{{ "/search.json" | relative_url }}')
-      .then(response => response.json())
-      .then(data => {
-        const options = {
-          keys: [
-            { name: 'title', weight: 2 },
-            { name: 'content', weight: 1 }
-          ],
-          includeScore: true,
-          // --- NEW: Enable match data for highlighting ---
-          includeMatches: true, 
-          threshold: 0.4,
-          minMatchCharLength: 1,
-        };
-        fuse = new Fuse(data, options);
-      })
-      .catch(error => console.error('Error fetching or parsing search data:', error));
+        if (query.length > 0) {
+          if (!fuse) { return; }
 
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value;
-      
-      if (query.length > 0) {
-        if (!fuse) { return; }
+          const results = fuse.search(query);
 
-        const results = fuse.search(query);
-        resultsContainer.innerHTML = '';
+          // --- NEW: Custom sort to move "[待录入]" items to the bottom ---
+          results.sort((a, b) => {
+            const aIsPending = a.item.title.includes('[待录入]');
+            const bIsPending = b.item.title.includes('[待录入]');
 
-        if (results.length === 0) {
-          const noResultsLi = document.createElement('li');
-          noResultsLi.className = 'no-results';
-          noResultsLi.textContent = '未找到结果';
-          resultsContainer.appendChild(noResultsLi);
-        } else {
-          results.slice(0, 100).forEach(result => {
-            const li = document.createElement('li');
-            let highlightedSnippet = '';
+            if (aIsPending && !bIsPending) return 1;  // a goes after b
+            if (!aIsPending && bIsPending) return -1; // a goes before b
+            return 0; // Keep original order if both are same type
+          });
 
-            // Get a simple text snippet
-            const textSnippet = result.item.content.substring(0, 120);
+          resultsContainer.innerHTML = '';
 
-            // Find matches within the content
-            const contentMatches = result.matches.find(match => match.key === 'content');
+          if (results.length === 0) {
+            const noResultsLi = document.createElement('li');
+            noResultsLi.className = 'no-results';
+            noResultsLi.textContent = '未找到结果';
+            resultsContainer.appendChild(noResultsLi);
+          } else {
+            results.slice(0, 1000).forEach(result => {
+              const li = document.createElement('li');
+              let highlightedSnippet = '';
+              const textSnippet = result.item.content.substring(0, 120);
+              const contentMatches = result.matches.find(match => match.key === 'content');
 
-            if (contentMatches) {
-              // Filter indices to only those within our snippet length
-              const snippetIndices = contentMatches.indices.filter(index => index[1] < 120);
-              highlightedSnippet = applyHighlights(textSnippet, snippetIndices);
-            } else {
-              highlightedSnippet = textSnippet; // Fallback to non-highlighted snippet
-            }
+              if (contentMatches) {
+                const snippetIndices = contentMatches.indices.filter(index => index[1] < 120);
+                highlightedSnippet = applyHighlights(textSnippet, snippetIndices);
+              } else {
+                highlightedSnippet = textSnippet;
+              }
 
-            li.innerHTML = `
+              li.innerHTML = `
               <a href="${result.item.url}">${result.item.title}</a>
               <p class="search-result-snippet">${highlightedSnippet}...</p>
             `;
-            resultsContainer.appendChild(li);
-          });
+              resultsContainer.appendChild(li);
+            });
+          }
+        } else {
+          resultsContainer.innerHTML = '';
         }
-      } else {
-        resultsContainer.innerHTML = '';
-      }
+      });
     });
-  });
-</script>
+  </script>
 </head>
 
 <body>
@@ -126,7 +125,7 @@
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <input type="text" id="search-input" placeholder="全站搜索（仅显示前一百条结果～）">
+        <input type="text" id="search-input" placeholder="全站搜索">
         <ul id="search-results"></ul>
       </div>
       {{ content }}
