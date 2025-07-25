@@ -1,0 +1,45 @@
+---
+layout: book
+title: "与廖耀湘相关的文字资料合集"
+permalink: /book.html
+---
+
+{% comment %} Get the same custom category order from your homepage {% endcomment %}
+{% assign custom_order = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele" | split: "," %}
+
+<div class="cover-page">
+  <h1>{{ site.title }}</h1>
+  <!-- <p class="date-generated">生成于 2025年7月25日<br>内容更新中<br>请以lyxmemo.github.io为准</p> -->
+</div>
+
+
+<div class="main-toc">
+  <h1>目录</h1>
+  
+  {% for category_name in custom_order %}
+    {% assign collection_data = site.collections | where: "label", category_name | first %}
+    {% assign posts_in_category = site[category_name] | sort: "title" %}
+
+    {% if posts_in_category.size > 0 %}
+      <h2 class="toc-category-heading">{{ collection_data.display_name | default: category_name | replace: "_", " " | capitalize | replace: "（点击展开或折叠）", "" }}</h2>
+      
+      <ul class="toc-post-list">
+        {% for post in posts_in_category %}
+          <li><a href="#{{ post.url | slugify }}">{{ post.title | replace: "（点击展开或折叠）", "" }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endfor %}
+</div>
+
+
+{% for category_name in custom_order %}
+  {% assign posts_in_category = site[category_name] | sort: "title" %}
+
+  {% for post in posts_in_category %}
+    <article id="{{ post.url | slugify }}">
+      <h3 class="post-title">{{ post.title | replace: "（点击展开或折叠）", "" }}</h3>
+      {{ post.content }}
+    </article>
+  {% endfor %}
+{% endfor %}
