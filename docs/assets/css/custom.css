@@ -99,3 +99,21 @@ summary h2 {
   text-align: center;
   font-style: italic;
 }
+
+/* Style for the content snippet in search results */
+.search-result-snippet {
+  font-size: 0.85em; /* Smaller font size */
+  color: #666;      /* Lighter text color */
+  display: block;    /* Ensures it appears on its own line */
+  line-height: 1.4;
+  padding: 1rem 1rem 0 1rem;
+}
+
+/* Style for highlighted text in search results */
+.search-result-snippet mark {
+  background-color: #ffde73; /* A pleasant yellow */
+  color: #333;
+  font-weight: bold;
+  padding: 1px 2px;
+  border-radius: 3px;
+}
