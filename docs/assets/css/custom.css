@@ -91,3 +91,11 @@ summary h2 {
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+
+/* Style for the "No results" message */
+#search-results .no-results {
+  padding: 12px 15px;
+  color: #888; /* Grayed-out text */
+  text-align: center;
+  font-style: italic;
+}

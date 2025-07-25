@@ -10,76 +10,61 @@
   <link rel="stylesheet" type="text/css" href="{{ '/assets/css/custom.css' | relative_url }}">
   {% seo %}
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1. Log to confirm the script is running
-      console.log('🔍 Search script loaded and DOM is ready.');
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('search-results');
+    let fuse;
 
-      const searchInput = document.getElementById('search-input');
-      const resultsContainer = document.getElementById('search-results');
-      let fuse;
-
-      if (!searchInput) {
-        console.error('❌ Could not find search input with id="search-input"');
-        return;
-      }
-      if (!resultsContainer) {
-        console.error('❌ Could not find results container with id="search-results"');
-        return;
-      }
-
-      // 2. Fetch the search index
-      fetch('{{ "/search.json" | relative_url }}')
-        .then(response => response.json())
-        .then(data => {
-          // 3. Log the data to see if it's correct
-          console.log('✅ Search index fetched successfully! First item:', data[0]);
-
-          const options = {
-            keys: ['title', 'content'],
-            includeScore: true,
-            threshold: 0.4,
-            minMatchCharLength: 2,
-          };
-          fuse = new Fuse(data, options);
-          console.log('🚀 Fuse.js initialized.');
-        })
-        .catch(error => console.error('❌ Error fetching or parsing search data:', error));
-
-      // 4. Add an event listener
-      searchInput.addEventListener('input', () => {
-        const query = searchInput.value;
-
-        // 5. Log the search query
-        console.log(`Searching for: "${query}"`);
-
+    document.addEventListener('click', (event) => {
+      if (!searchInput.contains(event.target) && !resultsContainer.contains(event.target)) {
         resultsContainer.innerHTML = '';
+      }
+    });
 
-        if (query.length < 2) {
-          return;
-        }
+    fetch('{{ "/search.json" | relative_url }}')
+      .then(response => response.json())
+      .then(data => {
+        const options = {
+          keys: ['title', 'content'],
+          includeScore: true,
+          threshold: 0.4,
+          minMatchCharLength: 1,
+        };
+        fuse = new Fuse(data, options);
+      })
+      .catch(error => console.error('Error fetching or parsing search data:', error));
 
-        if (!fuse) {
-          console.warn('Fuse.js is not yet initialized.');
-          return;
-        }
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value;
+      
+      if (query.length > 0) {
+        if (!fuse) { return; }
 
         const results = fuse.search(query);
+        resultsContainer.innerHTML = ''; // Clear previous results
 
-        // 6. Log the results from Fuse.js
-        console.log('Found results:', results);
-
-        // 7. Display the results
-        results.slice(0, 100).forEach(result => {
-          const li = document.createElement('li');
-          li.innerHTML = `<a href="${result.item.url}">${result.item.title}</a>`;
-          resultsContainer.appendChild(li);
-        });
-      });
+        // --- NEW: Check if there are any results ---
+        if (results.length === 0) {
+          // If no results, display a message
+          const noResultsLi = document.createElement('li');
+          noResultsLi.className = 'no-results'; // Add class for styling
+          noResultsLi.textContent = '未找到结果 (No results found)';
+          resultsContainer.appendChild(noResultsLi);
+        } else {
+          // If results are found, display them
+          results.slice(0, 8).forEach(result => {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="${result.item.url}">${result.item.title}</a>`;
+            resultsContainer.appendChild(li);
+          });
+        }
+      } else {
+        resultsContainer.innerHTML = '';
+      }
     });
-  </script>
-
-
+  });
+</script>
 </head>
 
 <body>
@@ -99,7 +84,7 @@
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <input type="text" id="search-input" placeholder="">
+        <input type="text" id="search-input" placeholder="全站搜索">
         <ul id="search-results"></ul>
       </div>
       {{ content }}
