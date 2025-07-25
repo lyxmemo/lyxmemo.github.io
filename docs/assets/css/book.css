@@ -6,6 +6,15 @@
   src: url('../fonts/NotoSansSC-Regular.ttf') format('truetype');
 }
 
+/* This new @page rule adds page numbers to the footer of every page */
+@page {
+  @bottom-center {
+    content: counter(page);
+    font-size: 9pt;
+    color: #888888;
+  }
+}
+
 body {
   font-family: 'BookFont', sans-serif;
   line-height: 1.5;
@@ -27,6 +36,19 @@ body {
   font-size: 32pt;
 }
 
+/* Styling for the Notice Page */
+.notice-page {
+  page-break-after: always;
+  padding: 2in 1in;
+  font-size: 10pt;
+  line-height: 1.6;
+}
+.notice-page h3 {
+  font-size: 14pt;
+  text-align: center;
+  margin-bottom: 2em;
+}
+
 /* 2. STYLING THE MAIN TABLE OF CONTENTS */
 .main-toc {
   page-break-after: always;
@@ -45,18 +67,28 @@ body {
 }
 .toc-post-list {
   list-style: none;
-  padding-left: 1em;
+  padding-left: 0; /* Changed from 1em */
   line-height: 1.8;
+}
+.toc-post-list li {
+  display: flex; /* Using flexbox for alignment */
+  justify-content: space-between;
 }
 .toc-post-list a {
   text-decoration: none;
   color: black;
 }
+/* This is the magic that adds page numbers to the TOC */
+.toc-post-list a::after {
+  /* Fills the space with leader dots and adds the page number of the linked article */
+  content: leader('.') " " target-counter(attr(href), page);
+  font-size: 11pt;
+}
+
 
 /* 3. STYLING THE FULL ARTICLES */
 article {
   page-break-before: always;
-  /* ADJUSTMENT 2: Changed padding from 1in to 0.7in */
   padding: 0.1in 0.5in;
 }
 article:first-of-type {
@@ -67,21 +99,15 @@ article .post-title {
   margin-top: 0;
 }
 
-/* 4. REPEATING WATERMARK PATTERN (NEW METHOD) */
+/* 4. REPEATING WATERMARK PATTERN (DYNAMIC) */
 body::after {
-  /* This creates a "virtual" layer behind the body content */
   content: "";
-  
-  /* Make the layer cover the entire page, on every page */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Ctext x='-50' y='120' font-size='18' font-weight='bold' fill='rgba(0,0,0,0.08)' transform='rotate(-30)'%3E生成于 {{ 'now' | date: '%Y年%m月%d日' }}%3C/text%3E%3Ctext x='-50' y='140' font-size='18' font-weight='bold' fill='rgba(0,0,0,0.08)' transform='rotate(-30)'%3E内容更新中%3Ctspan dy='1.2em' x='-50'%3E请以lyxmemo.github.io为准%3C/tspan%3E%3C/text%3E%3C/svg%3E");
-  
-  /* Ensure it's behind the real content and not clickable */
   z-index: -1000;
   pointer-events: none;
 }
