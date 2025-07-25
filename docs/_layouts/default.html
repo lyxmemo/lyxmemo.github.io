@@ -9,6 +9,77 @@
     href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
   <link rel="stylesheet" type="text/css" href="{{ '/assets/css/custom.css' | relative_url }}">
   {% seo %}
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Log to confirm the script is running
+      console.log('🔍 Search script loaded and DOM is ready.');
+
+      const searchInput = document.getElementById('search-input');
+      const resultsContainer = document.getElementById('search-results');
+      let fuse;
+
+      if (!searchInput) {
+        console.error('❌ Could not find search input with id="search-input"');
+        return;
+      }
+      if (!resultsContainer) {
+        console.error('❌ Could not find results container with id="search-results"');
+        return;
+      }
+
+      // 2. Fetch the search index
+      fetch('{{ "/search.json" | relative_url }}')
+        .then(response => response.json())
+        .then(data => {
+          // 3. Log the data to see if it's correct
+          console.log('✅ Search index fetched successfully! First item:', data[0]);
+
+          const options = {
+            keys: ['title', 'content'],
+            includeScore: true,
+            threshold: 0.4,
+            minMatchCharLength: 2,
+          };
+          fuse = new Fuse(data, options);
+          console.log('🚀 Fuse.js initialized.');
+        })
+        .catch(error => console.error('❌ Error fetching or parsing search data:', error));
+
+      // 4. Add an event listener
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value;
+
+        // 5. Log the search query
+        console.log(`Searching for: "${query}"`);
+
+        resultsContainer.innerHTML = '';
+
+        if (query.length < 2) {
+          return;
+        }
+
+        if (!fuse) {
+          console.warn('Fuse.js is not yet initialized.');
+          return;
+        }
+
+        const results = fuse.search(query);
+
+        // 6. Log the results from Fuse.js
+        console.log('Found results:', results);
+
+        // 7. Display the results
+        results.slice(0, 100).forEach(result => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a href="${result.item.url}">${result.item.title}</a>`;
+          resultsContainer.appendChild(li);
+        });
+      });
+    });
+  </script>
+
+
 </head>
 
 <body>
@@ -21,7 +92,16 @@
 
     </header>
     <section>
-
+      <div class="search-container">
+        <label for="search-input" class="visually-hidden">搜索</label> <svg class="search-icon"
+          xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="search-input" placeholder="">
+        <ul id="search-results"></ul>
+      </div>
       {{ content }}
 
     </section>
