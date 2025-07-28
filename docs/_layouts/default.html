@@ -18,106 +18,134 @@
   </script>
   <script src="{{ '/assets/js/fuse.min.js' | relative_url }}"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const searchInput = document.getElementById('search-input');
-      const resultsContainer = document.getElementById('search-results');
-      let fuse;
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('search-results');
+    let fuse;
 
-      function applyHighlights(text, indices) {
-        indices.sort((a, b) => a[0] - b[0]);
-        let result = '';
-        let lastIndex = 0;
+    function applyHighlights(text, indices) {
+      indices.sort((a, b) => a[0] - b[0]);
+      let result = '';
+      let lastIndex = 0;
 
-        indices.forEach(index => {
-          const [start, end] = index;
-          result += text.substring(lastIndex, start);
-          result += `<mark>${text.substring(start, end + 1)}</mark>`;
-          lastIndex = end + 1;
-        });
-        result += text.substring(lastIndex);
-        return result;
+      indices.forEach(index => {
+        const [start, end] = index;
+        result += text.substring(lastIndex, start);
+        result += `<mark>${text.substring(start, end + 1)}</mark>`;
+        lastIndex = end + 1;
+      });
+      result += text.substring(lastIndex);
+      return result;
+    }
+
+    document.addEventListener('click', (event) => {
+      if (!searchInput.contains(event.target) && !resultsContainer.contains(event.target)) {
+        resultsContainer.innerHTML = '';
       }
-
-      document.addEventListener('click', (event) => {
-        if (!searchInput.contains(event.target) && !resultsContainer.contains(event.target)) {
-          resultsContainer.innerHTML = '';
-        }
-      });
-
-      fetch('{{ "/search.json" | relative_url }}')
-        .then(response => response.json())
-        .then(data => {
-          const options = {
-            keys: [
-              { name: 'title', weight: 2 },
-              { name: 'content', weight: 1 }
-            ],
-            includeScore: true,
-            includeMatches: true,
-            threshold: 0.4,
-            minMatchCharLength: 1,
-          };
-          fuse = new Fuse(data, options);
-        })
-        .catch(error => console.error('Error fetching or parsing search data:', error));
-
-      searchInput.addEventListener('input', () => {
-        const query = searchInput.value;
-
-        if (query.length > 0) {
-          if (!fuse) { return; }
-
-          const results = fuse.search(query);
-
-          results.sort((a, b) => {
-            const aIsPending = a.item.title.includes('[待录入]');
-            const bIsPending = b.item.title.includes('[待录入]');
-            if (aIsPending && !bIsPending) return 1;
-            if (!aIsPending && bIsPending) return -1;
-            return 0;
-          });
-
-          resultsContainer.innerHTML = '';
-
-          if (results.length === 0) {
-            const noResultsLi = document.createElement('li');
-            noResultsLi.className = 'no-results';
-            noResultsLi.textContent = '未找到结果';
-            resultsContainer.appendChild(noResultsLi);
-          } else {
-            results.slice(0, 1000).forEach(result => {
-              const li = document.createElement('li');
-
-              let highlightedTitle = result.item.title;
-              const titleMatches = result.matches.find(match => match.key === 'title');
-              if (titleMatches) {
-                highlightedTitle = applyHighlights(result.item.title, titleMatches.indices);
-              }
-
-              let resultHTML = `<a href="${result.item.url}">${highlightedTitle}</a>`;
-
-              // --- NEW: Conditionally add the snippet ---
-              const contentMatches = result.matches.find(match => match.key === 'content');
-              if (contentMatches) {
-                // If there's a match in the content, create and append the snippet
-                const textSnippet = result.item.content.substring(0, 120);
-                const snippetIndices = contentMatches.indices.filter(index => index[1] < 120);
-                const highlightedSnippet = applyHighlights(textSnippet, snippetIndices);
-                resultHTML += `<p class="search-result-snippet">${highlightedSnippet}...</p>`;
-              }
-
-              // Set the final HTML for the list item
-              li.innerHTML = resultHTML;
-              resultsContainer.appendChild(li);
-            });
-          }
-        } else {
-          resultsContainer.innerHTML = '';
-        }
-      });
     });
-  </script>
+
+    fetch('{{ "/search.json" | relative_url }}')
+      .then(response => response.json())
+      .then(data => {
+        const options = {
+          keys: [
+            { name: 'title', weight: 2 },
+            { name: 'content', weight: 1 }
+          ],
+          includeScore: true,
+          includeMatches: true, 
+          threshold: 0.5,
+          ignoreLocation: true,
+          minMatchCharLength: 1,
+        };
+        fuse = new Fuse(data, options);
+      })
+      .catch(error => console.error('Error fetching or parsing search data:', error));
+
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value;
+      
+      if (query.length > 0) {
+        if (!fuse) { return; }
+
+        const results = fuse.search(query);
+        const queryLower = query.toLowerCase();
+
+        // --- NEW: Create a custom composite score for perfect sorting ---
+        const scoredResults = results.map(result => {
+          let customScore = result.score; // Start with Fuse's score
+          const title = result.item.title;
+          const content = result.item.content;
+
+          // Check for a perfect, complete match
+          const isPerfectMatch = title.toLowerCase().includes(queryLower) || content.toLowerCase().includes(queryLower);
+
+          // If it's NOT a perfect match (fuzzy only), apply a large penalty
+          if (!isPerfectMatch) {
+            customScore += 100; 
+          }
+
+          // If it IS a "[待录入]" item, apply an even bigger penalty
+          if (title.includes('[待录入]')) {
+            customScore += 1000;
+          }
+          
+          return { ...result, customScore };
+        });
+
+        // Now sort by the new, unambiguous customScore
+        scoredResults.sort((a, b) => a.customScore - b.customScore);
+
+        resultsContainer.innerHTML = '';
+
+        if (scoredResults.length === 0) {
+          const noResultsLi = document.createElement('li');
+          noResultsLi.className = 'no-results';
+          noResultsLi.textContent = '未找到结果 (No results found)';
+          resultsContainer.appendChild(noResultsLi);
+        } else {
+          scoredResults.slice(0, 1000).forEach(result => {
+            // Display logic remains the same
+            const li = document.createElement('li');
+            let highlightedTitle = result.item.title;
+            const titleMatches = result.matches.find(match => match.key === 'title');
+            if (titleMatches) {
+              highlightedTitle = applyHighlights(result.item.title, titleMatches.indices);
+            }
+            let resultHTML = `<a href="${result.item.url}">${highlightedTitle}</a>`;
+            const contentMatches = result.matches.find(match => match.key === 'content');
+            if (contentMatches) {
+              const fullContent = result.item.content;
+              const firstMatch = contentMatches.indices[0];
+              const firstMatchStart = firstMatch[0];
+              const snippetLength = 120;
+              const charsBefore = 40;
+              let snippetStart = Math.max(0, firstMatchStart - charsBefore);
+              let snippetEnd = snippetStart + snippetLength;
+              let rawSnippet = fullContent.substring(snippetStart, snippetEnd);
+              const adjustedIndices = contentMatches.indices
+                .map(index => [index[0] - snippetStart, index[1] - snippetStart])
+                .filter(index => index[0] >= 0 && index[1] < snippetLength);
+              let highlightedSnippet = applyHighlights(rawSnippet, adjustedIndices);
+              if (snippetStart > 0) {
+                highlightedSnippet = "..." + highlightedSnippet;
+              }
+              if (snippetEnd < fullContent.length) {
+                highlightedSnippet += "...";
+              }
+              resultHTML += `<p class="search-result-snippet">${highlightedSnippet}</p>`;
+            }
+            li.innerHTML = resultHTML;
+            resultsContainer.appendChild(li);
+          });
+        }
+      } else {
+        resultsContainer.innerHTML = '';
+      }
+    });
+  });
+</script>
 </head>
 
 <body>
