@@ -52,7 +52,7 @@ collections:
     display_name: 新二十二师纪念
   ten_year_memorial:
     output: true
-    display_name: 分类
+    display_name: 故人回忆
   battles_history:
     output: true
     display_name: 战史
