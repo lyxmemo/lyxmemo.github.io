@@ -2,6 +2,8 @@
   url: /
 - title: 关于
   url: /about.html
+- title: 分类  # <-- 添加这一行
+  url: /memories.html # <-- 这里的 `memories.html` 对应你上一步创建的文件名
 - title: 文集
   url: /categories/liaos_writings/
 - title: 来往电报
