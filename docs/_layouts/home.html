@@ -2,72 +2,92 @@
 layout: default
 title: 主页
 ---
+
 <style>
-  /* === 视图切换按钮的样式 (更新为固定在右下角) === */
-  .view-switcher {
-    position: fixed; /* 固定定位 */
-    bottom: 30px;    /* 距离底部30px */
-    right: 30px;     /* 距离右侧30px */
-    z-index: 1000;   /* 确保它在最顶层，不会被其他内容遮挡 */
+  /* === “全部展开/收起”浮动按钮样式 (已恢复) === */
+  .floating-toggle-wrapper {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: none; /* 默认隐藏，只在“分类视图”下显示 */
   }
-  .view-switcher .switch-btn {
-    background-color: rgba(255, 255, 255, 0.9); /* 半透明白色背景，适应各种内容 */
+  .floating-toggle-btn {
+    background-color: rgba(255, 255, 255, 0.9);
     border: 1px solid #ccc;
     color: #333;
     padding: 8px 15px;
     cursor: pointer;
     font-size: 14px;
-    margin-left: 10px;
-    border-radius: 20px; /* 改为圆角矩形，更像一个浮动按钮 */
+    border-radius: 20px;
     outline: none;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15); /* 加一点阴影，让它有悬浮感 */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
     transition: all 0.2s ease-in-out;
   }
-  
-  .view-switcher .switch-btn:hover {
-    transform: translateY(-2px); /* 鼠标悬停时轻微上浮 */
+  .floating-toggle-btn:hover {
+    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
-  .view-switcher .switch-btn.active {
-    background-color: #007bff; /* 选中时用蓝色填充 */
-    border-color: #007bff;
-    color: white;
+
+  /* === 页脚的视图切换按钮样式 (低调) === */
+  .footer-view-switcher {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+  .footer-view-switcher .switch-btn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    padding: 5px;
+    margin: 0 10px;
+  }
+  .footer-view-switcher .switch-btn:hover {
+    color: #007bff;
+  }
+  .footer-view-switcher .switch-btn.active {
+    color: #333;
     font-weight: bold;
-    box-shadow: none; /* 选中时去掉阴影 */
+    text-decoration: none;
+    cursor: default;
   }
 
-  /* --- 从 memories.md 复制过来的样式 --- */
-  /* === Tab 样式 (背景填充) === */
+  /* --- 分类视图内部的样式 --- */
+  /* Tab 样式 */
   .tab { overflow: hidden; border-bottom: 1px solid #ddd; }
-  .tab button { background-color: transparent; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: background-color 0.3s; font-size: 1rem; }
+  .tab button { background-color: transparent; float: left; border: none; outline: none; cursor: pointer; padding: 0.7rem 1rem; transition: background-color 0.3s; font-size: 1rem; color: #555; border-radius: 6px 6px 0 0; }
   .tab button:hover:not(.active) { background-color: #f1f1f1; }
-  .tab button.active { background-color: #e9e9e9; font-weight: bold; }
+  .tab button.active { background-color: #e9e9e9; font-weight: bold; color: #333; }
   .tabcontent { display: none; padding: 0px 0; animation: fadeEffect 0.5s; }
   @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
 
-  /* === 可折叠列表样式 === */
+  /* 可折叠列表样式 */
   .collapsible-book { border-bottom: 1px solid #e0e0e0; }
   .collapsible-book:first-of-type { border-top: 1px solid #e0e0e0; }
-  summary { font-size: 1em; font-weight: 600; padding: 5px 0px; cursor: pointer; list-style: none; outline: none; margin-bottom:0!important; transition: background-color 0.2s; color: #504949ff; }
+  summary { font-size: 1rem; font-weight: 600; padding: 0.5rem 0px; cursor: pointer; list-style: none; outline: none; margin-bottom:0!important; transition: background-color 0.2s; color: #504949ff; }
   summary:hover { background-color: #f7f7f7; }
   summary::-webkit-details-marker { display: none; }
-  summary::before { content: '+'; font-family: monospace; font-weight: bold; font-size: 1em; margin-right: 12px; color: #888; display: inline-block; width: 20px; text-align: center; }
-  details[open] > summary::before { content: '−'; }
+  summary::before { content: '−'; font-family: monospace; font-weight: bold; font-size: 1rem; margin-right: 12px; color: #888; display: inline-block; width: 20px; text-align: center; }
+  details:not([open]) > summary::before { content: '+'; }
   .collapsible-book ul { list-style-type: none; padding: 10px 0 15px 42px; margin: 0; }
   .collapsible-book li { padding: 0.1rem 0; border: none; }
 
-  /* === 时间线视图的样式 === */
+  /* 时间线视图的样式 */
   .timeline-list { list-style-type: none; padding-left: 0; }
-  .timeline-list li, .timeline-list-no-date li { display: flex; align-items: baseline; padding: 8px 0; border-bottom: 1px solid #eee; }
-  .timeline-date { font-family: monospace; color: #777; margin-right: 15px; flex-shrink: 0; }
-  .unknown-date-header { margin-top: 40px; padding-top: 20px; border-top: 2px solid #ccc; font-size: 1em; color: #555; }
+  .timeline-list li, .timeline-list-no-date li { display: flex; align-items: baseline; padding: 0.1rem 0; }
+  .timeline-list li { border-bottom: 1px solid #eee; } /* 电报Tab带下划线 */
+  .timeline-list-no-date li { border-bottom: none; } /* 时间线Tab不带下划线 */
+  .timeline-date { font-family: monospace; color: #777; margin-right: 15px; flex-shrink: 0; font-size: 0.8rem; }
+  .unknown-date-header { margin-top: 40px; padding-top: 20px; border-top: 2px solid #ccc; font-size: 1rem; font-weight: bold; color: #555; }
 </style>
 
-<div class="view-switcher">
-  <button id="new-view-btn" class="switch-btn" onclick="switchView('new-view', this)">分类视图 (新)</button>
-  <button id="original-view-btn" class="switch-btn" onclick="switchView('original-view', this)">原始首页 (旧)</button>
+<div class="floating-toggle-wrapper">
+  <button class="floating-toggle-btn" onclick="toggleAllMaster('#new-view .collapsible-book')">全部展开/收起</button>
 </div>
-
 
 <div id="new-view" class="view-panel">
   {%- assign memorial_posts_raw = "" | split: "" -%}
@@ -75,23 +95,22 @@ title: 主页
   {%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele" | split: "," -%}
   {%- for collection_name in collections_to_search -%}
     {%- for post in site[collection_name] -%}
-      {%- if post.category == "Liao's Tele" -%}
-        {%- assign telegrams_raw = telegrams_raw | push: post -%}
-      {%- else -%}
-        {%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}
-      {%- endif -%}
+      {%- if post.category == "Liao's Tele" -%}{%- assign telegrams_raw = telegrams_raw | push: post -%}{%- else -%}{%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}{%- endif -%}
     {%- endfor -%}
   {%- endfor -%}
+
   <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'byBook')" id="defaultOpen">按书籍出处排列</button>
     <button class="tablinks" onclick="openTab(event, 'byTime')">按时间线排列</button>
     <button class="tablinks" onclick="openTab(event, 'telegrams')">电报</button>
   </div>
+  
   <div id="byBook" class="tabcontent">
     {%- if memorial_posts_raw and memorial_posts_raw.size > 0 -%}
       {%- assign posts_by_book = memorial_posts_raw | group_by: "category" -%}
       {%- for book in posts_by_book -%}
-        <details class="collapsible-book"><summary>《{{ book.name }}》</summary>
+        <details class="collapsible-book" open>
+          <summary>《{{ book.name }}》</summary>
           <ul>
             {%- assign items_sorted_by_title = book.items | sort: 'title' -%}
             {%- for post in items_sorted_by_title -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}
@@ -100,17 +119,16 @@ title: 主页
       {%- endfor -%}
     {%- else -%}<p>未能生成列表。</p>{%- endif -%}
   </div>
+
   <div id="byTime" class="tabcontent">
     {%- if memorial_posts_raw and memorial_posts_raw.size > 0 -%}
       {%- assign dated_posts = "" | split: "" -%}{%- assign undated_posts = "" | split: "" -%}
-      {%- for post in memorial_posts_raw -%}
-        {%- assign formatted_date = post.date | date: "%Y-%m-%d" -%}
-        {%- if formatted_date == "1900-01-01" or post.date == nil -%}{%- assign undated_posts = undated_posts | push: post -%}{%- else -%}{%- assign dated_posts = dated_posts | push: post -%}{%- endif -%}
-      {%- endfor -%}
+      {%- for post in memorial_posts_raw -%}{%- assign formatted_date = post.date | date: "%Y-%m-%d" -%}{%- if formatted_date == "1900-01-01" or post.date == nil -%}{%- assign undated_posts = undated_posts | push: post -%}{%- else -%}{%- assign dated_posts = dated_posts | push: post -%}{%- endif -%}{%- endfor -%}
       {%- if dated_posts.size > 0 -%}
         {%- assign posts_by_year = dated_posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse -%}
         {%- for year_group in posts_by_year -%}
-          <details class="collapsible-book" {% if forloop.first %}open{% endif %}><summary>{{ year_group.name }} 年</summary>
+          <details class="collapsible-book" open>
+            <summary>{{ year_group.name }} 年</summary>
             <ul class="timeline-list-no-date">
               {%- assign posts_in_year = year_group.items | sort: 'date' | reverse -%}
               {%- for post in posts_in_year -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}
@@ -118,28 +136,13 @@ title: 主页
           </details>
         {%- endfor -%}
       {%- endif -%}
-      {%- if undated_posts.size > 0 -%}<h3 class="unknown-date-header">暂无时间</h3>
-        <ul>
-          {%- assign undated_posts_sorted = undated_posts | sort: 'title' -%}
-          {%- for post in undated_posts_sorted -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}
-        </ul>
-      {%- endif -%}
+      {%- if undated_posts.size > 0 -%}<h3 class="unknown-date-header">暂无时间</h3><ul>{%- assign undated_posts_sorted = undated_posts | sort: 'title' -%}{%- for post in undated_posts_sorted -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}</ul>{%- endif -%}
     {%- else -%}<p>未能生成列表。</p>{%- endif -%}
   </div>
+  
   <div id="telegrams" class="tabcontent">
     {%- assign telegrams = telegrams_raw | sort: 'date' -%}
-    {%- if telegrams.size > 0 -%}
-      <ul class="timeline-list">
-        {%- for post in telegrams -%}
-          <li><span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
-            <div>
-              {%- assign date_slash = post.date | date: "%Y/%m/%d" -%}{%- assign temp_title = post.title | replace_first: date_slash, "|||" -%}{%- assign title_parts = temp_title | split: "|||" -%}
-              {%- if title_parts.size > 1 -%}{%- assign title_to_display = title_parts[1] -%}{%- else -%}{%- assign date_dot = post.date | date: "%Y.%m.%d" -%}{%- assign temp_title_dot = post.title | replace_first: date_dot, "|||" -%}{%- assign title_parts_dot = temp_title_dot | split: "|||" -%}{%- if title_parts_dot.size > 1 -%}{%- assign title_to_display = title_parts_dot[1] -%}{%- else -%}{%- assign title_to_display = post.title -%}{%- endif -%}{%- endif -%}
-              <a href="{{ post.url | relative_url }}">{{ title_to_display }}</a>
-            </div>
-          </li>
-        {%- endfor -%}
-      </ul>
+    {%- if telegrams.size > 0 -%}<ul class="timeline-list">{%- for post in telegrams -%}<li><span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span><div>{%- assign title_parts = post.title | split: ']' -%}{%- if title_parts.size > 1 -%}{%- assign bracket_prefix = title_parts[0] | append: ']' -%}{%- assign after_prefix = title_parts[1] -%}{%- assign first_char = after_prefix | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign rest_of_title = after_prefix | slice: 10, 999 -%}{%- assign title_to_display = bracket_prefix | append: rest_of_title -%}{%- else -%}{%- assign title_to_display = bracket_prefix | append: after_prefix -%}{%- endif -%}{%- else -%}{%- assign first_char = post.title | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign title_to_display = post.title | slice: 10, 999 -%}{%- else -%}{%- assign title_to_display = post.title -%}{%- endif -%}{%- endif -%}<a href="{{ post.url | relative_url }}">{{ title_to_display }}</a></div></li>{%- endfor -%}</ul>
     {%- else -%}<p>未能生成列表。请检查 `category` 为 `Liao's Tele` 的文章是否存在。</p>{%- endif -%}
   </div>
 </div>
@@ -147,87 +150,54 @@ title: 主页
 <div id="original-view" class="view-panel">
   <div class="home">
     {% assign custom_order = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele" | split: "," %}
-    {% for category_name in custom_order %}
-      {% assign collection_data = site.collections | where: "label", category_name | first %}
-      {% if category_name == "liaos_tele" %}
-        <details><summary><h2>{{ collection_data.display_name }}</h2></summary><ul>
-      {% else %}
-        {% if collection_data.display_name %}<h2>{{ collection_data.display_name }}</h2>
-        {% else %}<h2>{{ category_name | replace: "_", " " | capitalize }}</h2>{% endif %}
-        <ul>
-      {% endif %}
-      {% if category_name == "battles_history" %}
-        {% assign year_folders = "1942,1943,1944,1945,1946,1947,1948" | split: "," %}
-        {% for year in year_folders %}
-          {% assign posts_in_year = site[category_name] | where_exp: "post", "post.path contains year" %}
-          {% if posts_in_year.size > 0 %}
-            <li><h3 class="sub-heading">{{ year }}</h3>
-              <ul>
-                {% for post in posts_in_year %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}
-              </ul>
-            </li>
-          {% endif %}
-        {% endfor %}
-      {% else %}
-        {% assign posts_in_category = site[category_name] | sort: "title" %}
-        {% for post in posts_in_category %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}
-      {% endif %}
-    </ul>
-    {% if category_name == "liaos_tele" %}</details>{% endif %}
-    {% endfor %}
+    {% for category_name in custom_order %}{% assign collection_data = site.collections | where: "label", category_name | first %}{% if category_name == "liaos_tele" %}<details><summary><h2>{{ collection_data.display_name }}</h2></summary><ul>{% else %}{% if collection_data.display_name %}<h2>{{ collection_data.display_name }}</h2>{% else %}<h2>{{ category_name | replace: "_", " " | capitalize }}</h2>{% endif %}<ul>{% endif %}{% if category_name == "battles_history" %}{% assign year_folders = "1942,1943,1944,1945,1946,1947,1948" | split: "," %}{% for year in year_folders %}{% assign posts_in_year = site[category_name] | where_exp: "post", "post.path contains year" %}{% if posts_in_year.size > 0 %}<li><h3 class="sub-heading">{{ year }}</h3><ul>{% for post in posts_in_year %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}</ul></li>{% endif %}{% endfor %}{% else %}{% assign posts_in_category = site[category_name] | sort: "title" %}{% for post in posts_in_category %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}{% endif %}</ul>{% if category_name == "liaos_tele" %}</details>{% endif %}{% endfor %}
     <h2>资料下载区</h2>
-    <ul>
-      {% for file in site.static_files %}
-        {% if file.path contains 'resources' %}
-          <li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>
-        {% endif %}
-      {% endfor %}
-    </ul>
+    <ul>{% for file in site.static_files %}{% if file.path contains 'resources' %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>{% endif %}{% endfor %}</ul>
   </div>
 </div>
 
-<script>
-  // --- 视图切换功能 (新增) ---
-  function switchView(viewId, clickedButton) {
-    // 隐藏所有视图面板
-    document.querySelectorAll('.view-panel').forEach(panel => {
-      panel.style.display = 'none';
-    });
-    // 移除所有按钮的 'active' 状态
-    document.querySelectorAll('.switch-btn').forEach(btn => {
-      btn.classList.remove('active');
-    });
 
-    // 显示点击的视图面板
+<div class="footer-view-switcher">
+  <button class="switch-btn" onclick="switchView('new-view', this)">分类视图</button>
+  <button class="switch-btn" onclick="switchView('original-view', this)">原始首页</button>
+</div>
+
+
+<script>
+  // --- 视图切换功能 ---
+  function switchView(viewId, clickedButton) {
+    var toggleButton = document.querySelector('.floating-toggle-wrapper');
+    document.querySelectorAll('.view-panel').forEach(panel => { panel.style.display = 'none'; });
+    document.querySelectorAll('.footer-view-switcher .switch-btn').forEach(btn => { btn.classList.remove('active'); });
     document.getElementById(viewId).style.display = 'block';
-    // 激活点击的按钮
     clickedButton.classList.add('active');
+    if (viewId === 'new-view') { toggleButton.style.display = 'block'; } else { toggleButton.style.display = 'none'; }
   }
 
-  // --- Tab 切换功能 (来自 memories.md) ---
+  // --- Tab 切换功能 ---
   function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
-    // 注意: 我们只在 #new-view 中查找 tab 内容
     var tabContainer = document.getElementById('new-view');
     tabcontent = tabContainer.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
+    for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
     tablinks = tabContainer.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
+    for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
     document.getElementById(tabName).style.display = "block";
-    if (evt) {
-      evt.currentTarget.className += " active";
-    }
+    if (evt) { evt.currentTarget.className += " active"; }
+  }
+
+  // --- 全部展开/收起功能 ---
+  function toggleAllMaster(selector) {
+    const detailsElements = document.querySelectorAll(selector);
+    if (detailsElements.length === 0) { return; }
+    const hasAClosedElement = Array.from(detailsElements).some(detail => !detail.open);
+    const newState = hasAClosedElement;
+    detailsElements.forEach((detail) => { detail.open = newState; });
   }
 
   // --- 页面加载时执行的默认操作 ---
   document.addEventListener('DOMContentLoaded', () => {
-    // 默认点击“分类视图 (新)”
-    document.getElementById('new-view-btn').click();
-    // 默认点击“按书籍出处排列”
+    document.querySelector('.footer-view-switcher .switch-btn').click();
     document.getElementById('defaultOpen').click();
   });
 </script>

@@ -191,26 +191,38 @@ details[open] > summary::before {
               全新的标题处理逻辑：
               直接分析标题字符串，不再依赖 post.date。
             {%- endcomment -%}
-            {%- assign title_parts = post.title | split: ']' -%}
-            {%- if title_parts.size > 1 -%}
-              {%- comment -%} 情况一：标题包含 [前缀] {%- endcomment -%}
-              {%- assign bracket_prefix = title_parts[0] | append: ']' -%}
-              {%- assign rest_of_title = title_parts[1] | slice: 10, 999 -%}
-              {%- assign title_to_display = bracket_prefix | append: rest_of_title -%}
+            {%- assign title_to_display = post.title -%}
+            {%- assign parts = post.title | split: ']' -%}
+            {%- if parts.size > 1 -%}
+              {%- comment -%} 情况一：标题包含 [前缀] (e.g., "[待录入]1944/02/18...") {%- endcomment -%}
+              {%- assign bracket_prefix = parts[0] | append: ']' -%}
+              {%- assign after_prefix = parts[1] -%}
+              {%- comment -%} 检查前缀后面的部分是否以年份开头, 如果是, 则移除10个字符的日期 {%- endcomment -%}
+              {%- assign first_char = after_prefix | slice: 0 -%}
+              {%- if first_char == '1' or first_char == '2' -%}
+                {%- assign rest_of_title = after_prefix | slice: 10, 999 -%}
+                {%- assign title_to_display = bracket_prefix | append: rest_of_title -%}
+              {%- else -%}
+                {%- assign title_to_display = bracket_prefix | append: after_prefix -%}
+              {%- endif -%}
             {%- else -%}
-              {%- comment -%} 情况二：标题不含前缀，直接从开头移除10位日期 {%- endcomment -%}
-              {%- assign title_to_display = post.title | slice: 10, 999 -%}
+              {%- comment -%} 情况二：标题不含前缀 (e.g., "1937/04/29...") {%- endcomment -%}
+              {%- assign first_char = post.title | slice: 0 -%}
+              {%- if first_char == '1' or first_char == '2' -%}
+                 {%- assign title_to_display = post.title | slice: 10, 999 -%}
+              {%- endif -%}
             {%- endif -%}
-
             <a href="{{ post.url | relative_url }}">{{ title_to_display }}</a>
           </div>
         </li>
       {%- endfor -%}
     </ul>
   {%- else -%}
-    <p>未能生成列表。请检查 `_liaos_tele` 文件夹中是否有内容。</p>
+    <p>未能生成列表。请检查 `category` 为 `Liao's Tele` 的文章是否存在。</p>
   {%- endif -%}
 </div>
+
+
 <script>
   function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
