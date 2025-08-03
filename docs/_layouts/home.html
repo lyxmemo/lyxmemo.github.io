@@ -81,7 +81,7 @@ title: 主页
   .timeline-list li, .timeline-list-no-date li { display: flex; align-items: baseline; padding: 0.1rem 0; }
   .timeline-list li { border-bottom: 1px solid #eee; } /* 电报Tab带下划线 */
   .timeline-list-no-date li { border-bottom: none; } /* 时间线Tab不带下划线 */
-  .timeline-date { font-family: monospace; color: #777; margin-right: 15px; flex-shrink: 0; font-size: 0.8rem; }
+  .timeline-date { margin: 0 1rem; flex-shrink: 0; font-size: 0.8rem; }
   .unknown-date-header { margin-top: 40px; padding-top: 20px; border-top: 2px solid #ccc; font-size: 1rem; font-weight: bold; color: #555; }
 </style>
 
@@ -142,7 +142,9 @@ title: 主页
   
   <div id="telegrams" class="tabcontent">
     {%- assign telegrams = telegrams_raw | sort: 'date' -%}
-    {%- if telegrams.size > 0 -%}<ul class="timeline-list">{%- for post in telegrams -%}<li><span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span><div>{%- assign title_parts = post.title | split: ']' -%}{%- if title_parts.size > 1 -%}{%- assign bracket_prefix = title_parts[0] | append: ']' -%}{%- assign after_prefix = title_parts[1] -%}{%- assign first_char = after_prefix | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign rest_of_title = after_prefix | slice: 10, 999 -%}{%- assign title_to_display = bracket_prefix | append: rest_of_title -%}{%- else -%}{%- assign title_to_display = bracket_prefix | append: after_prefix -%}{%- endif -%}{%- else -%}{%- assign first_char = post.title | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign title_to_display = post.title | slice: 10, 999 -%}{%- else -%}{%- assign title_to_display = post.title -%}{%- endif -%}{%- endif -%}<a href="{{ post.url | relative_url }}">{{ title_to_display }}</a></div></li>{%- endfor -%}</ul>
+    {%- if telegrams.size > 0 -%}<ul class="timeline-list">{%- for post in telegrams -%}<li>
+      <span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+      <div>{%- assign title_parts = post.title | split: ']' -%}{%- if title_parts.size > 1 -%}{%- assign bracket_prefix = title_parts[0] | append: ']' -%}{%- assign after_prefix = title_parts[1] -%}{%- assign first_char = after_prefix | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign rest_of_title = after_prefix | slice: 10, 999 -%}{%- assign title_to_display = bracket_prefix | append: rest_of_title -%}{%- else -%}{%- assign title_to_display = bracket_prefix | append: after_prefix -%}{%- endif -%}{%- else -%}{%- assign first_char = post.title | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign title_to_display = post.title | slice: 10, 999 -%}{%- else -%}{%- assign title_to_display = post.title -%}{%- endif -%}{%- endif -%}<a href="{{ post.url | relative_url }}">{{ title_to_display }}</a></div></li>{%- endfor -%}</ul>
     {%- else -%}<p>未能生成列表。请检查 `category` 为 `Liao's Tele` 的文章是否存在。</p>{%- endif -%}
   </div>
 </div>
