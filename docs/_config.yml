@@ -37,7 +37,7 @@ social:
 
 collections:
   posts:
-    output: false
+    output: true
   liaos_tele:
     output: true
     display_name: 来往电报（点击展开或折叠）
