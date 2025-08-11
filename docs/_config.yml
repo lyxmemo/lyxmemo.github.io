@@ -44,6 +44,9 @@ collections:
   liaos_writings:
     output: true
     display_name: 文集
+  newspapers:
+    output: true
+    display_name: 报刊杂志
   n6a_memorial:
     output: true
     display_name: 新六军纪念

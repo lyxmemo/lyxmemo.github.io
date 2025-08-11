@@ -24,6 +24,9 @@ layout: null
 {%- for item in site.posts -%}
   {%- assign searchable_items = searchable_items | push: item -%}
 {%- endfor -%}
+{%- for item in site.newspapers -%}
+  {%- assign searchable_items = searchable_items | push: item -%}
+{%- endfor -%}
 
 [
   {%- for item in searchable_items -%}

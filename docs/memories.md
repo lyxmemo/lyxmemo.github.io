@@ -101,7 +101,7 @@ details[open] > summary::before {
 {%- endcomment -%}
 {%- assign memorial_posts_raw = "" | split: "" -%}
 {%- assign telegrams_raw = "" | split: "" -%}
-{%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele" | split: "," -%}
+{%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," -%}
 
 {%- for collection_name in collections_to_search -%}
   {%- for post in site[collection_name] -%}
@@ -115,8 +115,8 @@ details[open] > summary::before {
 
 
 <div class="tab">
-  <button class="tablinks" onclick="openTab(event, 'byBook')" id="defaultOpen">按书籍出处排列</button>
-  <button class="tablinks" onclick="openTab(event, 'byTime')">按时间线排列</button>
+  <button class="tablinks" onclick="openTab(event, 'byBook')" id="defaultOpen">按书籍</button>
+  <button class="tablinks" onclick="openTab(event, 'byTime')">按时间</button>
   <button class="tablinks" onclick="openTab(event, 'telegrams')">电报</button>
 </div>
 

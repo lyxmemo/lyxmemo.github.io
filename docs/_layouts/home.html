@@ -92,17 +92,19 @@ title: 主页
 <div id="new-view" class="view-panel">
   {%- assign memorial_posts_raw = "" | split: "" -%}
   {%- assign telegrams_raw = "" | split: "" -%}
-  {%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele" | split: "," -%}
+  {%- assign magazines_raw = "" | split: "" -%}
+  {%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," -%}
   {%- for collection_name in collections_to_search -%}
     {%- for post in site[collection_name] -%}
-      {%- if post.category == "Liao's Tele" -%}{%- assign telegrams_raw = telegrams_raw | push: post -%}{%- else -%}{%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}{%- endif -%}
+      {%- if post.category == "Liao's Tele" -%}{%- assign telegrams_raw = telegrams_raw | push: post -%}{%- elsif post.category == "报刊杂志" -%}{%- assign magazines_raw = magazines_raw | push: post -%}{%- else -%}{%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}{%- endif -%}
     {%- endfor -%}
   {%- endfor -%}
 
   <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'byBook')" id="defaultOpen">按书籍出处排列</button>
-    <button class="tablinks" onclick="openTab(event, 'byTime')">按时间线排列</button>
+    <button class="tablinks" onclick="openTab(event, 'byBook')" id="defaultOpen">按书籍</button>
+    <button class="tablinks" onclick="openTab(event, 'byTime')">按时间</button>
     <button class="tablinks" onclick="openTab(event, 'telegrams')">电报</button>
+    <button class="tablinks" onclick="openTab(event, 'magazines')">报刊杂志</button>
   </div>
   
   <div id="byBook" class="tabcontent">
@@ -147,11 +149,52 @@ title: 主页
       <div>{%- assign title_parts = post.title | split: ']' -%}{%- if title_parts.size > 1 -%}{%- assign bracket_prefix = title_parts[0] | append: ']' -%}{%- assign after_prefix = title_parts[1] -%}{%- assign first_char = after_prefix | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign rest_of_title = after_prefix | slice: 10, 999 -%}{%- assign title_to_display = bracket_prefix | append: rest_of_title -%}{%- else -%}{%- assign title_to_display = bracket_prefix | append: after_prefix -%}{%- endif -%}{%- else -%}{%- assign first_char = post.title | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign title_to_display = post.title | slice: 10, 999 -%}{%- else -%}{%- assign title_to_display = post.title -%}{%- endif -%}{%- endif -%}<a href="{{ post.url | relative_url }}">{{ title_to_display }}</a></div></li>{%- endfor -%}</ul>
     {%- else -%}<p>未能生成列表。请检查 `category` 为 `Liao's Tele` 的文章是否存在。</p>{%- endif -%}
   </div>
+
+  <div id="magazines" class="tabcontent">
+    {%- if magazines_raw and magazines_raw.size > 0 -%}
+      {%- assign dated_magazines = "" | split: "" -%}
+      {%- assign undated_magazines = "" | split: "" -%}
+      {%- for post in magazines_raw -%}
+        {%- assign formatted_date = post.date | date: "%Y-%m-%d" -%}
+        {%- if formatted_date == "1900-01-01" or post.date == nil -%}
+          {%- assign undated_magazines = undated_magazines | push: post -%}
+        {%- else -%}
+          {%- assign dated_magazines = dated_magazines | push: post -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- assign dated_magazines_sorted = dated_magazines | sort: 'date' -%}
+      {%- if dated_magazines_sorted.size > 0 -%}
+        <ul class="timeline-list">
+          {%- for post in dated_magazines_sorted -%}
+            <li>
+              <span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+              <div><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if undated_magazines.size > 0 -%}
+        <details class="collapsible-book" open>
+          <summary>日期未知</summary>
+          <ul class="timeline-list-no-date">
+            {%- assign undated_magazines_sorted = undated_magazines | sort: 'title' -%}
+            {%- for post in undated_magazines_sorted -%}
+              <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>
+            {%- endfor -%}
+          </ul>
+        </details>
+      {%- endif -%}
+    {%- else -%}
+      <p>未能生成列表。</p>
+    {%- endif -%}
+  </div>
 </div>
 
 <div id="original-view" class="view-panel">
   <div class="home">
-    {% assign custom_order = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele" | split: "," %}
+    {% assign custom_order = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," %}
     {% for category_name in custom_order %}{% assign collection_data = site.collections | where: "label", category_name | first %}{% if category_name == "liaos_tele" %}<details><summary><h2>{{ collection_data.display_name }}</h2></summary><ul>{% else %}{% if collection_data.display_name %}<h2>{{ collection_data.display_name }}</h2>{% else %}<h2>{{ category_name | replace: "_", " " | capitalize }}</h2>{% endif %}<ul>{% endif %}{% if category_name == "battles_history" %}{% assign year_folders = "1942,1943,1944,1945,1946,1947,1948" | split: "," %}{% for year in year_folders %}{% assign posts_in_year = site[category_name] | where_exp: "post", "post.path contains year" %}{% if posts_in_year.size > 0 %}<li><h3 class="sub-heading">{{ year }}</h3><ul>{% for post in posts_in_year %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}</ul></li>{% endif %}{% endfor %}{% else %}{% assign posts_in_category = site[category_name] | sort: "title" %}{% for post in posts_in_category %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}{% endif %}</ul>{% if category_name == "liaos_tele" %}</details>{% endif %}{% endfor %}
     <h2>资料下载区</h2>
     <ul>{% for file in site.static_files %}{% if file.path contains 'resources' %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>{% endif %}{% endfor %}</ul>
