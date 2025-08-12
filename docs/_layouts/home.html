@@ -196,10 +196,13 @@ title: 主页
   <div class="home">
     {% assign custom_order = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," %}
     {% for category_name in custom_order %}{% assign collection_data = site.collections | where: "label", category_name | first %}{% if category_name == "liaos_tele" %}<details><summary><h2>{{ collection_data.display_name }}</h2></summary><ul>{% else %}{% if collection_data.display_name %}<h2>{{ collection_data.display_name }}</h2>{% else %}<h2>{{ category_name | replace: "_", " " | capitalize }}</h2>{% endif %}<ul>{% endif %}{% if category_name == "battles_history" %}{% assign year_folders = "1942,1943,1944,1945,1946,1947,1948" | split: "," %}{% for year in year_folders %}{% assign posts_in_year = site[category_name] | where_exp: "post", "post.path contains year" %}{% if posts_in_year.size > 0 %}<li><h3 class="sub-heading">{{ year }}</h3><ul>{% for post in posts_in_year %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}</ul></li>{% endif %}{% endfor %}{% else %}{% assign posts_in_category = site[category_name] | sort: "title" %}{% for post in posts_in_category %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}{% endif %}</ul>{% if category_name == "liaos_tele" %}</details>{% endif %}{% endfor %}
-    <h2>资料下载区</h2>
-    <ul>{% for file in site.static_files %}{% if file.path contains 'resources' %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>{% endif %}{% endfor %}</ul>
   </div>
 </div>
+
+<br/>
+
+<h2>资料下载区</h2>
+<ul>{% for file in site.static_files %}{% if file.path contains 'resources' %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>{% endif %}{% endfor %}</ul>
 
 
 <div class="footer-view-switcher">
