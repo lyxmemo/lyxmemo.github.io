@@ -78,9 +78,9 @@ title: 主页
 
   /* 时间线视图的样式 */
   .timeline-list { list-style-type: none; padding-left: 0; }
-  .timeline-list li, .timeline-list-no-date li { display: flex; align-items: baseline; padding: 0.1rem 0; }
-  .timeline-list li { border-bottom: 1px solid #eee; } /* 电报Tab带下划线 */
-  .timeline-list-no-date li { border-bottom: none; } /* 时间线Tab不带下划线 */
+  .timeline-list li, .timeline-list-no-date li { display: flex; align-items: baseline; padding: 0.2rem 0; }
+  /* .timeline-list li { border-bottom: 1px solid #eee; } 电报Tab带下划线 */
+  /* .timeline-list-no-date li { border-bottom: none; } 时间线Tab不带下划线 */
   .timeline-date { margin: 0 1rem; flex-shrink: 0; font-size: 0.8rem; }
   .unknown-date-header { margin-top: 40px; padding-top: 20px; border-top: 2px solid #ccc; font-size: 1rem; font-weight: bold; color: #555; }
 </style>
@@ -101,10 +101,10 @@ title: 主页
   {%- endfor -%}
 
   <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'byBook')" id="defaultOpen">按书籍</button>
-    <button class="tablinks" onclick="openTab(event, 'byTime')">按时间</button>
-    <button class="tablinks" onclick="openTab(event, 'telegrams')">电报</button>
-    <button class="tablinks" onclick="openTab(event, 'magazines')">报刊杂志</button>
+    <button class="tablinks" onclick="openTab(event, 'byBook')" id="byBook-tab">按书籍</button>
+    <button class="tablinks" onclick="openTab(event, 'byTime')" id="byTime-tab">按时间</button>
+    <button class="tablinks" onclick="openTab(event, 'telegrams')" id="telegrams-tab">电报</button>
+    <button class="tablinks" onclick="openTab(event, 'magazines')" id="magazines-tab">报刊杂志</button>
   </div>
   
   <div id="byBook" class="tabcontent">
@@ -232,6 +232,7 @@ title: 主页
     for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
     document.getElementById(tabName).style.display = "block";
     if (evt) { evt.currentTarget.className += " active"; }
+    localStorage.setItem('lastTab', tabName);
   }
 
   // --- 全部展开/收起功能 ---
@@ -245,7 +246,34 @@ title: 主页
 
   // --- 页面加载时执行的默认操作 ---
   document.addEventListener('DOMContentLoaded', () => {
+    // 默认切换到“分类视图”
     document.querySelector('.footer-view-switcher .switch-btn').click();
-    document.getElementById('defaultOpen').click();
+
+    const openTabFromHash = () => {
+      const hash = window.location.hash.substring(1);
+      const validTabs = ['byBook', 'byTime', 'telegrams', 'magazines'];
+      let tabToOpen = '';
+
+      if (hash && validTabs.includes(hash)) {
+        tabToOpen = hash;
+      } else {
+        const lastTab = localStorage.getItem('lastTab');
+        if (lastTab && validTabs.includes(lastTab)) {
+          tabToOpen = lastTab;
+        } else {
+          tabToOpen = 'byBook';
+        }
+      }
+      
+      const tabButton = document.getElementById(tabToOpen + '-tab');
+      if (tabButton) {
+        tabButton.click();
+      } else {
+        document.getElementById('byBook-tab').click(); // Fallback
+      }
+    };
+
+    openTabFromHash();
+    window.addEventListener('hashchange', openTabFromHash, false);
   });
 </script>

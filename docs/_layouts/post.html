@@ -3,7 +3,15 @@ layout: default
 ---
 <article>
   <h1>{{ page.title }}</h1>
-  <a href="{{ site.baseurl }}/">回到目录页</a>
+  {%- case page.category -%}
+    {%- when "Liao's Tele" -%}
+      {%- assign back_tab = "telegrams" -%}
+    {%- when "报刊杂志" -%}
+      {%- assign back_tab = "magazines" -%}
+    {%- else -%}
+      {%- assign back_tab = "byBook" -%}
+  {%- endcase -%}
+  <a href="{{ site.baseurl }}/#{{ back_tab }}">回到目录页</a>
   <hr>
   {{ content }}
 </article>
