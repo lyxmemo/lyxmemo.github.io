@@ -123,9 +123,10 @@ title: 主页
   </div>
 
   <div id="byTime" class="tabcontent">
-    {%- if memorial_posts_raw and memorial_posts_raw.size > 0 -%}
+    {%- assign timeline_posts = memorial_posts_raw | concat: magazines_raw -%}
+    {%- if timeline_posts and timeline_posts.size > 0 -%}
       {%- assign dated_posts = "" | split: "" -%}{%- assign undated_posts = "" | split: "" -%}
-      {%- for post in memorial_posts_raw -%}{%- assign formatted_date = post.date | date: "%Y-%m-%d" -%}{%- if formatted_date == "1900-01-01" or post.date == nil -%}{%- assign undated_posts = undated_posts | push: post -%}{%- else -%}{%- assign dated_posts = dated_posts | push: post -%}{%- endif -%}{%- endfor -%}
+      {%- for post in timeline_posts -%}{%- assign formatted_date = post.date | date: "%Y-%m-%d" -%}{%- if formatted_date == "1900-01-01" or post.date == nil -%}{%- assign undated_posts = undated_posts | push: post -%}{%- else -%}{%- assign dated_posts = dated_posts | push: post -%}{%- endif -%}{%- endfor -%}
       {%- if dated_posts.size > 0 -%}
         {%- assign posts_by_year = dated_posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse -%}
         {%- for year_group in posts_by_year -%}
