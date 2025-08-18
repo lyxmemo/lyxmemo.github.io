@@ -145,9 +145,60 @@ title: 主页
   
   <div id="telegrams" class="tabcontent">
     {%- assign telegrams = telegrams_raw | sort: 'date' -%}
-    {%- if telegrams.size > 0 -%}<ul class="timeline-list">{%- for post in telegrams -%}<li>
-      <span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
-      <div>{%- assign title_parts = post.title | split: ']' -%}{%- if title_parts.size > 1 -%}{%- assign bracket_prefix = title_parts[0] | append: ']' -%}{%- assign after_prefix = title_parts[1] -%}{%- assign first_char = after_prefix | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign rest_of_title = after_prefix | slice: 10, 999 -%}{%- assign title_to_display = bracket_prefix | append: rest_of_title -%}{%- else -%}{%- assign title_to_display = bracket_prefix | append: after_prefix -%}{%- endif -%}{%- else -%}{%- assign first_char = post.title | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign title_to_display = post.title | slice: 10, 999 -%}{%- else -%}{%- assign title_to_display = post.title -%}{%- endif -%}{%- endif -%}<a href="{{ post.url | relative_url }}">{{ title_to_display }}</a></div></li>{%- endfor -%}</ul>
+    {%- if telegrams.size > 0 -%}
+      {%- assign periods = "" | split: "," -%}
+      {%- assign p1 = "end_date:1938-02-26|title:【教导总队中校参谋主任】南京保卫战" | split: "|" -%}
+      {%- assign p2 = "start_date:1938-02-26|end_date:1942-01-01|title:【新二二师副师长】桂南会战" | split: "|" -%}
+      {%- assign p3 = "start_date:1942-01-01|end_date:1942-05-16|title:【新二二师师长】第一次入缅作战" | split: "|" -%}
+      {%- assign p4 = "start_date:1942-05-16|end_date:1942-10-01|title:【新二二师师长】徒步野人山" | split: "|" -%}
+      {%- assign p5 = "start_date:1942-10-01|end_date:1943-11-01|title:【新二二师师长】驻印军整训" | split: "|" -%}
+      {%- assign p6 = "start_date:1943-11-01|end_date:1944-09-01|title:【新二二师师长】缅北胜利反攻（胡康河谷）" | split: "|" -%}
+      {%- assign p7 = "start_date:1944-09-01|end_date:1945-01-01|title:【新六军军长】缅北胜利反攻（八莫、腊戌）" | split: "|" -%}
+      {%- assign p8 = "start_date:1945-01-01|end_date:1945-05-01|title:【新六军军长】云南曲靖整训待命" | split: "|" -%}
+      {%- assign p9 = "start_date:1945-05-01|end_date:1945-08-15|title:【新六军军长】湘西反攻" | split: "|" -%}
+      {%- assign p10 = "start_date:1945-08-15|end_date:1946-01-01|title:【新六军军长】驻防京沪" | split: "|" -%}
+      {%- assign p11 = "start_date:1946-01-01|end_date:1947-01-01|title:【新六军军长】东北攻势作战" | split: "|" -%}
+      {%- assign p12 = "start_date:1947-01-01|end_date:1948-01-01|title:【第四兵团司令官】东北解围作战" | split: "|" -%}
+      {%- assign p13 = "start_date:1948-01-01|end_date:1949-01-01|title:【第九兵团司令官】东北撤退作战" | split: "|" -%}
+      {%- assign periods = periods | push: p1 | push: p2 | push: p3 | push: p4 | push: p5 | push: p6 | push: p7 | push: p8 | push: p9 | push: p10 | push: p11 | push: p12 | push: p13 -%}
+
+      {%- for period in periods -%}
+        {%- assign start_date = nil -%}
+        {%- assign end_date = nil -%}
+        {%- assign title = nil -%}
+        {%- for prop_str in period -%}
+          {%- assign prop_key = prop_str | split: ":" | first -%}
+          {%- assign prop_value = prop_str | split: ":" | slice: 1 | join: ":" -%}
+          {%- if prop_key == "start_date" -%}
+            {%- assign start_date = prop_value -%}
+          {%- elsif prop_key == "end_date" -%}
+            {%- assign end_date = prop_value -%}
+          {%- elsif prop_key == "title" -%}
+            {%- assign title = prop_value -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- assign posts_in_period = "" | split: "," -%}
+        {%- for post in telegrams -%}
+          {%- assign post_date = post.date | date: "%Y-%m-%d" -%}
+          {%- if start_date == nil and post_date < end_date -%}{%- assign posts_in_period = posts_in_period | push: post -%}{%- endif -%}
+          {%- if start_date and post_date >= start_date and post_date < end_date -%}{%- assign posts_in_period = posts_in_period | push: post -%}{%- endif -%}
+        {%- endfor -%}
+
+        {%- if posts_in_period.size > 0 -%}
+          <details class="collapsible-book" open>
+            <summary>{{ title }}</summary>
+            <ul class="timeline-list">
+              {%- for post in posts_in_period -%}
+              <li>
+                <span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                <div>{%- assign title_parts = post.title | split: ']' -%}{%- if title_parts.size > 1 -%}{%- assign bracket_prefix = title_parts[0] | append: ']' -%}{%- assign after_prefix = title_parts[1] -%}{%- assign first_char = after_prefix | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign rest_of_title = after_prefix | slice: 10, 999 -%}{%- assign title_to_display = bracket_prefix | append: rest_of_title -%}{%- else -%}{%- assign title_to_display = bracket_prefix | append: after_prefix -%}{%- endif -%}{%- else -%}{%- assign first_char = post.title | slice: 0 -%}{%- if first_char == '1' or first_char == '2' -%}{%- assign title_to_display = post.title | slice: 10, 999 -%}{%- else -%}{%- assign title_to_display = post.title -%}{%- endif -%}{%- endif -%}<a href="{{ post.url | relative_url }}">{{ title_to_display }}</a></div>
+              </li>
+              {%- endfor -%}
+            </ul>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
     {%- else -%}<p>未能生成列表。请检查 `category` 为 `Liao's Tele` 的文章是否存在。</p>{%- endif -%}
   </div>
 
@@ -166,14 +217,59 @@ title: 主页
 
       {%- assign dated_magazines_sorted = dated_magazines | sort: 'date' -%}
       {%- if dated_magazines_sorted.size > 0 -%}
-        <ul class="timeline-list">
-          {%- for post in dated_magazines_sorted -%}
-            <li>
-              <span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
-              <div><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</div>
-            </li>
+        {%- assign periods = "" | split: "," -%}
+        {%- assign p1 = "end_date:1938-02-26|title:【教导总队中校参谋主任】南京保卫战" | split: "|" -%}
+        {%- assign p2 = "start_date:1938-02-26|end_date:1942-01-01|title:【新二二师副师长】桂南会战" | split: "|" -%}
+        {%- assign p3 = "start_date:1942-01-01|end_date:1942-05-16|title:【新二二师师长】第一次入缅作战" | split: "|" -%}
+        {%- assign p4 = "start_date:1942-05-16|end_date:1942-10-01|title:【新二二师师长】徒步野人山" | split: "|" -%}
+        {%- assign p5 = "start_date:1942-10-01|end_date:1943-11-01|title:【新二二师师长】驻印军整训" | split: "|" -%}
+        {%- assign p6 = "start_date:1943-11-01|end_date:1944-09-01|title:【新二二师师长】缅北胜利反攻（胡康河谷）" | split: "|" -%}
+        {%- assign p7 = "start_date:1944-09-01|end_date:1945-01-01|title:【新六军军长】缅北胜利反攻（八莫、腊戌）" | split: "|" -%}
+        {%- assign p8 = "start_date:1945-01-01|end_date:1945-05-01|title:【新六军军长】云南曲靖整训待命" | split: "|" -%}
+        {%- assign p9 = "start_date:1945-05-01|end_date:1945-08-15|title:【新六军军长】湘西反攻" | split: "|" -%}
+        {%- assign p10 = "start_date:1945-08-15|end_date:1946-01-01|title:【新六军军长】驻防京沪" | split: "|" -%}
+        {%- assign p11 = "start_date:1946-01-01|end_date:1947-01-01|title:【新六军军长】东北攻势作战" | split: "|" -%}
+        {%- assign p12 = "start_date:1947-01-01|end_date:1948-01-01|title:【第四兵团司令官】东北解围作战" | split: "|" -%}
+        {%- assign p13 = "start_date:1948-01-01|end_date:1949-01-01|title:【第九兵团司令官】东北撤退作战" | split: "|" -%}
+        {%- assign periods = periods | push: p1 | push: p2 | push: p3 | push: p4 | push: p5 | push: p6 | push: p7 | push: p8 | push: p9 | push: p10 | push: p11 | push: p12 | push: p13 -%}
+
+        {%- for period in periods -%}
+          {%- assign start_date = nil -%}
+          {%- assign end_date = nil -%}
+          {%- assign title = nil -%}
+          {%- for prop_str in period -%}
+            {%- assign prop_key = prop_str | split: ":" | first -%}
+            {%- assign prop_value = prop_str | split: ":" | slice: 1 | join: ":" -%}
+            {%- if prop_key == "start_date" -%}
+              {%- assign start_date = prop_value -%}
+            {%- elsif prop_key == "end_date" -%}
+              {%- assign end_date = prop_value -%}
+            {%- elsif prop_key == "title" -%}
+              {%- assign title = prop_value -%}
+            {%- endif -%}
           {%- endfor -%}
-        </ul>
+
+          {%- assign posts_in_period = "" | split: "," -%}
+          {%- for post in dated_magazines_sorted -%}
+            {%- assign post_date = post.date | date: "%Y-%m-%d" -%}
+            {%- if start_date == nil and post_date < end_date -%}{%- assign posts_in_period = posts_in_period | push: post -%}{%- endif -%}
+            {%- if start_date and post_date >= start_date and post_date < end_date -%}{%- assign posts_in_period = posts_in_period | push: post -%}{%- endif -%}
+          {%- endfor -%}
+
+          {%- if posts_in_period.size > 0 -%}
+            <details class="collapsible-book" open>
+              <summary>{{ title }}</summary>
+              <ul class="timeline-list">
+                {%- for post in posts_in_period -%}
+                  <li>
+                    <span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                    <div><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</div>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
       {%- endif -%}
 
       {%- if undated_magazines.size > 0 -%}
