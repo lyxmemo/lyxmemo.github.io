@@ -2,6 +2,7 @@
 New codespace:
 sudo apt update
 sudo apt install pandoc
+sudo apt install weasyprint
 
 
 Old codespace:
