@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《辽西战役纪实》课后训练</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Inter字体 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background-color: #f7fafc; /* 浅灰色背景 */
+        }
+        
+        /* 选中项的样式 */
+        /* 正确答案 */
+        .correct-answer {
+            background-color: #c6f6d5; /* Tailwind green-200 */
+            border-color: #68d391 !important; /* Tailwind green-400 */
+            font-weight: 600;
+            color: #2f855a; /* green-700 */
+        }
+        /* 错误答案 */
+        .incorrect-answer {
+            background-color: #fed7d7; /* Tailwind red-200 */
+            border-color: #fc8181 !important; /* Tailwind red-400 */
+            opacity: 0.9;
+        }
+        
+        /* 禁用的选项标签 */
+        input[type="radio"]:disabled + span {
+            color: #718096; /* gray-600 */
+        }
+        input[type="radio"]:disabled {
+            cursor: not-allowed;
+        }
+        label.disabled-label {
+            cursor: not-allowed;
+            opacity: 0.8;
+            background-color: #f7fafc; /* gray-100 */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto max-w-3xl p-4 md:p-8">
+        
+        <!-- 页面主标题 -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">《辽西战役纪实》课后训练</h1>
+        </header>
+
+        <!-- 引言部分 -->
+        <section class="mb-10 text-base md:text-lg leading-relaxed bg-white p-6 rounded-lg shadow-sm">
+            <p class="mb-4">辽西战役是解放战争中一场具有决定性意义的战役，直接关系到东北国民党军主力的命运，并对整个解放战争的进程产生了深远影响。廖耀湘将军的《辽西战役纪实》为我们提供了这场战役的宝贵第一手资料，详细记录了战役前后的战略决策、指挥争议以及战场上的艰难困境。</p>
+            <p>通过以下问题，让我们回顾并深入理解廖耀湘将军笔下的辽西战役，检验你对这段历史的掌握程度。</p>
+        </section>
+
+        <!-- 问题区域 -->
+        <div class="space-y-8">
+
+            <!-- 问题 1 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 1：在辽西战役之前，东北国民党军队主要被困守在哪三个城市？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 长春、哈尔滨、沈阳</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 沈阳、锦州、大连</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 长春、沈阳、锦州</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 锦州、葫芦岛、营口</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q1">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 长春、沈阳、锦州</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 辽西战役之前，东北国民党军队已被迫困守于长春、沈阳和锦州三点。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 2 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 2：1948年5月初，蒋介石最初决定撤退沈阳主力部队的目的是什么？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 集中兵力反攻长春</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 在解放军进攻锦州前，主动将沈阳主力撤往锦州</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 增援华北战场</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 诱敌深入，在沈阳地区与解放军决战</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q2">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 在解放军进攻锦州前，主动将沈阳主力撤往锦州</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 蒋介石在1948年5月初就决心要撤退沈阳地区国民党军队的主力，首先是想在东北解放军未进攻锦州之前，先主动把沈阳主力撤往锦州。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 3 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 3：卫立煌对蒋介石最初的撤退计划提出了什么主要异议？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 认为应立即撤退，不应等待</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 认为应先增援锦州，打通锦沈交通，并救出长春守军</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 认为应直接向营口撤退</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 认为应在沈阳坚守待援</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q3">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 认为应先增援锦州，打通锦沈交通，并救出长春守军</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 卫立煌认为，如要撤退沈阳主力，蒋介石应该实践诺言，先多派几个军到锦州来，向东打通锦沈交通，沈阳部队西去与东进的部队会师，再一同北上，把长春被围的部队拉出来，然后才能再议撤退。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 4 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 4：蒋介石在1948年5月召见廖耀湘时，除了撤退沈阳主力，还有一个更深层的意图是什么？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 将东北主力调往台湾</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 将由驻印军组成的沈阳主力转运至南京地区，作为机动预备队</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 立即与解放军在东北进行决战</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 放弃东北，全力防守华北</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q4">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 将由驻印军组成的沈阳主力转运至南京地区，作为机动预备队</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 据罗泽闿说，蒋介石还想把由过去驻印军组成的沈阳主力（新编第一军、新编第六军、新编第三军）转运至南京地区，作他的机动预备队，必要时用以巩固南京老巢。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 5 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 5：在沈阳部队重新编组中，廖耀湘统一指挥的“机动兵团”主要由哪些部队组成？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 第五十三军和第二〇七师</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 新编第一军、新编第六军、新编第三军、第五十二军、第四十九军、第七十一军及第二〇七师一部</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 仅由新编第一军和新编第六军组成</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 东北“剿总”直属的重炮及战车部队</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q5">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 新编第一军、新编第六军、新编第三军、第五十二军、第四十九军、第七十一军及第二〇七师一部</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 新编第一军、新编第六军、新编第三军和第五十二军、第四十九军、第七十一军共六个军加第二〇七师并附东北“剿总”直属的重炮及战车部队编为机动兵团，由廖耀湘统一指挥。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 6 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 6：在辽西战役前，廖耀湘曾多次向卫立煌建议采取的“自救”方案是什么？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 坚守沈阳，等待援军</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 秘密集中主力，一举袭取营口，从海上获得补给并灵活行动</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 立即向锦州方向突围</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 向长春方向增援</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q6">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 秘密集中主力，一举袭取营口，从海上获得补给并灵活行动</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 廖耀湘认为应趁辽南空虚之际，把我沈阳主力，秘密集中于辽中以南地区，利用新编第一军骑兵部队所到达的最南端为出发线，一举袭取营口。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 7 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 7：1948年9月，解放军进兵锦州后，蒋介石下令沈阳国民党军主力应如何行动？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q7" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 立即退回沈阳固守</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q7" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 直出辽西，径解锦州之围，并夹击锦州地区的解放军</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q7" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 秘密撤往营口</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q7" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 增援长春</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q7">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 直出辽西，径解锦州之围，并夹击锦州地区的解放军</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 九月，解放军进兵锦州，蒋介石下令要沈阳国民党军主力直出辽西径解锦州之围，并夹击锦州地区的解放军。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 8 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 8：蒋介石于10月2日飞抵沈阳，其真实意图与5月初有何不同？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q8" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 放弃东北，全力防守华北</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q8" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 纯粹是为了安全撤退沈阳主力</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q8" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 在撤退之前与东北解放军进行一次决战，给他一个大的打击</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q8" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 集中兵力攻打长春</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q8">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 在撤退之前与东北解放军进行一次决战，给他一个大的打击</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 蒋介石说：“现在的问题不纯粹是撤退沈阳主力的问题，而是要在撤退之前与东北共产党进行一次决战，给他一个大的打击。”</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 9 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 9：辽西兵团在向彰武进犯后，葫芦岛方面国民党军队对塔山的攻击进展如何？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q9" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 顺利突破，迅速打通锦葫交通</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q9" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 受到坚强阻击，没有越雷池一步</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q9" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 进展缓慢，但最终攻克</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q9" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 未进行攻击，而是直接增援锦州</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q9">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 受到坚强阻击，没有越雷池一步</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 葫芦岛国民党军队于十日就在陆海空三军协同下，开始向塔山猛攻，打到十一日晚竟没有越雷池一步。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 10 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 10：锦州于何时被解放军攻克？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q10" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 10月10日</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q10" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 10月12日</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q10" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 10月15日</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q10" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 10月20日</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q10">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 10月15日</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 兵团主力到达新立屯的那一天，锦州已被解放了。根据廖耀湘的记忆，他于14日早晨下令整个兵团立即渡新开河西进，并限15日到达新立屯。因此锦州应在15日被解放。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 11 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 11：锦州失守后，廖耀湘认为辽西兵团不能继续向锦州前进的原因是什么？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q11" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 兵力不足，无法与解放军主力抗衡</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q11" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 塔山之战证明不能再依靠葫芦岛东进兵团的援助，兵团好似无根浮萍</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q11" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 补给困难，弹药不足</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q11" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 卫立煌命令其撤回沈阳</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q11">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 塔山之战证明不能再依靠葫芦岛东进兵团的援助，兵团好似无根浮萍</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 廖耀湘认为蒋介石寻求与东北解放军决战的方针，现因情况变化，应该放弃，辽西兵团不能继续向锦州前进。因为塔山之战已证明不能再依靠葫芦岛东进兵团的援助，东北解放军的兵力和战力已十分强大，辽西兵团好似是水上飘流着的两不靠岸的无根浮萍。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 12 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 12：锦州失守后，廖耀湘最终决定采取的撤退方案是？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q12" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 退回沈阳</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q12" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 经黑山、大虎山以东和以南地区直接退营口</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q12" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 经北票绕道葫芦岛</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q12" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 就地防御，等待援军</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q12">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 经黑山、大虎山以东和以南地区直接退营口</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 廖耀湘反复权衡利害得失，最后决定采取由新立屯经黑山、大虎山以东和以南地区直接退营口，虽然有危险和带冒险性，但要紧的是争取时间。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 13 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 13：辽西兵团对黑山的攻击为何受阻？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q13" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 兵力不足</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q13" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 黑山守军得到增援，顽强抵抗，并有猛烈反击</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q13" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 补给线被切断</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q13" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 蒋介石命令停止攻击</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q13">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 黑山守军得到增援，顽强抵抗，并有猛烈反击</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 廖耀湘判断黑山守军已得到增援，它是在死守，以待攻打锦州的解放军主力之回师。守军不仅顽强抵抗，而且发动猛烈的反击。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 14 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 14：在辽西兵团被歼灭前，廖耀湘得知“退营口之路被关闭”和“退沈阳之路也被截断”分别发生在何时？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q14" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 10月24日和10月25日</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q14" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 10月25日和10月26日</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q14" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 10月25日黄昏和10月25日黄昏</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q14" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 10月26日早晨和10月26日早晨</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q14">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 10月25日黄昏和10月25日黄昏</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 廖耀湘在25日黄昏得知第四十九军方面情况，即“退营口之路被关闭了”。同时，新三军主力撤退时，解放军第六纵队于25日黄昏前渗入到公路上，截断了兵团与沈阳的交通线，即“退沈阳之门已经关闭了”。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 15 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 15：辽西战役最终的结果是什么？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q15" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 国民党军主力成功撤退至葫芦岛</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q15" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 国民党军主力成功撤退至沈阳</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q15" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 辽西兵团被解放军全歼，沈阳解放，国民党最终撤出东北</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q15" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 双方僵持不下，最终达成停战协议</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q15">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 辽西兵团被解放军全歼，沈阳解放，国民党最终撤出东北</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 辽西战役是解放军战史上最成功的战役之一，一举歼灭了国民党军早就想拉出去的东北主力，计新一军、新六军、新三军、第七十一军、第四十九军五个军，共十二个师再再加上一些游杂部队和直属的重炮单位。沈阳解放可以说是辽西战役的直接结果。辽西战役也直接决定了国民党最后完全撤出东北，它开了解放战争三大战役胜利的端绪。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    查看总结 &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- 总结部分 (初始隐藏) -->
+        <section class="summary-section mt-12 bg-blue-50 p-6 md:p-8 rounded-lg shadow border-l-4 border-blue-500 hidden">
+            <h2 class="text-2xl font-bold text-blue-900 mb-4">🏁 你的测试总结</h2>
+            <p class="mb-4">通过以上问题，我们可以对辽西战役的关键事件和决策有更清晰的认识：</p>
+            <ol class="list-decimal list-inside space-y-3 text-gray-700">
+                <li>
+                    <strong class="font-semibold text-gray-800">战略困境：</strong> 东北国民党军被困于长春、沈阳、锦州三点，面临被分割包围的危险。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">蒋介石的决策变化：</strong> 从最初希望主动撤退沈阳主力至锦州，转变为在撤退前与解放军进行一次战略决战。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">指挥争议：</strong> 卫立煌和廖耀湘多次提出不同于蒋介石的作战方案，如先增援锦州、救出长春，或经营口撤退，但最终被迫执行蒋介石的命令。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">战役进程：</strong> 辽西兵团在蒋介石的命令下西进，但葫芦岛援军在塔山受阻，锦州迅速失守，使得辽西兵团陷入孤立无援的境地。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">撤退路线被切断：</strong> 廖耀湘在黑山攻击受阻后，决定向营口撤退，但由于解放军的快速回师和穿插，营口和沈阳的退路均被切断。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">最终结局：</strong> 辽西兵团指挥体系瓦解，主力被解放军全歼，廖耀湘被俘。此战直接导致沈阳解放，国民党军彻底退出东北，对解放战争全局产生了决定性影响。
+                </li>
+            </ol>
+            <p class="mt-6 font-semibold text-blue-800 text-lg">
+                辽西战役的悲剧性结局，不仅是军事上的失败，更是国民党高层战略决策失误、指挥系统混乱以及对战场形势判断失准的集中体现。廖耀湘将军的纪实，为我们理解这段历史提供了深刻的视角。
+            </p>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="text-center text-gray-500 text-sm mt-10 pb-6">
+            <p>内容仅供学习交流，不代表绝对历史定论。欢迎探讨。</p>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript 交互脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let score = 0; // Initialize score
+            const totalQuestions = document.querySelectorAll('.question-container').length; // Get total questions
+
+            const checkButtons = document.querySelectorAll('.check-answer-btn');
+            const nextButtons = document.querySelectorAll('.next-question-btn');
+            
+            checkButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const questionContainer = button.closest('.question-container');
+                    const questionName = button.dataset.question; // e.g., "q1"
+                    const correctAnswer = questionContainer.dataset.correctAnswer; // e.g., "C"
+                    const explanation = questionContainer.querySelector('.explanation');
+                    const nextButton = questionContainer.querySelector('.next-question-btn'); // 找到“下一题”按钮
+                    
+                    const selectedRadio = document.querySelector(`input[name="${questionName}"]:checked`);
+                    
+                    if (!selectedRadio) {
+                        // 如果用户未选择，则不执行任何操作
+                        return; 
+                    }
+                    
+                    const selectedValue = selectedRadio.value;
+                    const labels = questionContainer.querySelectorAll('label');
+                    const radios = questionContainer.querySelectorAll(`input[name="${questionName}"]`);
+
+                    // Increment score ONLY if the user's selected value is the correct answer
+                    if (selectedValue === correctAnswer) {
+                        score++;
+                    }
+
+                    // 禁用所有单选按钮
+                    radios.forEach(radio => {
+                        radio.disabled = true;
+                    });
+
+                    // 禁用所有标签的样式
+                    labels.forEach(label => {
+                        label.classList.add('disabled-label');
+                        label.classList.remove('hover:bg-gray-100');
+                    });
+
+                    // 高亮正确和错误答案
+                    labels.forEach(label => {
+                        const radio = label.querySelector('input[type="radio"]');
+                        const value = radio.value;
+
+                        if (value === correctAnswer) {
+                            label.classList.add('correct-answer');
+                        } else if (value === selectedValue && value !== correctAnswer) {
+                            label.classList.add('incorrect-answer');
+                        }
+                    });
+
+                    // 显示解析并隐藏“查看答案”按钮
+                    if (explanation) {
+                        explanation.classList.remove('hidden');
+                    }
+                    button.classList.add('hidden');
+
+                    // 显示“下一题”按钮
+                    if (nextButton) {
+                        nextButton.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // 为所有“下一题”按钮添加新的点击事件
+            nextButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const questionContainer = button.closest('.question-container');
+                    
+                    // 查找下一个问题或总结
+                    const nextElement = questionContainer.nextElementSibling;
+                    const summary = document.querySelector('.summary-section');
+
+                    // 隐藏当前问题
+                    questionContainer.classList.add('hidden');
+
+                    if (nextElement) {
+                        // 如果有下一个问题，显示它并滚动
+                        nextElement.classList.remove('hidden');
+                        nextElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        // 如果没有下一个问题（即这是最后一题），显示总结
+                        const scoreDisplay = document.createElement('p');
+                        scoreDisplay.classList.add('mb-4', 'font-bold', 'text-xl', 'text-blue-800');
+                        scoreDisplay.textContent = `你的得分：${score} / ${totalQuestions}`;
+                        summary.prepend(scoreDisplay); // Add score to the beginning of the summary
+                        summary.classList.remove('hidden');
+                        summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

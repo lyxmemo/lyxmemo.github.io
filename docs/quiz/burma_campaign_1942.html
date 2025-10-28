@@ -381,6 +381,9 @@
     <!-- JavaScript 交互脚本 -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            let score = 0; // Initialize score
+            const totalQuestions = document.querySelectorAll('.question-container').length; // Get total questions
+
             const checkButtons = document.querySelectorAll('.check-answer-btn');
             const nextButtons = document.querySelectorAll('.next-question-btn');
             
@@ -402,6 +405,11 @@
                     const selectedValue = selectedRadio.value;
                     const labels = questionContainer.querySelectorAll('label');
                     const radios = questionContainer.querySelectorAll(`input[name="${questionName}"]`);
+
+                    // Increment score ONLY if the user's selected value is the correct answer
+                    if (selectedValue === correctAnswer) {
+                        score++;
+                    }
 
                     // 禁用所有单选按钮
                     radios.forEach(radio => {
@@ -436,8 +444,6 @@
                     if (nextButton) {
                         nextButton.classList.remove('hidden');
                     }
-
-                    // 移除了 setTimeout
                 });
             });
 
@@ -459,6 +465,10 @@
                         nextElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     } else {
                         // 如果没有下一个问题（即这是最后一题），显示总结
+                        const scoreDisplay = document.createElement('p');
+                        scoreDisplay.classList.add('mb-4', 'font-bold', 'text-xl', 'text-blue-800');
+                        scoreDisplay.textContent = `你的得分：${score} / ${totalQuestions}`;
+                        summary.prepend(scoreDisplay); // Add score to the beginning of the summary
                         summary.classList.remove('hidden');
                         summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
