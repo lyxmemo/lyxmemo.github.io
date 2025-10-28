@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>廖耀湘将军趣闻测试</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Inter字体 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background-color: #f7fafc; /* 浅灰色背景 */
+        }
+        
+        /* 选中项的样式 */
+        /* 正确答案 */
+        .correct-answer {
+            background-color: #c6f6d5; /* Tailwind green-200 */
+            border-color: #68d391 !important; /* Tailwind green-400 */
+            font-weight: 600;
+            color: #2f855a; /* green-700 */
+        }
+        /* 错误答案 */
+        .incorrect-answer {
+            background-color: #fed7d7; /* Tailwind red-200 */
+            border-color: #fc8181 !important; /* Tailwind red-400 */
+            opacity: 0.9;
+        }
+        
+        /* 禁用的选项标签 */
+        input[type="radio"]:disabled + span {
+            color: #718096; /* gray-600 */
+        }
+        input[type="radio"]:disabled {
+            cursor: not-allowed;
+        }
+        label.disabled-label {
+            cursor: not-allowed;
+            opacity: 0.8;
+            background-color: #f7fafc; /* gray-100 */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto max-w-3xl p-4 md:p-8">
+        
+        <!-- 页面主标题 -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">廖耀湘将军趣闻测试</h1>
+        </header>
+
+        <!-- 问题区域 -->
+        <div class="space-y-8">
+
+            <!-- 问题 1 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 1：1946年除夕，廖耀湘将军因何事对新二十二师留守处主任易占中大发雷霆？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 易占中未能及时向他汇报军情</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 留守部队士兵私自拆毁民房作柴烧</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 易占中在军需管理上出现重大失误</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 易占中未能妥善安排军部过年事宜</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q1">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 留守部队士兵私自拆毁民房作柴烧</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 廖耀湘将军因接到报告，称新二十二师留守部队士兵拆毁民房作柴烧，认为此举败坏军风纪，故对易占中大发雷霆。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 2 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 2：易占中主任在处理士兵拆房事件中，为何情愿自己挨骂挨罚，而不立即将肇事士兵送交军部？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 他认为士兵无辜，不应受罚</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 肇事士兵曾跟随廖将军在缅甸爬过野人山，他想救人</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 他想私下解决此事，避免事态扩大</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 他对廖将军的命令不满，故意拖延</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q2">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 肇事士兵曾跟随廖将军在缅甸爬过野人山，他想救人</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 易占中主任表示，肇事排长和两个班长都是跟随廖将军在缅甸爬过野人山的，他心里只想救人，情愿自己挨骂挨罚。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 3 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 3：廖耀湘将军在北校场视察教导大队训练时，亲自示范了什么？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 步枪射击姿势</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 刺刀格斗技巧</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 卧地投掷手榴弹的要领</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 战术地图判读</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q3">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 卧地投掷手榴弹的要领</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 廖耀湘将军在北校场视察训练时，亲自取了一个训练弹，卧倒在地，作投掷示范，并详加说明其要领及注意事项。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 4 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 4：易占中在回忆中提到，廖耀湘将军在训练示范后，还做了什么，体现了他对部队训练的重视？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 立即召集高级军官开会讨论训练计划</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 亲自为士兵颁发训练奖章</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 乘车前往抚顺二〇七师，边吃晚饭边与罗又伦师长讨论部队训练至深夜</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 要求易占中撰写一份详细的训练报告</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q4">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 乘车前往抚顺二〇七师，边吃晚饭边与罗又伦师长讨论部队训练至深夜</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 廖耀湘将军在北校场示范训练后，又乘车前往抚顺二〇七师，与罗又伦师长边吃晚饭边滔滔不绝地讨论部队训练事宜，直到深夜才返回沈阳，这体现了他对部队训练的极度重视。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 5 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 5：廖耀湘幼年时，因家境贫寒只有一条裤子，他是如何解决每天换洗衣服的问题的？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 他每天向同学借衣服穿</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 他每天晚上洗澡后将衣裤洗净，第二天穿着湿衣服跑步烘干</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 他只在周末才洗衣服</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 他让家人为他缝制多条裤子</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q5">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 他每天晚上洗澡后将衣裤洗净，第二天穿着湿衣服跑步烘干</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 廖耀湘幼年时，每天晚上洗澡后会把穿的衣裤洗干净，然后第二天早晨穿着湿衣服跑步，利用身体发热和急风将衣服烘干，从而保证每天都有干净衣服穿。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 6 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 6：廖耀湘的爷爷艺圃先生得知他只有一条裤子后，是如何帮助他的？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 为他购买了新衣服</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 向亲戚朋友借钱为他添置衣物</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 将自己预备的寿袍布料改为衣裤送给他</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 鼓励他更加努力学习以改善家境</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q6">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 将自己预备的寿袍布料改为衣裤送给他</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 艺圃先生得知廖耀湘的困境后，将自己预备的寿袍布料改为衣裤送给他，以支持他继续学业。</p>
+                </div>
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    查看总结 &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- 总结部分 (初始隐藏) -->
+        <section class="summary-section mt-12 bg-blue-50 p-6 md:p-8 rounded-lg shadow border-l-4 border-blue-500 hidden">
+            <h2 class="text-2xl font-bold text-blue-900 mb-4">🏁 你的测试总结</h2>
+            <p class="mb-4">通过以上趣闻，我们可以对廖耀湘将军的个人品质和治军理念有更清晰的认识：</p>
+            <ol class="list-decimal list-inside space-y-3 text-gray-700">
+                <li>
+                    <strong class="font-semibold text-gray-800">军纪严明：</strong> 廖耀湘将军对部队军纪要求极高，对任何损害民众利益的行为都嫉恶如仇，即使是跟随自己出生入死的部下，也绝不姑息。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">爱兵如子：</strong> 尽管军纪严明，但廖将军也深知爱兵之道。他能理解下属保护老兵的心情，并在事后恢复了易占中的军衔，体现了他对部下的体恤和知人善任。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">注重实干：</strong> 廖将军不仅是战略家，更是实干家。他亲自示范训练动作，深入基层指导，展现了其严谨务实、以身作则的领导风格。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">勤勉尽责：</strong> 廖将军对部队训练的投入程度令人敬佩，即使在周末和深夜，他依然心系部队建设，与下属探讨训练事宜，体现了他对军事事业的无限热忱和责任感。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">勤俭自强：</strong> 廖耀湘将军幼年家境贫寒，但他通过自己的智慧和毅力克服困难，展现了其勤俭节约、自强不息的优秀品质。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">孝顺感恩：</strong> 廖耀湘将军在学校获得重奖后，心愿是给爷爷做寿袍，体现了他对长辈的孝顺和感恩之心。
+                </li>
+            </ol>
+            <p class="mt-6 font-semibold text-blue-800 text-lg">
+                这些小事虽微，却生动展现了廖耀湘将军作为一名高级将领的优秀品质：他既有铁腕治军的魄力，又有体恤下属的柔情；既能运筹帷幄，又能躬身示范。这些特质共同塑造了他独特的军事领导风格。
+            </p>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="text-center text-gray-500 text-sm mt-10 pb-6">
+            <p>内容仅供学习交流，不代表绝对历史定论。欢迎探讨。</p>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript 交互脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let score = 0; // Initialize score
+            const totalQuestions = document.querySelectorAll('.question-container').length; // Get total questions
+
+            const checkButtons = document.querySelectorAll('.check-answer-btn');
+            const nextButtons = document.querySelectorAll('.next-question-btn');
+            
+            checkButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const questionContainer = button.closest('.question-container');
+                    const questionName = button.dataset.question; // e.g., "q1"
+                    const correctAnswer = questionContainer.dataset.correctAnswer; // e.g., "C"
+                    const explanation = questionContainer.querySelector('.explanation');
+                    const nextButton = questionContainer.querySelector('.next-question-btn'); // 找到“下一题”按钮
+                    
+                    const selectedRadio = document.querySelector(`input[name="${questionName}"]:checked`);
+                    
+                    if (!selectedRadio) {
+                        // 如果用户未选择，则不执行任何操作
+                        return; 
+                    }
+                    
+                    const selectedValue = selectedRadio.value;
+                    const labels = questionContainer.querySelectorAll('label');
+                    const radios = questionContainer.querySelectorAll(`input[name="${questionName}"]`);
+
+                    // Increment score ONLY if the user's selected value is the correct answer
+                    if (selectedValue === correctAnswer) {
+                        score++;
+                    }
+
+                    // 禁用所有单选按钮
+                    radios.forEach(radio => {
+                        radio.disabled = true;
+                    });
+
+                    // 禁用所有标签的样式
+                    labels.forEach(label => {
+                        label.classList.add('disabled-label');
+                        label.classList.remove('hover:bg-gray-100');
+                    });
+
+                    // 高亮正确和错误答案
+                    labels.forEach(label => {
+                        const radio = label.querySelector('input[type="radio"]');
+                        const value = radio.value;
+
+                        if (value === correctAnswer) {
+                            label.classList.add('correct-answer');
+                        } else if (value === selectedValue && value !== correctAnswer) {
+                            label.classList.add('incorrect-answer');
+                        }
+                    });
+
+                    // 显示解析并隐藏“查看答案”按钮
+                    if (explanation) {
+                        explanation.classList.remove('hidden');
+                    }
+                    button.classList.add('hidden');
+
+                    // 显示“下一题”按钮
+                    if (nextButton) {
+                        nextButton.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // 为所有“下一题”按钮添加新的点击事件
+            nextButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const questionContainer = button.closest('.question-container');
+                    
+                    // 查找下一个问题或总结
+                    const nextElement = questionContainer.nextElementSibling;
+                    const summary = document.querySelector('.summary-section');
+
+                    // 隐藏当前问题
+                    questionContainer.classList.add('hidden');
+
+                    if (nextElement) {
+                        // 如果有下一个问题，显示它并滚动
+                        nextElement.classList.remove('hidden');
+                        nextElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        // 如果没有下一个问题（即这是最后一题），显示总结
+                        const scoreDisplay = document.createElement('p');
+                        scoreDisplay.classList.add('mb-4', 'font-bold', 'text-xl', 'text-blue-800');
+                        scoreDisplay.textContent = `你的得分：${score} / ${totalQuestions}`;
+                        summary.prepend(scoreDisplay); // Add score to the beginning of the summary
+                        summary.classList.remove('hidden');
+                        summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Back to Home Floating Button -->
+    <div class="fixed bottom-8 right-8">
+        <a href="index.html" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center space-x-2 transition-all duration-300 ease-in-out transform hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span>回到测试主页</span>
+        </a>
+    </div>
+
+</body>
+</html>
