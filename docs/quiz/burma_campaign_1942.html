@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测一测你对1942年第一次缅甸战役了解多少吧</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Inter字体 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background-color: #f7fafc; /* 浅灰色背景 */
+        }
+        
+        /* 选中项的样式 */
+        /* 正确答案 */
+        .correct-answer {
+            background-color: #c6f6d5; /* Tailwind green-200 */
+            border-color: #68d391 !important; /* Tailwind green-400 */
+            font-weight: 600;
+            color: #2f855a; /* green-700 */
+        }
+        /* 错误答案 */
+        .incorrect-answer {
+            background-color: #fed7d7; /* Tailwind red-200 */
+            border-color: #fc8181 !important; /* Tailwind red-400 */
+            opacity: 0.9;
+        }
+        
+        /* 禁用的选项标签 */
+        input[type="radio"]:disabled + span {
+            color: #718096; /* gray-600 */
+        }
+        input[type="radio"]:disabled {
+            cursor: not-allowed;
+        }
+        label.disabled-label {
+            cursor: not-allowed;
+            opacity: 0.8;
+            background-color: #f7fafc; /* gray-100 */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto max-w-3xl p-4 md:p-8">
+        
+        <!-- 页面主标题 -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">测一测你对1942年第一次缅甸战役了解多少吧</h1>
+        </header>
+
+        <!-- 引言部分 -->
+        <section class="mb-10 text-base md:text-lg leading-relaxed bg-white p-6 rounded-lg shadow-sm">
+            <p class="mb-4">1942年的缅甸战役，是中国远征军的第一次入缅作战，也是一场充满悲剧色彩的战略撤退。关于远征军副总司令杜聿明的决策，尤其是率部进入“野人山”的决定，历来众说纷纭，饱受争议。</p>
+            <p class="mb-4">他为什么没有和孙立人一起前往印度？他为什么会选择那条凶险的丛林？</p>
+            <p>让我们抛开“上帝视角”，通过下面几个问题，一步步还原杜聿明在1942年5月所面临的真实战场困境，看看你的历史知识是否准确。</p>
+        </section>
+
+        <!-- 问题区域 -->
+        <div class="space-y-8">
+
+            <!-- 第一部分 (标题已移除) -->
+            <!-- <h2 class="text-2xl font-bold text-blue-800 border-b-2 border-blue-200 pb-2">
+                🧐 第一部分：战场态势与原定计划
+            </h2> -->
+
+            <!-- 问题 1 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 1：在战役初期，中国远征军的主要作战目标是保卫缅甸的哪条“生命线”？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 密支那-腾冲的公路</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 仰光-曼德勒的铁路</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 滇缅公路（腊戍-昆明）</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q1" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 印度-雷多的公路</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q1">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 滇缅公路（腊戍-昆明）</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 滇缅公路是当时中国获取国际援助的最后陆上通道。保卫这条路的畅通是远征-军入缅的核心战略目的。这决定了远征军的行动必须始终围绕着“保护公路”和“确保回国通道”展开。</p>
+                </div>
+                <!-- 新增的“下一题”按钮 -->
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 2 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 2：在战役后期，杜聿明原定的主要撤退路线（密支那线）是怎样的？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 必须穿越大片原始森林和高山</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q2" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 是一条有公路和铁路基础的已知路线</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q2">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 是一条有公路和铁路基础的已知路线</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 杜聿明的第一计划是经密支那返回国内。这条路线是当时缅甸北部的交通要道，有公路和铁路（密支那-抹谷-八莫），是远征军撤回云南最合理、最安全的选择，并非“野人山”那样的原始丛林。</p>
+                </div>
+                <!-- 新增的“下一题”按钮 -->
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 3 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="C">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 3：是什么关键事件，彻底打乱了杜聿明从密支那回国的原定计划？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 英军在仁安羌被围</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 腊戍（Lashio）于4月29日失守</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 密支那（Myitkyina）于5月8日被日军占领</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q3" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 曼德勒会战失败</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q3">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：C. 密支那（Myitkyina）于5月8日被日军占领</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 腊戍失守，切断了滇缅公路；而密支那的失守，则彻底堵死了远征军主力经由公路/铁路撤回云南的最后一条大路。<strong>原定计划已无法执行</strong>，杜聿明和第五军主力被迫重新选择路线。</p>
+                </div>
+                <!-- 新增的“下一题”按钮 -->
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 第二部分 (标题已移除) -->
+            <!-- <h2 class="text-2xl font-bold text-blue-800 border-b-2 border-blue-200 pb-2 pt-6">
+                🧐 第二部分：指挥系统与“印度选项”
+            </h2> -->
+
+            <!-- 问题 4 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 4：在回国道路被切断后，摆在杜聿明面前的“西撤印度”选项是否得到了盟友的保障？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 是的，英军发出过正式邀请，欢迎中国军队入境休整</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q4" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 没有，当时英军自顾不暇，并未邀请中国军队成建制进入印度</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q4">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 没有...</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 这是一个关键的历史事实。当时英军在缅甸战场已全面溃败，正在仓皇撤向印度，他们并没有余力或意愿邀请数万中国军队入境。这对杜聿明来说是一个重大的政治和军事考量。未经邀请强行率主力入境，在当时情境下近乎“武装入境”。</p>
+                </div>
+                <!-- 新增的“下一题”按钮 -->
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 5 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="A">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 5：作为新38师师长，孙立人将军的“直接”上级隶属是？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 第六十六军军长张轸</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 第六军军长甘丽初</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 第五军军长杜聿明</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q5" value="D" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">D. 中国战区参谋长史迪威</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q5">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：A. 第六十六军军长张轸</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 孙立人（新38师）与刘伯龙（新28师）编制上隶属于第六十六军（军长张轸）。</p>
+                </div>
+                <!-- 新增的“下一题”按钮 -->
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 第三部分 (标题已移除) -->
+            <!-- <h2 class="text-2xl font-bold text-blue-800 border-b-2 border-blue-200 pb-2 pt-6">
+                🧐 第三部分：“野人山”的真相
+            </h2> -->
+
+            <!-- 问题 6 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 6：鉴于密支那已失守，杜聿明最终决定穿越“野人山”（胡康河谷）的<strong>目的地</strong>是哪里？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 绕道返回中国云南</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q6" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 前往印度雷多（Ledo）地区</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q6">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 前往印度雷多（Ledo）地区</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 这是最容易被误解的一点。在密支那（回国路线）失守后，杜聿明选择走野人山（胡康河谷），<strong>其目的地同样是印度</strong>，而非“回国”。这条路线是当时地图上标明的、通往印度雷多的另一条通道，只是需要穿越丛林。网上流传的“杜聿明坚持走野人山回国，孙立人坚持去印度”的说法，与事实不符。</p>
+                </div>
+                <!-- 新增的“下一题”按钮 -->
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 7 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="A">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 7：杜聿明选择的这条“野人山”路线（胡康河谷），在“旱季”是否能通行？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q7" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 可以，在旱季时是当地人可徒步通过的路线</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q7" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 不可以，全年都是无法通行的“死亡之地”</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q7">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：A. 可以...</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 胡康河谷的“野人山”地区，虽然艰险，但在旱季（通常到5月底）时，河流水位低，瘴气较轻，是当地马帮和行人可以通行的一条小道。它并非一条绝对的“死路”。</p>
+                </div>
+                <!-- 新增的“下一题”按钮 -->
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 8 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="A">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 8：作为久经战阵的指挥官，杜聿明本人是否了解缅甸雨季的危险性？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q8" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 知道，他清楚雨季的致命性</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q8" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 不知道，他缺乏缅甸的地理气候知识</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q8">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：A. 知道...</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 杜聿明在战后回忆录和电报中多次提到，他完全清楚雨季的威胁。他选择这条路，是在回国（密支那）要道已失、西撤印度（英帕尔）又无保障下的无奈选择。他赌的是在雨季（通常5月底开始）大规模爆发前，率领部队抢先通过。</p>
+                </div>
+                <!-- 新增的“下一题”按钮 -->
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    下一题 &rarr;
+                </button>
+            </div>
+
+            <!-- 问题 9 -->
+            <div class="question-container bg-white p-5 rounded-lg shadow-sm hidden" data-correct-answer="B">
+                <p class="font-semibold text-lg text-gray-900 mb-4">
+                    问题 9：（关键问题）1942年缅甸的雨季实际在何时到来的？
+                </p>
+                <div class="space-y-3 mb-4">
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q9" value="A" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">A. 如期而至，5月28日左右</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q9" value="B" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">B. 异常提早，5月初（3日-5日）就开始了</span>
+                    </label>
+                    <label class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors">
+                        <input type="radio" name="q9" value="C" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">C. 推迟了，6月10日才开始</span>
+                    </label>
+                </div>
+                <button class="check-answer-btn bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors" data-question="q9">查看答案</button>
+                <div class="explanation hidden mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                    <p class="font-bold text-green-800">答案：B. 异常提早，5月初（3日-5日）就开始了</p>
+                    <p class="mt-2 text-gray-700"><strong>解析：</strong> 这是杜聿明和第五军最大的悲剧——“人算不如天算”。当他们5月中旬被迫进入胡康河谷时，本以为还有半个月左右的旱季窗口期，却遭遇了1942年一场异常提早且猛烈的大雨。暴雨导致河水暴涨、道路泥泞、瘴气（疟疾）肆虐，最终将这条“旱季通道”变成了吞噬数万生命的“死亡之路”。</p>
+                </div>
+                <!-- 新增的“下一题”按钮 (文本改为“查看总结”) -->
+                <button class="next-question-btn bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors hidden mt-4">
+                    查看总结 &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- 总结部分 (初始隐藏) -->
+        <section class="summary-section mt-12 bg-blue-50 p-6 md:p-8 rounded-lg shadow border-l-4 border-blue-500 hidden">
+            <h2 class="text-2xl font-bold text-blue-900 mb-4">🏁 你的测试总结</h2>
+            <p class="mb-4">通过以上问题，我们可以梳理出杜聿明决策的逻辑链：</p>
+            <ol class="list-decimal list-inside space-y-3 text-gray-700">
+                <li>
+                    <strong class="font-semibold text-gray-800">原计划（最优解）：</strong> 经密支那（公路/铁路）撤回国内。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">战场突变：</strong> 密支那于5月8日失守，回国道路被日军切断。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">被迫选择：</strong> 摆在面前的只有两个选项：
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li><strong>A. 转向印度（英帕尔）：</strong> 孙立人（非直属）最终选了这条路。但对杜聿明（总指挥）而言，这条路意味着需要掉头走回头路，重新渡过亲敦江，路程更远且要面对更多日军的追击。</li>
+                        <li><strong>B. 转向印度（雷多）：</strong> 即穿越胡康河谷（野人山）。这是一条旱季尚可通行的路线。</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">最终决策：</strong> 杜聿明决定率主力走 B 路线（野人山）前往印度。
+                </li>
+                <li>
+                    <strong class="font-semibold text-gray-800">悲剧原因：</strong> 他赌的是时间，即在5月底雨季到来前通过。但他遭遇了5月初就异常到来的雨季，“野人山”瞬间变为地狱。
+                </li>
+            </ol>
+            <p class="mt-6 font-semibold text-blue-800 text-lg">
+                因此，将杜聿明“走野人山”视为“愚蠢地选择回国”或“对雨季一无所知”，是一种简单化、脸谱化的误解。他的决策是在战场信息瞬息万变、盟友不可靠、回国要道已失的极端困境下，基于“旱季尚能通行”的经验而做出的符合当时逻辑的军事赌博——<strong>不幸的是，他赌输给了老天。</strong>
+            </p>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="text-center text-gray-500 text-sm mt-10 pb-6">
+            <p>内容仅供学习交流，不代表绝对历史定论。欢迎探讨。</p>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript 交互脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkButtons = document.querySelectorAll('.check-answer-btn');
+            const nextButtons = document.querySelectorAll('.next-question-btn');
+            
+            checkButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const questionContainer = button.closest('.question-container');
+                    const questionName = button.dataset.question; // e.g., "q1"
+                    const correctAnswer = questionContainer.dataset.correctAnswer; // e.g., "C"
+                    const explanation = questionContainer.querySelector('.explanation');
+                    const nextButton = questionContainer.querySelector('.next-question-btn'); // 找到“下一题”按钮
+                    
+                    const selectedRadio = document.querySelector(`input[name="${questionName}"]:checked`);
+                    
+                    if (!selectedRadio) {
+                        // 如果用户未选择，则不执行任何操作
+                        return; 
+                    }
+                    
+                    const selectedValue = selectedRadio.value;
+                    const labels = questionContainer.querySelectorAll('label');
+                    const radios = questionContainer.querySelectorAll(`input[name="${questionName}"]`);
+
+                    // 禁用所有单选按钮
+                    radios.forEach(radio => {
+                        radio.disabled = true;
+                    });
+
+                    // 禁用所有标签的样式
+                    labels.forEach(label => {
+                        label.classList.add('disabled-label');
+                        label.classList.remove('hover:bg-gray-100');
+                    });
+
+                    // 高亮正确和错误答案
+                    labels.forEach(label => {
+                        const radio = label.querySelector('input[type="radio"]');
+                        const value = radio.value;
+
+                        if (value === correctAnswer) {
+                            label.classList.add('correct-answer');
+                        } else if (value === selectedValue && value !== correctAnswer) {
+                            label.classList.add('incorrect-answer');
+                        }
+                    });
+
+                    // 显示解析并隐藏“查看答案”按钮
+                    if (explanation) {
+                        explanation.classList.remove('hidden');
+                    }
+                    button.classList.add('hidden');
+
+                    // 显示“下一题”按钮
+                    if (nextButton) {
+                        nextButton.classList.remove('hidden');
+                    }
+
+                    // 移除了 setTimeout
+                });
+            });
+
+            // 为所有“下一题”按钮添加新的点击事件
+            nextButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const questionContainer = button.closest('.question-container');
+                    
+                    // 查找下一个问题或总结
+                    const nextElement = questionContainer.nextElementSibling;
+                    const summary = document.querySelector('.summary-section');
+
+                    // 隐藏当前问题
+                    questionContainer.classList.add('hidden');
+
+                    if (nextElement) {
+                        // 如果有下一个问题，显示它并滚动
+                        nextElement.classList.remove('hidden');
+                        nextElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        // 如果没有下一个问题（即这是最后一题），显示总结
+                        summary.classList.remove('hidden');
+                        summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
