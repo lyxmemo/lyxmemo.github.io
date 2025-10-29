@@ -49,11 +49,8 @@
         #next-fruit-container {
             position: absolute;
             top: 4.5rem;
-            /* 72px, 位于红线 (60px) 之下 */
             right: 1rem;
-            /* 16px, 距离右边缘 */
             z-index: 100;
-
             width: 3.125rem;
             height: 3.125rem;
             background: rgba(0, 0, 0, 0.05);
@@ -109,7 +106,6 @@
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         }
 
-
         /* 游戏结束浮层 */
         #game-over-overlay {
             position: absolute;
@@ -120,18 +116,45 @@
             background-color: rgba(0, 0, 0, 0.6);
             color: white;
             display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column; /* 垂直排列 */
+            align-items: center; /* 水平居中 */
+            justify-content: center; /* 垂直居中，但稍后通过 margin 调整 */
             z-index: 100;
             opacity: 0;
             transition: opacity 0.5s;
+            padding-top: 5vh; /* 顶部留白，防止文字太靠上 */
         }
 
+        /* 调整游戏结束标题位置，移除绝对定位，让它在flex流中 */
         #game-over-overlay h2 {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem; /* 增加标题和图片之间的距离 */
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center; /* 确保文本居中 */
+            padding-top: 5vh; /* 额外增加顶部内边距，确保文字在最上方 */
+        }
+
+        /* 新增：等级10图片的容器 */
+        #level-10-image-container {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 2rem; /* 图片和按钮之间增加间距 */
+            border: 8px solid gold; /* 加粗的金色边框 */
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.5); /* 闪耀效果 */
+            display: none; /* 默认隐藏 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex-shrink: 0; /* 防止图片容器在小屏幕上缩小 */
+        }
+
+        #level-10-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         #restart-button {
@@ -145,6 +168,8 @@
             cursor: pointer;
             transition: transform 0.2s, background-color 0.2s;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* margin-top: auto; 移除这个，因为我们不再将按钮推到最底部，而是与图片保持一定距离 */
+            margin-bottom: 2rem; /* 底部留白 */
         }
 
         #restart-button:hover {
@@ -164,6 +189,9 @@
 
         <div id="game-over-overlay">
             <h2>游戏结束</h2>
+            <div id="level-10-image-container">
+                <img id="level-10-image" src="" alt="合成成功">
+            </div>
             <button id="restart-button">重新开始</button>
         </div>
 
@@ -184,6 +212,9 @@
             const gameOverOverlay = document.getElementById('game-over-overlay');
             const restartButton = document.getElementById('restart-button');
             const gameOverTitle = gameOverOverlay.querySelector('h2');
+            const level10ImageContainer = document.getElementById('level-10-image-container'); // 获取图片容器
+            const level10Image = document.getElementById('level-10-image'); // 获取图片元素本身
+
 
             let width, height;
 
@@ -431,8 +462,15 @@
 
                 if (status === "success") {
                     gameOverTitle.textContent = "恭喜！合成成功！";
+                    // 找到等级10的图片数据
+                    const level10Data = FRUITS_DATA.find(f => f.level === MAX_LEVEL);
+                    if (level10Data) {
+                        level10Image.src = level10Data.imageUrl;
+                        level10ImageContainer.style.display = 'flex'; // 显示图片容器
+                    }
                 } else {
                     gameOverTitle.textContent = "游戏失败";
+                    level10ImageContainer.style.display = 'none'; // 失败时隐藏图片
                 }
 
                 gameOverOverlay.style.display = 'flex';
@@ -448,6 +486,7 @@
                 setTimeout(() => {
                     gameOverOverlay.style.display = 'none';
                     gameOverTitle.textContent = "游戏结束";
+                    level10ImageContainer.style.display = 'none'; // 隐藏图片
                 }, 500);
 
                 gameOver = false;
