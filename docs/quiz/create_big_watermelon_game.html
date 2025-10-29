@@ -254,7 +254,8 @@
                 { level: 7, radius: 56, label: "等级7", color: "#FF4500", imageUrl: "../assets/images/create_big_watermelon_game/7.jpg", imgWidth: 381, imgHeight: 409 },
                 { level: 8, radius: 68, label: "等级8", color: "#4169E1", imageUrl: "../assets/images/create_big_watermelon_game/8.JPG", imgWidth: 515, imgHeight: 802 },
                 { level: 9, radius: 83, label: "等级9", color: "#FF1493", imageUrl: "../assets/images/create_big_watermelon_game/9.JPG", imgWidth: 108, imgHeight: 103 },
-                { level: 10, radius: 100, label: "等级10", color: "#1E90FF", imageUrl: "../assets/images/create_big_watermelon_game/10.JPG", imgWidth: 317, imgHeight: 306 }
+                { level: 10, radius: 100, label: "等级10", color: "#1E90FF", imageUrl: "../assets/images/create_big_watermelon_game/10.JPG", imgWidth: 317, imgHeight: 306 },
+                { level: 11, radius: 120, label: "等级10", color: "#1E90FF", imageUrl: "../assets/images/create_big_watermelon_game/11.JPG", imgWidth: 600, imgHeight: 442 }
             ];
             FRUITS_DATA.forEach(fruit => {
                 const img = new Image();
@@ -264,7 +265,7 @@
             const MAX_LEVEL = FRUITS_DATA.length;
 
             // --- 🌟 修改点 1：从第 5 级开始 ---
-            const STARTING_LEVELS = [5, 5, 6, 7]; // 原为 [1, 2, 2, 3, 3, 4]
+            const STARTING_LEVELS = [ 5, 5, 6, 7]; // 原为 [1, 2, 2, 3, 3, 4]
 
             let currentLevel = 0;
             let nextLevel = 0;
