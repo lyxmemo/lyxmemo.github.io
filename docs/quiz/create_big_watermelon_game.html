@@ -172,7 +172,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         document.addEventListener('DOMContentLoaded', () => {
 
             // --- 1. matter.js 基础设置 ---
@@ -183,7 +183,7 @@
             const nextFruitPreview = document.getElementById('next-fruit-preview');
             const gameOverOverlay = document.getElementById('game-over-overlay');
             const restartButton = document.getElementById('restart-button');
-            const gameOverTitle = gameOverOverlay.querySelector('h2'); // --- 🚀 新增：获取标题元素 ---
+            const gameOverTitle = gameOverOverlay.querySelector('h2'); 
 
             let width, height;
 
@@ -233,7 +233,7 @@
             let nextLevel = 0;
             let canDrop = true;
             let gameOver = false;
-            let gameStatus = "playing"; // --- 🚀 新增：游戏状态 ("playing", "success", "failure") ---
+            let gameStatus = "playing"; 
             let gameOverCheckInterval = null;
 
             // --- 3. 创建边界 (墙和地板) ---
@@ -266,9 +266,9 @@
             World.add(world, [ground, leftWall, rightWall, topLine]);
 
 
-            // --- 4. 掉落 "图片" 的功能 ---
-            function addFruit(x, y, level) {
-                // --- 🚀 修改点：检查 gameStatus ---
+            // --- 4. 掉落 "图片" 的功能 (🚀 修复点 1) ---
+            // 添加 isDropped 参数，默认为 false
+            function addFruit(x, y, level, isDropped = false) {
                 if (gameStatus !== "playing") return;
                 
                 const data = FRUITS_DATA.find(f => f.level === level);
@@ -290,12 +290,19 @@
                 fruitBody.element = fruitElement;
                 gameContainer.appendChild(fruitElement);
 
-                fruitBody.isNew = true;
-                setTimeout(() => {
-                    if (fruitBody.world) {
-                        fruitBody.isNew = false;
-                    }
-                }, 500);
+                // --- 🚀 修复点 2：逻辑修改 ---
+                // 只有玩家亲手 "Dropped" (isDropped = true) 的水果才有宽限期
+                // 合并 (merge) 产生的水果 (isDropped = false) 必须立即接受失败检查
+                if (isDropped) {
+                    fruitBody.isNew = true;
+                    setTimeout(() => {
+                        if (fruitBody.world) {
+                            fruitBody.isNew = false;
+                        }
+                    }, 500); // 宽限期可以设置长一点，只对玩家操作生效
+                } else {
+                    fruitBody.isNew = false; // 合并产生的水果，立即生效
+                }
 
                 World.add(world, fruitBody);
                 return fruitBody;
@@ -318,9 +325,8 @@
                 }
             }
 
-            // --- 6. 添加点击事件 ---
+            // --- 6. 添加点击事件 (🚀 修复点 3) ---
             function handleDrop(event) {
-                // --- 🚀 修改点：检查 gameStatus ---
                 if (!canDrop || gameOver || gameStatus !== "playing") return;
                 event.preventDefault();
 
@@ -340,7 +346,9 @@
                 
                 x = Math.max(minX, Math.min(x, maxX));
 
-                addFruit(x, 25, currentLevel);
+                // --- 🚀 修复点 3：调用 addFruit 时传入 'true' ---
+                addFruit(x, 25, currentLevel, true); 
+                
                 setNextFruit();
 
                 canDrop = false;
@@ -355,7 +363,6 @@
 
             // --- 7. 核心：合并逻辑 ---
             Events.on(engine, 'collisionStart', (event) => {
-                // --- 🚀 修改点：检查 gameStatus ---
                 if (gameOver || gameStatus !== "playing") return;
 
                 const pairs = event.pairs;
@@ -375,9 +382,9 @@
                         const newY = (bodyA.position.y + bodyB.position.y) / 2;
 
                         setTimeout(() => {
-                            const newFruit = addFruit(newX, newY, nextLevel);
+                            // 调用 addFruit 时不传 'true'，isDropped 默认为 false
+                            const newFruit = addFruit(newX, newY, nextLevel); 
                             
-                            // --- 🚀 新增点：检查是否合成成功 ---
                             if (newFruit && nextLevel === MAX_LEVEL && gameStatus === "playing") {
                                 triggerGameOver("success");
                             }
@@ -386,38 +393,37 @@
                 }
             });
 
-            // --- 8. 游戏结束逻辑 (🚀 已修复) ---
+            // --- 8. 游戏结束逻辑 (使用最开始的干净版本) ---
             function checkGameOver() {
-                // --- 🚀 修改点：检查 gameStatus ---
                 if (gameOver || gameStatus !== "playing") return;
 
                 const allFruits = world.bodies.filter(body => body.label.startsWith('fruit-'));
                 for (const fruit of allFruits) {
+                    // 只跳过玩家刚扔下的
                     if (fruit.isNew) continue;
 
-                    // --- 🚀 修复点：移除了 'if (fruit.isSleeping)' 的判断 ---
+                    // 移除 isSleeping 检查，检查所有非 'isNew' 的水果
                     const topEdgeY = fruit.position.y - fruit.circleRadius;
                     if (topEdgeY < topLineY) {
-                        triggerGameOver("failure"); // --- 🚀 修改点：传入 "failure" ---
+                        triggerGameOver("failure"); 
                         break;
                     }
                 }
             }
 
-            // --- 🚀 修改点：triggerGameOver 接受一个状态 ---
+            // --- 9. 触发结束 ---
             function triggerGameOver(status) {
-                if (gameOver || gameStatus !== "playing") return; // 防止重复触发
+                if (gameOver || gameStatus !== "playing") return; 
                 
                 console.log(`游戏结束: ${status}`);
                 gameOver = true;
-                gameStatus = status; // 设置状态
+                gameStatus = status; 
 
                 if (gameOverCheckInterval) {
                     clearInterval(gameOverCheckInterval);
                 }
                 Runner.stop(runner);
 
-                // --- 🚀 新增点：根据状态设置不同的标题 ---
                 if (status === "success") {
                     gameOverTitle.textContent = "恭喜！合成成功！";
                 } else {
@@ -430,18 +436,17 @@
                 }, 10);
             }
 
-            // --- 9. 游戏重启逻辑 ---
+            // --- 10. 游戏重启逻辑 ---
             function restartGame() {
                 console.log("游戏重启...");
                 gameOverOverlay.style.opacity = '0';
                 setTimeout(() => {
                     gameOverOverlay.style.display = 'none';
-                    // --- 🚀 新增点：重置标题 ---
                     gameOverTitle.textContent = "游戏结束"; 
                 }, 500);
 
                 gameOver = false;
-                gameStatus = "playing"; // --- 🚀 新增点：重置游戏状态 ---
+                gameStatus = "playing"; 
                 canDrop = true;
 
                 const allFruitElements = document.querySelectorAll('.fruit-element');
@@ -456,7 +461,7 @@
             }
             restartButton.addEventListener('click', restartGame);
 
-            // --- 10. 运行引擎 和 渲染循环 ---
+            // --- 11. 运行引擎 和 渲染循环 ---
             const runner = Runner.create();
             Runner.run(runner, engine);
 
@@ -477,8 +482,8 @@
                 if (gameOverCheckInterval) {
                     clearInterval(gameOverCheckInterval);
                 }
-                // --- 🚀 修改点：缩短检查间隔，反应更灵敏 ---
-                gameOverCheckInterval = setInterval(checkGameOver, 500); 
+                // 检查间隔可以放回 1000ms，因为 Bug 已经修复
+                gameOverCheckInterval = setInterval(checkGameOver, 1000); 
             }
 
             // 开始游戏
