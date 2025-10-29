@@ -172,7 +172,7 @@
         </div>
     </div>
 
-<script>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
 
             // --- 1. matter.js 基础设置 ---
@@ -183,7 +183,7 @@
             const nextFruitPreview = document.getElementById('next-fruit-preview');
             const gameOverOverlay = document.getElementById('game-over-overlay');
             const restartButton = document.getElementById('restart-button');
-            const gameOverTitle = gameOverOverlay.querySelector('h2'); 
+            const gameOverTitle = gameOverOverlay.querySelector('h2');
 
             let width, height;
 
@@ -194,9 +194,9 @@
                 gameWrapper.style.height = `${height}px`;
             }
             setupGameSize();
-            
+
             window.addEventListener('resize', () => {
-                 window.location.reload();
+                window.location.reload();
             });
 
 
@@ -205,20 +205,24 @@
             const world = engine.world;
             engine.world.gravity.y = 0.9;
             engine.enableSleeping = true;
+            // 🚀 修复穿透 Bug：
+            // 增加求解器迭代次数，让碰撞检测更精确
+            engine.positionIterations = 8;
+            engine.velocityIterations = 6;
 
             // --- 2. "图片" 数据 ---
             const FRUITS_DATA = [
-                { level: 1, radius: 20, label: "等级1", color: "#FFD700", imageUrl: "../assets/images/create_big_watermelon_game/1.JPG", imgWidth: 339, imgHeight: 464 },
-                { level: 2, radius: 24, label: "等级2", color: "#FFA07A", imageUrl: "../assets/images/create_big_watermelon_game/2.JPG", imgWidth: 121, imgHeight: 111 },
-                { level: 3, radius: 29, label: "等级3", color: "#20B2AA", imageUrl: "../assets/images/create_big_watermelon_game/3.PNG", imgWidth: 449, imgHeight: 559 },
-                { level: 4, radius: 35, label: "等级4", color: "#8A2BE2", imageUrl: "../assets/images/create_big_watermelon_game/4.jpg", imgWidth: 369, imgHeight: 366 },
-                { level: 5, radius: 43, label: "等级5", color: "#DC143C", imageUrl: "../assets/images/create_big_watermelon_game/5.jpg", imgWidth: 888, imgHeight: 898 },
-                { level: 6, radius: 52, label: "等级6", color: "#006400", imageUrl: "../assets/images/create_big_watermelon_game/6.JPG", imgWidth: 564, imgHeight: 545 },
-                { level: 7, radius: 63, label: "等级7", color: "#FF4500", imageUrl: "../assets/images/create_big_watermelon_game/7.jpg", imgWidth: 381, imgHeight: 409 },
-                { level: 8, radius: 77, label: "等级8", color: "#4169E1", imageUrl: "../assets/images/create_big_watermelon_game/8.JPG", imgWidth: 515, imgHeight: 802 },
-                { level: 9, radius: 94, label: "等级9", color: "#FF1493", imageUrl: "../assets/images/create_big_watermelon_game/9.JPG", imgWidth: 108, imgHeight: 103 },
-                { level: 10, radius: 115, label: "等级10", color: "#1E90FF", imageUrl: "../assets/images/create_big_watermelon_game/10.JPG", imgWidth: 317, imgHeight: 306 },
-                { level: 11, radius: 140, label: "等级11", color: "#32CD32", imageUrl: "../assets/images/create_big_watermelon_game/11.JPG", imgWidth: 600, imgHeight: 442 }
+                { level: 1, radius: 40, label: "等级1", color: "#FFD700", imageUrl: "../assets/images/create_big_watermelon_game/1.JPG", imgWidth: 339, imgHeight: 464 },
+                { level: 2, radius: 48, label: "等级2", color: "#FFA07A", imageUrl: "../assets/images/create_big_watermelon_game/2.JPG", imgWidth: 121, imgHeight: 111 },
+                { level: 3, radius: 58, label: "等级3", color: "#20B2AA", imageUrl: "../assets/images/create_big_watermelon_game/3.PNG", imgWidth: 449, imgHeight: 559 },
+                { level: 4, radius: 70, label: "等级4", color: "#8A2BE2", imageUrl: "../assets/images/create_big_watermelon_game/4.jpg", imgWidth: 369, imgHeight: 366 },
+                { level: 5, radius: 86, label: "等级5", color: "#DC143C", imageUrl: "../assets/images/create_big_watermelon_game/5.jpg", imgWidth: 888, imgHeight: 898 },
+                { level: 6, radius: 104, label: "等级6", color: "#006400", imageUrl: "../assets/images/create_big_watermelon_game/6.JPG", imgWidth: 564, imgHeight: 545 },
+                { level: 7, radius: 126, label: "等级7", color: "#FF4500", imageUrl: "../assets/images/create_big_watermelon_game/7.jpg", imgWidth: 381, imgHeight: 409 },
+                { level: 8, radius: 154, label: "等级8", color: "#4169E1", imageUrl: "../assets/images/create_big_watermelon_game/8.JPG", imgWidth: 515, imgHeight: 802 },
+                { level: 9, radius: 188, label: "等级9", color: "#FF1493", imageUrl: "../assets/images/create_big_watermelon_game/9.JPG", imgWidth: 108, imgHeight: 103 },
+                { level: 10, radius: 230, label: "等级10", color: "#1E90FF", imageUrl: "../assets/images/create_big_watermelon_game/10.JPG", imgWidth: 317, imgHeight: 306 },
+                { level: 11, radius: 280, label: "等级11", color: "#32CD32", imageUrl: "../assets/images/create_big_watermelon_game/11.JPG", imgWidth: 600, imgHeight: 442 }
             ];
 
             FRUITS_DATA.forEach(fruit => {
@@ -233,11 +237,11 @@
             let nextLevel = 0;
             let canDrop = true;
             let gameOver = false;
-            let gameStatus = "playing"; 
+            let gameStatus = "playing";
             let gameOverCheckInterval = null;
 
             // --- 3. 创建边界 (墙和地板) ---
-            const wallThickness = 20; 
+            const wallThickness = 60;
 
             const ground = Bodies.rectangle(width / 2, height + (wallThickness / 2), width, wallThickness, {
                 isStatic: true,
@@ -270,7 +274,7 @@
             // 添加 isDropped 参数，默认为 false
             function addFruit(x, y, level, isDropped = false) {
                 if (gameStatus !== "playing") return;
-                
+
                 const data = FRUITS_DATA.find(f => f.level === level);
                 if (!data) return;
 
@@ -286,7 +290,7 @@
                 fruitElement.style.width = `${data.radius * 2}px`;
                 fruitElement.style.height = `${data.radius * 2}px`;
                 fruitElement.style.backgroundImage = `url('${data.imageUrl}')`;
-                
+
                 fruitBody.element = fruitElement;
                 gameContainer.appendChild(fruitElement);
 
@@ -343,12 +347,12 @@
 
                 const minX = data.radius;
                 const maxX = width - data.radius;
-                
+
                 x = Math.max(minX, Math.min(x, maxX));
 
                 // --- 🚀 修复点 3：调用 addFruit 时传入 'true' ---
-                addFruit(x, 25, currentLevel, true); 
-                
+                addFruit(x, 25, currentLevel, true);
+
                 setNextFruit();
 
                 canDrop = false;
@@ -375,7 +379,7 @@
 
                         if (bodyA.element) bodyA.element.remove();
                         if (bodyB.element) bodyB.element.remove();
-                        
+
                         World.remove(world, [bodyA, bodyB]);
 
                         const newX = (bodyA.position.x + bodyB.position.x) / 2;
@@ -383,8 +387,8 @@
 
                         setTimeout(() => {
                             // 调用 addFruit 时不传 'true'，isDropped 默认为 false
-                            const newFruit = addFruit(newX, newY, nextLevel); 
-                            
+                            const newFruit = addFruit(newX, newY, nextLevel);
+
                             if (newFruit && nextLevel === MAX_LEVEL && gameStatus === "playing") {
                                 triggerGameOver("success");
                             }
@@ -401,11 +405,9 @@
                 for (const fruit of allFruits) {
                     // 只跳过玩家刚扔下的
                     if (fruit.isNew) continue;
-
-                    // 移除 isSleeping 检查，检查所有非 'isNew' 的水果
                     const topEdgeY = fruit.position.y - fruit.circleRadius;
                     if (topEdgeY < topLineY) {
-                        triggerGameOver("failure"); 
+                        triggerGameOver("failure");
                         break;
                     }
                 }
@@ -413,11 +415,11 @@
 
             // --- 9. 触发结束 ---
             function triggerGameOver(status) {
-                if (gameOver || gameStatus !== "playing") return; 
-                
+                if (gameOver || gameStatus !== "playing") return;
+
                 console.log(`游戏结束: ${status}`);
                 gameOver = true;
-                gameStatus = status; 
+                gameStatus = status;
 
                 if (gameOverCheckInterval) {
                     clearInterval(gameOverCheckInterval);
@@ -442,18 +444,18 @@
                 gameOverOverlay.style.opacity = '0';
                 setTimeout(() => {
                     gameOverOverlay.style.display = 'none';
-                    gameOverTitle.textContent = "游戏结束"; 
+                    gameOverTitle.textContent = "游戏结束";
                 }, 500);
 
                 gameOver = false;
-                gameStatus = "playing"; 
+                gameStatus = "playing";
                 canDrop = true;
 
                 const allFruitElements = document.querySelectorAll('.fruit-element');
                 allFruitElements.forEach(el => el.remove());
                 const allFruitBodies = world.bodies.filter(body => body.label.startsWith('fruit-'));
                 World.remove(world, allFruitBodies);
-                
+
                 Runner.run(runner, engine);
                 currentLevel = 0;
                 setNextFruit();
@@ -483,7 +485,7 @@
                     clearInterval(gameOverCheckInterval);
                 }
                 // 检查间隔可以放回 1000ms，因为 Bug 已经修复
-                gameOverCheckInterval = setInterval(checkGameOver, 1000); 
+                gameOverCheckInterval = setInterval(checkGameOver, 1000);
             }
 
             // 开始游戏
@@ -492,12 +494,13 @@
     </script>
 
     <div class="fixed bottom-4 right-4 z-[200]"> <a href="/"
-            class="bg-purple-600 hover:bg-purple-700 text-white font-bold p-3 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ease-in-out transform hover:scale-105"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+            class="bg-purple-600 hover:bg-purple-700 text-white font-bold p-3 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ease-in-out transform hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
-            </a>
+        </a>
     </div>
 </body>
 
