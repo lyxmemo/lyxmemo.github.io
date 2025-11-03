@@ -259,7 +259,8 @@ title: 主页
         {%- assign p11 = "start_date:1946-01-01|end_date:1947-01-01|title:【新六军军长】东北攻势作战" | split: "|" -%}
         {%- assign p12 = "start_date:1947-01-01|end_date:1948-01-01|title:【第四兵团司令官】东北解围作战" | split: "|" -%}
         {%- assign p13 = "start_date:1948-01-01|end_date:1949-01-01|title:【第九兵团司令官】东北撤退作战" | split: "|" -%}
-        {%- assign periods = periods | push: p1 | push: p2 | push: p3 | push: p4 | push: p5 | push: p6 | push: p7 | push: p8 | push: p9 | push: p10 | push: p11 | push: p12 | push: p13 -%}
+        {%- assign p14 = "start_date:1949-01-01|title:【解放后】" | split: "|" -%}
+        {%- assign periods = periods | push: p1 | push: p2 | push: p3 | push: p4 | push: p5 | push: p6 | push: p7 | push: p8 | push: p9 | push: p10 | push: p11 | push: p12 | push: p13 | push: p14 -%}
 
         {%- for period in periods -%}
           {%- assign start_date = nil -%}
@@ -281,7 +282,8 @@ title: 主页
           {%- for post in dated_magazines_sorted -%}
             {%- assign post_date = post.date | date: "%Y-%m-%d" -%}
             {%- if start_date == nil and post_date < end_date -%}{%- assign posts_in_period = posts_in_period | push: post -%}{%- endif -%}
-            {%- if start_date and post_date >= start_date and post_date < end_date -%}{%- assign posts_in_period = posts_in_period | push: post -%}{%- endif -%}
+            {%- if start_date and end_date == nil and post_date >= start_date -%}{%- assign posts_in_period = posts_in_period | push: post -%}{%- endif -%}
+            {%- if start_date and end_date and post_date >= start_date and post_date < end_date -%}{%- assign posts_in_period = posts_in_period | push: post -%}{%- endif -%}
           {%- endfor -%}
 
           {%- if posts_in_period.size > 0 -%}
