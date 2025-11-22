@@ -80,6 +80,55 @@ title: 主页
     cursor: default;
   }
 
+  /* === 更新日志面板样式 === */
+  .changelog-container {
+    margin-bottom: 25px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .changelog-summary {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 5px 20px;
+    cursor: pointer;
+    outline: none;
+  }
+  .changelog-summary::-webkit-details-marker { display: none; }
+  .changelog-summary::before { content: '+'; font-family: monospace; font-weight: bold; font-size: 1rem; margin-right: 12px; color: #888; display: inline-block; width: 20px; text-align: center; }
+  details[open] > .changelog-summary::before { content: '−'; }
+
+  .changelog-panel {
+    padding: 0 20px 15px 20px;
+    border-top: 1px solid #e0e0e0;
+    max-height: 30vh;
+    overflow-y: auto;
+  }
+  .changelog-panel ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 10px 0 0 0;
+  }
+  .changelog-panel li {
+    padding: 4px 0;
+    font-size: 0.9rem;
+  }
+  .changelog-panel .commit-date {
+    font-weight: bold;
+    color: #555;
+  }
+  .changelog-panel .commit-message {
+    font-style: italic;
+    color: #777;
+    margin-left: 10px;
+  }
+  .changelog-panel .change-list {
+    padding-left: 20px;
+    list-style-type: disc;
+    margin-top: 5px;
+  }
+
   /* --- 分类视图内部的样式 --- */
   /* Tab 样式 */
   .tab { overflow: hidden; border-bottom: 1px solid #ddd; }
@@ -127,6 +176,24 @@ title: 主页
       {%- if post.category == "Liao's Tele" -%}{%- assign telegrams_raw = telegrams_raw | push: post -%}{%- elsif post.category == "报刊杂志" -%}{%- assign magazines_raw = magazines_raw | push: post -%}{%- else -%}{%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}{%- endif -%}
     {%- endfor -%}
   {%- endfor -%}
+
+  <details class="changelog-container">
+    <summary class="changelog-summary">更新日志</summary>
+    <div class="changelog-panel">
+      <ul>
+        {%- for item in site.data.changelog -%}
+          <li>
+            <span class="commit-date">{{ item.date }}</span> - <span class="commit-message">"{{ item.commit_message }}"</span>
+            <ul class="change-list">
+              {%- for change in item.changes -%}
+                <li><a href="{{ change.url | relative_url }}">{{ change.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </details>
 
   <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'byBook')" id="byBook-tab">按书籍</button>
