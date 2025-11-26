@@ -395,6 +395,11 @@ title: 主页
 
 <br/>
 
+<h2>相关工具</h2>
+<ul>
+  <li><a href="{{ '/quiz/n6a_name_list_.html' | relative_url }}">陸軍新編第六軍人員名冊</a></li>
+</ul>
+
 <h2>资料下载区</h2>
 <ul>{% for file in site.static_files %}{% if file.path contains 'resources' %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>{% endif %}{% endfor %}</ul>
 
