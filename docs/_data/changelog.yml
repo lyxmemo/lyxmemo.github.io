@@ -1,3 +1,19 @@
+- date: 2025-11-27
+  commit_message: "update; +从八莫之役到凯旋回国; +1942年缅甸作战回忆; 更新书目; +2 new"
+  changes:
+    - title: "从八莫之役到凯旋回国（史说）"
+      url: "/battles_history/1944/从八莫之役到凯旋回国（史说）.html"
+    - title: "1942年缅甸作战回忆（邓军林）"
+      url: "/battles_history/1939/昆仑关战役（邓军林）.html"
+    - title: "1942年缅甸作战回忆（邓军林）"
+      url: "/battles_history/1942/1942年缅甸作战回忆（邓军林）.html"
+    - title: "中国驻印军始末（郑洞国 覃异之）"
+      url: "/battles_history/1944/中国驻印军始末（郑洞国 覃异之）.html"
+- date: 2025-11-26
+  commit_message: "update view and add functionality; add 名册"
+  changes:
+    - title: "新增名册（N6A）"
+      url: "/quiz/n6a_name_list_.html"
 - date: 2025-11-22
   commit_message: "+6 new"
   changes:
