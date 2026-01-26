@@ -1,3 +1,18 @@
+- date: 2026-01-26
+  commit_message: "+6 新录入"
+  changes:
+    - title: "我所知远征军入缅初期抗日作战概况（赵德树）"
+      url: "/ten_year_memorial/我所知远征军入缅初期抗日作战概况（赵德树）.html"
+    - title: "随远征军入缅抗日回忆录（刘天庆 袁启俊）"
+      url: "/ten_year_memorial/随远征军入缅抗日回忆录（刘天庆 袁启俊）.html"
+    - title: "我对中国远征军赴缅作战的回忆（徐继光）"
+      url: "/ten_year_memorial/我对中国远征军赴缅作战的回忆（徐继光）.html"
+    - title: "在驻印缅远征军的几件事（李思恭口述 侯炳垚整理）"
+      url: "/ten_year_memorial/在驻印缅远征军的几件事（李思恭）.html"
+    - title: "参加缅印战场抗日回忆（师临先）"
+      url: "/ten_year_memorial/参加缅印战场抗日回忆（师临先）.html"
+    - title: "我参加青年远征军赴缅抗日（黄义方）"
+      url: "/ten_year_memorial/我参加青年远征军赴缅抗日（黄义方）.html"
 - date: 2025-11-27
   commit_message: "update; +从八莫之役到凯旋回国; +1942年缅甸作战回忆; 更新书目; +2 new"
   changes:
