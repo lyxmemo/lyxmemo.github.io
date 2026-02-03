@@ -1,0 +1,705 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>决战辽沈：指挥官战棋</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --accent-color: #d32f2f;
+            --success-color: #388e3c;
+            --paper-color: #1e1e1e;
+            --highlight: #fbc02d;
+            --god-color: #00e5ff;
+            --desc-color: #999;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            user-select: none;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--paper-color);
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            border: 1px solid #333;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- 顶部仪表盘 --- */
+        .dashboard {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .title-area { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .title { font-size: 20px; font-weight: bold; color: #fff; letter-spacing: 2px; }
+        
+        .god-badge {
+            display: none; font-size: 12px; background: var(--god-color); color: #000;
+            padding: 2px 6px; border-radius: 4px; font-weight: bold;
+            box-shadow: 0 0 10px var(--god-color); animation: pulse-god 2s infinite;
+        }
+        @keyframes pulse-god { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
+
+        .stats-box { display: flex; align-items: center; gap: 15px; }
+
+        .morale-container {
+            width: 200px; background: #333; height: 20px; border-radius: 10px;
+            overflow: hidden; position: relative; border: 1px solid #555;
+        }
+        .morale-fill {
+            height: 100%; background: linear-gradient(90deg, #d32f2f, #fbc02d, #388e3c);
+            width: 100%; transition: width 0.5s ease;
+        }
+        .morale-text {
+            position: absolute; top: 0; left: 0; width: 100%; text-align: center;
+            font-size: 12px; line-height: 20px; color: #fff; text-shadow: 1px 1px 2px black; font-weight: bold;
+        }
+
+        /* --- 剧情文本 --- */
+        #story-text {
+            font-size: 18px; line-height: 1.8; margin-bottom: 30px;
+            min-height: 120px; white-space: pre-wrap;
+        }
+        .dialogue { color: #90caf9; }
+        .system-msg { 
+            color: var(--highlight); font-family: monospace; border-top: 1px dashed #444;
+            margin-top: 10px; padding-top: 10px; font-size: 14px; display: none;
+        }
+        .fail-anim { animation: text-shake 0.5s; color: var(--accent-color); }
+        
+        .ending-stamp {
+            margin-top: 30px; text-align: center; color: var(--accent-color);
+            font-size: 24px; font-weight: bold; border: 3px double var(--accent-color);
+            padding: 15px; transform: rotate(-2deg); box-shadow: 0 0 20px rgba(211, 47, 47, 0.2);
+        }
+
+        /* --- 按钮区域 (布局优化) --- */
+        .options-grid { display: flex; flex-direction: column; gap: 12px; }
+        
+        button {
+            background-color: #2c3e50; color: #fff; border: 1px solid #444;
+            padding: 12px 15px; font-size: 16px; cursor: pointer; text-align: left;
+            transition: all 0.2s; position: relative; 
+            display: grid; 
+            grid-template-columns: 1fr auto; /* 左侧文字，右侧概率 */
+            align-items: center;
+            gap: 10px;
+        }
+        
+        button:hover:not(:disabled) {
+            background-color: #34495e; border-color: var(--highlight); transform: translateX(5px);
+        }
+        button:disabled {
+            background-color: #1a1a1a; color: #555; border-color: #222;
+            cursor: not-allowed; opacity: 0.7; text-decoration: line-through;
+        }
+        body.god-mode button:hover:not(:disabled) {
+            border-color: var(--god-color); box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+        }
+        
+        /* 按钮内部文字布局 */
+        .btn-content { display: flex; flex-direction: column; }
+        .btn-title { font-weight: bold; font-size: 16px; margin-bottom: 4px; }
+        .btn-desc { font-size: 12px; color: var(--desc-color); font-family: sans-serif; }
+        
+        .prob-badge {
+            font-family: monospace; font-size: 12px; padding: 4px 8px;
+            border-radius: 4px; background: rgba(0,0,0,0.3); min-width: 80px; text-align: center;
+            height: fit-content;
+        }
+        .prob-high { color: #69f0ae; border: 1px solid #69f0ae; }
+        .prob-med { color: #ffd740; border: 1px solid #ffd740; }
+        .prob-low { color: #ff5252; border: 1px solid #ff5252; }
+        
+        .restart-btn { background-color: var(--accent-color); display: flex; justify-content: center; font-weight: bold; margin-top: 20px; }
+
+        /* --- 动画与特效 --- */
+        @keyframes text-shake {
+            0% { transform: translateX(0); } 25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); }
+        }
+        .floating-text {
+            position: absolute; color: var(--accent-color); font-weight: bold;
+            font-size: 24px; pointer-events: none; z-index: 10;
+            animation: floatUp 1s ease-out forwards;
+            text-shadow: 2px 2px 4px black;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-50px); }
+        }
+
+        /* --- 覆盖层 --- */
+        .dice-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.2s, visibility 0.2s;
+            visibility: hidden; opacity: 0;
+            cursor: pointer; touch-action: none; 
+        }
+        .dice-overlay.active { visibility: visible; opacity: 1; }
+
+        .big-number-box {
+            font-family: 'Courier New', monospace;
+            font-size: 100px; font-weight: bold; color: var(--highlight);
+            text-shadow: 0 0 20px rgba(251, 192, 45, 0.5);
+            margin-bottom: 20px; min-width: 200px; text-align: center;
+        }
+        .result-status {
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 24px; font-weight: bold; letter-spacing: 2px;
+            margin-bottom: 10px; height: 30px;
+        }
+        .tap-hint {
+            color: #666; font-size: 14px; margin-top: 30px; animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        @media (max-width: 600px) {
+            .container { height: 100vh; border: none; padding: 15px; }
+            .dashboard { flex-direction: column; align-items: flex-start; gap: 10px; }
+            button { grid-template-columns: 1fr; gap: 5px; }
+            .prob-badge { justify-self: start; margin-top: 5px; }
+            .big-number-box { font-size: 80px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="dice-overlay" class="dice-overlay" onclick="handleOverlayClick(event)">
+    <div id="dice-display" class="big-number-box">00</div>
+    <div id="result-status" class="result-status">COMPUTING...</div>
+    <div id="tap-hint" class="tap-hint">TAP SCREEN TO SKIP</div>
+</div>
+
+<div class="container" id="game-container">
+    <div class="dashboard">
+        <div class="title-area" onclick="triggerCheat()">
+            <div class="title">LIAOSHEN CAMPAIGN</div>
+            <div id="god-badge" class="god-badge">GOD MODE</div>
+        </div>
+        
+        <div class="stats-box">
+            <span>兵团士气:</span>
+            <div class="morale-container">
+                <div class="morale-fill" id="morale-bar" style="width: 100%;"></div>
+                <div class="morale-text" id="morale-text">100/100</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="content-area">
+        <div id="story-text"></div>
+        <div id="system-msg" class="system-msg"></div>
+        <div id="options" class="options-grid"></div>
+    </div>
+</div>
+
+<script>
+    // --- 游戏状态 ---
+    let gameState = {
+        morale: 100,
+        currentNode: 1,
+        failedOptions: {}, 
+        isRolling: false 
+    };
+
+    let animState = {
+        status: 'idle', 
+        intervalId: null,
+        timeoutId: null,
+        finalRoll: 0,
+        targetRate: 0,
+        callback: null
+    };
+
+    let interactionCooldown = false;
+    let cheatClicks = 0;
+    let godMode = false;
+
+    // --- 剧本数据 (新增 desc 字段) ---
+    const storyNodes = {
+        1: {
+            text: "1948年10月12日，彰武。<br>窗外风雪交加。参谋长杨焜拿着战报匆匆走来。<br><span class='dialogue'>“司令官，塔山前线……有消息了。”</span>",
+            choices: [
+                { text: "期待奇迹：塔山防线已被我军突破！", desc: "收益：立刻解围 | 风险：极高 (若失败士气重挫)", next: 2, baseRate: 20, failText: "并没有。塔山阵地纹丝不动，我军伤亡惨重。" }, 
+                { text: "接受现实：攻击受挫，敌军阵地岿然不动。", desc: "收益：保存实力 | 代价：丧失先机", next: 3, baseRate: 100, isSafe: true }
+            ]
+        },
+        2: {
+            text: "不可思议！前线汇报塔山已被突破！锦州之围立解。<br>但两翼敌军正在快速合拢，你必须立刻决断。",
+            choices: [
+                { text: "战术清扫：原地歼灭两侧敌军。", desc: "收益：稳固后路 | 风险：战机流逝", next: 4, baseRate: 80, failText: "敌军也是精锐，你的清扫行动陷入了胶着。" },
+                { text: "大胆穿插：不管两翼，全军北上汇合长春！", desc: "收益：两大兵团会师 | 风险：后路被断", next: 5, baseRate: 40, failText: "部队在穿插中被切断，先头团失联！" },
+                { text: "既定目标：向西攻击，打通锦沈交通。", desc: "收益：完成战略目标 | 风险：攻坚战损耗", next: 6, baseRate: 60, failText: "西进受阻，交通线未能打通。" }
+            ]
+        },
+        3: {
+            text: "果然还是打不动。林彪的阻击部队像钉子一样。<br>范汉杰在求援，卫立煌在喊撤退，蒋介石在喊进攻。<br>你的指挥部里充满了失败的情绪。",
+            choices: [
+                { text: "按兵不动：等待战局变化。", desc: "收益：暂避锋芒 | 风险：坐以待毙", next: 7, baseRate: 60, failText: "战局恶化得比你想象的快，你失去了主动权。" },
+                { text: "战术欺骗：派兵南下黑山佯攻，主力寻找机会。", desc: "收益：迷惑敌军 | 风险：弄巧成拙", next: 8, baseRate: 85, failText: "佯攻被识破，敌军主力直接压向了你。" },
+                { text: "违抗军令：直接全军转向营口撤退！", desc: "收益：唯一生路 | 风险：抗命哗变", next: 9, baseRate: 40, failText: "军官们反对违抗军令，部队哗变，无法执行。" },
+                { text: "保守疗法：全军立刻缩回沈阳。", desc: "收益：暂时安全 | 代价：困守孤城", next: 10, baseRate: 100, isSafe: true }
+            ]
+        },
+        4: {
+            text: "你歼灭了部分敌军，但战机稍纵即逝。<br>国防部来电，准予你部相机行事。",
+            choices: [
+                { text: "放弃长春，沈阳与你部逐次撤出。", desc: "收益：保全主力 | 代价：放弃友军", next: 11, baseRate: 90, failText: "撤退命令传达混乱，各部争抢道路。" },
+                { text: "维持现状，等待美军调停。", desc: "收益：无 | 风险：极高", next: 12, baseRate: 20, failText: "没有任何调停，只有更猛烈的炮火。" },
+                { text: "既然赢了一阵，就向北追击！", desc: "收益：扩大战果 | 风险：中计", next: 5, baseRate: 30, failText: "贸然追击，落入了口袋阵。" }
+            ]
+        },
+        5: {
+            text: "部队北上途中，侦察兵报告：<br><span class='dialogue'>“前方发现敌军主力！漫山遍野都是人！”</span>",
+            choices: [
+                { text: "强行突围：不要恋战，直奔长春。", desc: "收益：死地后生 | 风险：全军覆没", next: 14, baseRate: 15, failText: "突围失败！被死死压了回来！" },
+                { text: "攻其必救：转头攻击四平。", desc: "收益：围魏救赵 | 风险：撞上铁板", next: 15, baseRate: 30, failText: "四平城防坚固，碰得头破血流。" },
+                { text: "原地防御：构筑工事反击。", desc: "收益：稳住阵脚 | 风险：被长期围困", next: 16, baseRate: 70, failText: "防线被多点突破。" }
+            ]
+        },
+        6: {
+            text: "锦沈交通线打通了。但你发现这是一个陷阱。<br>长春来电：粮弹俱绝，恐难支撑。",
+            choices: [
+                { text: "全面撤退：放弃长春，全军撤回关内。", desc: "收益：壮士断腕 | 代价：政治责任", next: 11, baseRate: 90, failText: "撤退中遭遇伏击。" },
+                { text: "原地驻守：等待后续命令。", desc: "收益：无 | 风险：被包围", next: 12, baseRate: 50, failText: "被敌军包围。" },
+                { text: "孤注一掷：救援长春！", desc: "收益：人性光辉 | 风险：由于补给不足失败", next: 5, baseRate: 20, failText: "救援部队被打散。" }
+            ]
+        },
+        7: {
+            text: "你在彰武犹豫了三天。<br>锦州的炮声停止了。锦州失守。<br>沈阳彻底变成了孤岛。",
+            choices: [
+                { text: "亡羊补牢：现在走营口！", desc: "收益：最后的生机 | 风险：道路已被切断", next: 9, baseRate: 50, failText: "道路已被切断。" },
+                { text: "听令行事：回沈阳。", desc: "收益：暂时存活 | 代价：慢性死亡", next: 23, baseRate: 100, isSafe: true },
+                { text: "复仇：向西攻击，夺回锦州！", desc: "收益：奇迹 | 风险：自杀式攻击", next: 19, baseRate: 10, failText: "部队拒绝执行自杀式攻击。" }
+            ]
+        },
+        8: {
+            text: "你的部队在黑山遭遇了梁兴初十纵的顽强阻击。<br>这里变成了绞肉机。",
+            choices: [
+                { text: "死命令：让新22师上！坦克压上去！", desc: "收益：快速突破 | 风险：王牌耗尽", next: 20, baseRate: 35, failText: "坦克掉进反坦克壕，攻击失效。" },
+                { text: "波浪攻击：整营整团轮番进攻。", desc: "收益：持续施压 | 风险：添油战术", next: 21, baseRate: 45, failText: "添油战术完全无效，伤亡惨重。" },
+                { text: "战术转进：主力借掩护转向营口。", desc: "收益：保存主力 | 风险：指挥混乱", next: 9, baseRate: 70, failText: "转进途中指挥混乱。" }
+            ]
+        },
+        9: {
+            text: "你来到了营口。海面上空空如也，没有船。<br>蒋介石手谕：廖耀湘临阵脱逃，即刻革职！<br>你背负了千古骂名。",
+            ending: "结局：千夫所指"
+        },
+        10: {
+            text: "你退回了沈阳。<br>这里很快变成了第二个长春。<br>1949年，沈阳不战而降。",
+            choices: [
+                { text: "接受结局：城破被俘", desc: "历史走向", next: 23, baseRate: 100, isSafe: true },
+                { text: "试图坚持：等待第三次世界大战", desc: "收益：幻想 | 风险：现实", next: 24, baseRate: 5, failText: "没有等到那天，你被部下绑了出去。" }
+            ]
+        },
+        11: {
+            text: "壮士断腕。你带着几十万精锐退入关内。<br>因为你的存在，淮海战役的国军兵力大增，历史也许会改变。",
+            ending: "结局：历史改写者"
+        },
+        12: {
+            text: "【时空回廊】<br>犹豫中，冬天来了又去。<br>历史的车轮滚滚向前。",
+            choices: [
+                { text: "重启：回到起点", desc: "重新开始", next: 1, baseRate: 100, isSafe: true },
+                { text: "跳跃：进入1950年", desc: "查看未来", next: 24, baseRate: 100, isSafe: true }
+            ],
+            special: "Loop"
+        },
+        14: {
+            text: "奇迹发生了。你们在运动战中付出了巨大伤亡，但接应到了长春守军。两军汇合退回沈阳。",
+            ending: "结局：长春拯救者"
+        },
+        15: {
+            text: "四平攻坚战失败。损兵折将后，你被迫退回沈阳。",
+            choices: [
+                { text: "退守沈阳", desc: "无奈之举", next: 12, baseRate: 100, isSafe: true }
+            ]
+        },
+        16: {
+            text: "反击虽然击退了敌军前锋，但主力已被包围风险剧增。你最终还是选择了退却。",
+            choices: [
+                { text: "退守沈阳", desc: "无奈之举", next: 12, baseRate: 100, isSafe: true }
+            ]
+        },
+        19: {
+            text: "你在辽西平原撞上了五十万大军的口袋阵。全军覆没。你化妆潜逃，仅以身免。",
+            ending: "结局：仅以身免"
+        },
+        20: {
+            text: "黑山拿下来了，但伤亡惨重。此时锦州已失，再去已无意义。<br>卫立煌让你回沈阳，蒋介石让你继续西进。",
+            choices: [
+                { text: "死忠：遵命西进，打光拉倒。", desc: "收益：尽忠 | 风险：全军覆没", next: 19, baseRate: 15, failText: "西进立刻遭到围攻。" },
+                { text: "妥协：回沈阳。", desc: "收益：甚至无法通过", next: 23, baseRate: 90, failText: "回沈阳的路也被堵了。" },
+                { text: "求生：撤营口。", desc: "收益：一线生机 | 风险：被追击", next: 9, baseRate: 60, failText: "无法脱离接触。" },
+                { text: "犹豫：等待杜聿明的命令。", desc: "收益：无 | 风险：时间流逝", next: 25, baseRate: 30, failText: "没有等到任何命令。" }
+            ]
+        },
+        21: {
+            text: "攻击受挫，锦州失守。局势已经彻底崩坏。",
+            choices: [
+                { text: "死忠：遵命西进。", desc: "收益：无 | 风险：必死", next: 19, baseRate: 15, failText: "送死行为。" },
+                { text: "妥协：回沈阳。", desc: "收益：低 | 风险：高", next: 23, baseRate: 90, failText: "道路不通。" },
+                { text: "求生：撤营口。", desc: "收益：中 | 风险：中", next: 9, baseRate: 60, failText: "无法突围。" },
+                { text: "犹豫：等待命令。", desc: "收益：无 | 风险：必死", next: 25, baseRate: 30, failText: "时间流逝。" }
+            ]
+        },
+        23: {
+            text: "漫长的围城战。沈阳粮弹俱绝。解放军发动总攻，你成了俘虏。",
+            ending: "结局：困兽之斗"
+        },
+        24: {
+            text: "韩战爆发。美国介入，美械弹药空投到了沈阳。你看着天空，感觉命运的齿轮又转动了。",
+            ending: "结局：一线生机"
+        },
+        25: {
+            text: "10月25日，撤退命令终于来了。但太晚了，营口方向发现了敌军主力。",
+            choices: [
+                { text: "潘裕琨建议：就地抵抗（死地）。", desc: "收益：无 | 风险：全灭", next: 26, baseRate: 10, failText: "防线瞬间崩溃。" },
+                { text: "杨焜建议：回沈阳（绝路）。", desc: "收益：无 | 风险：被俘", next: 27, baseRate: 15, failText: "回不去了。" },
+                { text: "殊死一搏：全军向营口突围！", desc: "收益：最后的希望 | 风险：高", next: 28, baseRate: 40, failText: "突围被堵了回来。" }
+            ]
+        },
+        26: {
+            text: "十几万人被围在雪地里。严寒、饥饿、绝望。全军溃散。",
+            ending: "结局：冰雪陈官庄"
+        },
+        27: {
+            text: "部队无法完成转向，被分割包围。兵败如山倒。",
+            ending: "历史结局：兵败辽西"
+        },
+        28: {
+            text: "那是唯一的生路！你冲破了封锁线，并在营口登上了杜聿明的接应船队。",
+            ending: "结局：无功无过"
+        }
+    };
+
+    // --- 核心功能函数 ---
+
+    function triggerCheat() {
+        if (godMode) return;
+        cheatClicks++;
+        
+        if (cheatClicks === 5) {
+            showFloatingText("还差5次...", window.innerWidth/2, 100);
+        }
+        
+        if (cheatClicks >= 10) {
+            godMode = true;
+            document.body.classList.add('god-mode');
+            document.getElementById('god-badge').style.display = 'block';
+            showSystemMsg("【系统】 上帝模式已激活：所有判定必定成功，不消耗士气。", false);
+            showFloatingText("GOD MODE ON", window.innerWidth/2, 100);
+            renderNode(gameState.currentNode, true);
+        }
+    }
+
+    function updateMoraleUI() {
+        const bar = document.getElementById('morale-bar');
+        const text = document.getElementById('morale-text');
+        if (gameState.morale < 0) gameState.morale = 0;
+        const percentage = gameState.morale;
+        bar.style.width = percentage + '%';
+        text.innerText = percentage + '/100';
+        if (percentage > 60) bar.style.background = '#388e3c';
+        else if (percentage > 30) bar.style.background = '#fbc02d';
+        else bar.style.background = '#d32f2f';
+    }
+
+    function calculateActualRate(baseRate) {
+        if (godMode) return 100;
+
+        let modifier = gameState.morale / 100;
+        if (gameState.morale < 20) modifier = 0.1;
+        let actual = Math.floor(baseRate * modifier);
+        if (actual < 5) actual = 5;
+        if (actual > 95 && baseRate < 100) actual = 95; 
+        if (baseRate === 100) actual = 100;
+        return actual;
+    }
+
+    function showSystemMsg(msg, isFail) {
+        const div = document.getElementById('system-msg');
+        div.style.display = 'block';
+        div.innerHTML = msg;
+        div.className = 'system-msg ' + (isFail ? 'fail-anim' : '');
+        setTimeout(() => div.classList.remove('fail-anim'), 500);
+    }
+
+    function showFloatingText(text, x, y) {
+        const floatDiv = document.createElement('div');
+        floatDiv.className = 'floating-text';
+        floatDiv.innerText = text;
+        
+        if (!x) x = window.innerWidth / 2;
+        if (!y) y = window.innerHeight / 2;
+
+        floatDiv.style.left = x + 'px';
+        floatDiv.style.top = y + 'px';
+        document.body.appendChild(floatDiv);
+        setTimeout(() => floatDiv.remove(), 1000);
+    }
+
+    // --- 骰子逻辑 ---
+
+    function handleOverlayClick(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (animState.status === 'rolling') {
+            finishRollingAnimation();
+        } else if (animState.status === 'finished') {
+            closeOverlayAndProceed();
+        }
+    }
+
+    function startDiceRoll(targetRate, callback) {
+        const overlay = document.getElementById('dice-overlay');
+        const optionsDiv = document.getElementById('options');
+        const display = document.getElementById('dice-display');
+        const status = document.getElementById('result-status');
+        const hint = document.getElementById('tap-hint');
+
+        optionsDiv.style.pointerEvents = 'none';
+
+        gameState.isRolling = true;
+        animState.status = 'rolling';
+        animState.callback = callback;
+        animState.targetRate = targetRate;
+        
+        animState.finalRoll = Math.floor(Math.random() * 100) + 1;
+
+        overlay.classList.add('active');
+        status.innerText = "COMPUTING...";
+        status.style.color = "#fff";
+        display.style.color = "var(--highlight)";
+        hint.innerText = "TAP TO SKIP";
+
+        animState.intervalId = setInterval(() => {
+            display.innerText = Math.floor(Math.random() * 100);
+        }, 40);
+
+        animState.timeoutId = setTimeout(() => {
+            finishRollingAnimation();
+        }, 1500);
+    }
+
+    function finishRollingAnimation() {
+        if (animState.status !== 'rolling') return;
+
+        clearInterval(animState.intervalId);
+        clearTimeout(animState.timeoutId);
+
+        animState.status = 'finished';
+
+        const display = document.getElementById('dice-display');
+        const status = document.getElementById('result-status');
+        const hint = document.getElementById('tap-hint');
+        
+        display.innerText = animState.finalRoll;
+        
+        const isSuccess = animState.finalRoll <= animState.targetRate;
+        
+        if (isSuccess) {
+            status.innerText = `SUCCESS (REQ ≤ ${animState.targetRate})`;
+            status.style.color = "var(--success-color)";
+            display.style.color = "var(--success-color)";
+        } else {
+            status.innerText = `FAILURE (REQ ≤ ${animState.targetRate})`;
+            status.style.color = "var(--accent-color)";
+            display.style.color = "var(--accent-color)";
+        }
+
+        hint.innerText = "TAP TO CONTINUE";
+    }
+
+    function closeOverlayAndProceed() {
+        const overlay = document.getElementById('dice-overlay');
+        const optionsDiv = document.getElementById('options');
+
+        interactionCooldown = true;
+        overlay.classList.remove('active');
+        gameState.isRolling = false;
+        animState.status = 'idle';
+        
+        if (animState.callback) {
+            animState.callback(animState.finalRoll);
+        }
+
+        setTimeout(() => {
+            interactionCooldown = false;
+            optionsDiv.style.pointerEvents = 'auto';
+        }, 500);
+    }
+
+    function handleChoice(choice, btnElement, choiceIndex) {
+        if (interactionCooldown) return;
+        if (gameState.isRolling) return;
+
+        if (godMode) {
+            showSystemMsg(`【上帝模式】 强制判定成功 (战术已执行)`, false);
+            renderNode(choice.next);
+            return;
+        }
+
+        if (choice.isSafe) {
+            renderNode(choice.next);
+            return;
+        }
+
+        const actualRate = calculateActualRate(choice.baseRate);
+
+        startDiceRoll(actualRate, (roll) => {
+            if (roll <= actualRate) {
+                showSystemMsg(`【判定成功】 掷骰:${roll} (需求≤${actualRate}) - 战术执行顺利`, false);
+                renderNode(choice.next);
+            } else {
+                gameState.morale -= 15;
+                updateMoraleUI();
+                
+                const rect = btnElement.getBoundingClientRect();
+                showFloatingText("-15 士气", rect.left + rect.width/2, rect.top);
+                
+                showSystemMsg(`【判定失败】 掷骰:${roll} (需求≤${actualRate}) <br>后果: ${choice.failText}`, true);
+
+                if (!gameState.failedOptions[gameState.currentNode]) {
+                    gameState.failedOptions[gameState.currentNode] = [];
+                }
+                gameState.failedOptions[gameState.currentNode].push(choiceIndex);
+                renderNode(gameState.currentNode, true);
+            }
+        });
+    }
+
+    function getRateColor(rate) {
+        if (rate >= 70) return 'prob-high';
+        if (rate >= 40) return 'prob-med';
+        return 'prob-low';
+    }
+
+    function renderNode(nodeId, isReRender = false) {
+        const node = storyNodes[nodeId];
+        const storyText = document.getElementById('story-text');
+        const optionsDiv = document.getElementById('options');
+        const sysMsg = document.getElementById('system-msg');
+
+        if (!isReRender) {
+            gameState.currentNode = nodeId;
+            sysMsg.style.display = 'none';
+            storyText.style.opacity = 0;
+            optionsDiv.style.opacity = 0;
+        }
+
+        setTimeout(() => {
+            let htmlContent = node.text;
+            if (node.ending) {
+                htmlContent += `<div class="ending-stamp">${node.ending}</div>`;
+            }
+            storyText.innerHTML = htmlContent;
+
+            optionsDiv.innerHTML = '';
+            
+            if (node.ending) {
+                optionsDiv.innerHTML = `<button class="restart-btn" onclick="location.reload()">⟳ 重启战争模拟</button>`;
+                storyText.style.opacity = 1;
+                optionsDiv.style.opacity = 1;
+                return;
+            }
+
+            let allFailed = false;
+            if (node.choices) {
+                const failedList = gameState.failedOptions[nodeId] || [];
+                const nonSafeCount = node.choices.filter(c => !c.isSafe).length;
+                
+                if (nonSafeCount > 0 && failedList.length >= nonSafeCount && !godMode) {
+                    const hasSafeOption = node.choices.some(c => c.isSafe);
+                    if (!hasSafeOption) allFailed = true;
+                }
+            }
+
+            if (allFailed) {
+                const failBtn = document.createElement('button');
+                failBtn.innerText = "【绝望】 局势失控，全线崩溃...";
+                failBtn.style.borderColor = 'red'; failBtn.style.color = 'red';
+                failBtn.onclick = () => {
+                    storyText.innerHTML = "你的指挥失灵，部队在混乱中自行溃散。你看着这一切，无能为力。";
+                    optionsDiv.innerHTML = `<div style="text-align:center; color:#d32f2f; font-size:24px; font-weight:bold; margin-top:20px;">结局：兵败如山倒</div><br><button class="restart-btn" onclick="location.reload()">⟳ 重启</button>`;
+                };
+                optionsDiv.appendChild(failBtn);
+            } else if (node.choices) {
+                node.choices.forEach((choice, index) => {
+                    const btn = document.createElement('button');
+                    const isFailed = (gameState.failedOptions[nodeId] || []).includes(index);
+                    
+                    if (isFailed) {
+                        btn.disabled = true;
+                        btn.innerHTML = `
+                            <div class="btn-content">
+                                <div class="btn-title">${choice.text}</div>
+                                <div class="btn-desc">${choice.desc || ''}</div>
+                            </div>
+                            <span class="prob-badge prob-low">已失效</span>
+                        `;
+                    } else {
+                        let rateDisplay = ""; let rateClass = "";
+                        
+                        if (godMode) {
+                            rateDisplay = "GOD (100%)"; rateClass = "prob-high";
+                            btn.style.borderColor = "var(--god-color)";
+                        } else if (choice.isSafe) {
+                            rateDisplay = "100% (安全)"; rateClass = "prob-high";
+                        } else {
+                            const actualRate = calculateActualRate(choice.baseRate);
+                            rateDisplay = actualRate + "%"; rateClass = getRateColor(actualRate);
+                        }
+                        
+                        // 优化的按钮内容结构
+                        btn.innerHTML = `
+                            <div class="btn-content">
+                                <div class="btn-title">${choice.text}</div>
+                                <div class="btn-desc">${choice.desc || ''}</div>
+                            </div>
+                            <span class="prob-badge ${rateClass}">胜率:${rateDisplay}</span>
+                        `;
+                        btn.onclick = (e) => handleChoice(choice, btn, index);
+                    }
+                    optionsDiv.appendChild(btn);
+                });
+            }
+            storyText.style.opacity = 1;
+            optionsDiv.style.opacity = 1;
+            storyText.style.transition = "opacity 0.3s";
+            optionsDiv.style.transition = "opacity 0.3s";
+        }, isReRender ? 0 : 200);
+    }
+
+    updateMoraleUI();
+    renderNode(1);
+
+</script>
+</body>
+</html>
+

@@ -29,28 +29,36 @@ title: 主页
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
 
-  /* === “小测试！”浮动按钮样式 === */
+  /* === “知识挑战”浮动按钮样式 (Updated) === */
   .floating-quiz-wrapper {
     position: fixed;
-    bottom: 80px; /* 调整位置，避免与“全部展开/收起”按钮重叠 */
+    bottom: 85px; /* 调整位置，避免与“全部展开/收起”按钮重叠 */
     right: 30px;
     z-index: 1000;
   }
   .floating-quiz-btn {
-    background-color: #4CAF50; /* 绿色背景 */
+    /* Modern Gradient Background */
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     color: white;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border: none;
-    border-radius: 25px;
+    border-radius: 50px; /* Pill shape */
     font-size: 16px;
+    font-weight: 600; /* Bolder text */
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3); /* Soft colored shadow */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Space for icon */
   }
   .floating-quiz-btn:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #5b0eb0 0%, #1a60d6 100%);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(37, 117, 252, 0.5); /* Glow effect on hover */
+  }
+  .floating-quiz-btn:active {
+    transform: translateY(-1px);
   }
 
   /* === 页脚的视图切换按钮样式 (低调) === */
@@ -163,7 +171,7 @@ title: 主页
 </div>
 
 <div class="floating-quiz-wrapper">
-  <button class="floating-quiz-btn" onclick="window.location.href='{{ '/quiz/index.html' | relative_url }}'">小测试！</button>
+  <button class="floating-quiz-btn" onclick="window.location.href='{{ '/quiz/index.html' | relative_url }}'">💡 知识挑战</button>
 </div>
 
 <div id="new-view" class="view-panel">
