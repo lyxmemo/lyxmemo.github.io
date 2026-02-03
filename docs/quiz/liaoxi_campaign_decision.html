@@ -24,10 +24,9 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center; /* Centers vertically on desktop */
+            align-items: center;
             min-height: 100vh;
             user-select: none;
-            /* FIX 1: Changed from hidden to auto to allow scrolling */
             overflow-y: auto; 
             -webkit-tap-highlight-color: transparent;
         }
@@ -42,11 +41,9 @@
             border: 1px solid #333;
             position: relative;
             z-index: 1;
-            /* FIX: Ensure container has room to breathe on desktop if content is long */
             margin: 20px 0; 
         }
 
-        /* --- Return Button Style --- */
         .back-btn {
             position: absolute;
             top: 10px;
@@ -63,11 +60,8 @@
             z-index: 10;
         }
 
-        .back-btn:hover {
-            color: var(--highlight);
-        }
+        .back-btn:hover { color: var(--highlight); }
 
-        /* --- 顶部仪表盘 --- */
         .dashboard {
             display: flex;
             justify-content: space-between;
@@ -102,7 +96,6 @@
             font-size: 12px; line-height: 20px; color: #fff; text-shadow: 1px 1px 2px black; font-weight: bold;
         }
 
-        /* --- 剧情文本 --- */
         #story-text {
             font-size: 18px; line-height: 1.8; margin-bottom: 30px;
             min-height: 120px; white-space: pre-wrap;
@@ -120,7 +113,6 @@
             padding: 15px; transform: rotate(-2deg); box-shadow: 0 0 20px rgba(211, 47, 47, 0.2);
         }
 
-        /* --- 按钮区域 (布局优化) --- */
         .options-grid { display: flex; flex-direction: column; gap: 12px; }
         
         button {
@@ -159,7 +151,6 @@
         
         .restart-btn { background-color: var(--accent-color); display: flex; justify-content: center; font-weight: bold; margin-top: 20px; }
 
-        /* --- 动画与特效 --- */
         @keyframes text-shake {
             0% { transform: translateX(0); } 25% { transform: translateX(-5px); }
             50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); }
@@ -174,7 +165,6 @@
             0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-50px); }
         }
 
-        /* --- 覆盖层 --- */
         .dice-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 9999;
@@ -201,46 +191,26 @@
         }
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-        /* --- MOBILE ADJUSTMENTS --- */
         @media (max-width: 600px) {
-            /* FIX 2: Allow container to grow naturally instead of being stuck at 100vh */
-            body {
-                align-items: flex-start; /* Prevents top cut-off when scrolling */
-            }
+            body { align-items: flex-start; }
             .container { 
-                min-height: 100vh; /* Minimum height is screen, but can grow */
-                height: auto;      /* Height adjusts to content */
-                border: none; 
-                padding: 15px; 
-                padding-top: 40px;
-                padding-bottom: 40px; /* Extra padding at bottom for easy scrolling */
-                margin: 0; /* Remove margin on mobile */
+                min-height: 100vh; height: auto; border: none; 
+                padding: 15px; padding-top: 40px; padding-bottom: 40px; margin: 0; 
             }
             .back-btn { left: 15px; } 
             .dashboard { flex-direction: column; align-items: flex-start; gap: 10px; }
             button { grid-template-columns: 1fr; gap: 5px; }
             .prob-badge { justify-self: start; margin-top: 5px; }
             .big-number-box { font-size: 80px; }
+            .lang-switch { right: 15px; }
         }
 
         .lang-switch {
-            position: absolute;
-            top: 10px;
-            right: 30px;
-            cursor: pointer;
-            color: #555;
-            font-size: 12px;
-            font-family: monospace;
-            letter-spacing: 1px;
-            transition: color 0.3s ease;
-            z-index: 10;
+            position: absolute; top: 10px; right: 30px; cursor: pointer;
+            color: #555; font-size: 12px; font-family: monospace;
+            letter-spacing: 1px; transition: color 0.3s ease; z-index: 10;
         }
-        .lang-switch:hover {
-            color: var(--highlight);
-        }
-        @media (max-width: 600px) {
-            .lang-switch { right: 15px; }
-        }
+        .lang-switch:hover { color: var(--highlight); }
     </style>
 </head>
 <body>
@@ -300,7 +270,7 @@
     let cheatClicks = 0;
     let godMode = false;
 
-    // --- 剧本数据 (新增 desc 字段) ---
+    // --- 剧本数据 ---
     const storyNodes = {
         1: {
             text: "1948年10月12日，彰武。<br>窗外风雪交加。参谋长杨焜拿着战报匆匆走来。<br><span class='dialogue'>“司令官，塔山前线……有消息了。”</span>",
@@ -637,19 +607,39 @@
                 showSystemMsg(`【判定成功】 掷骰:${roll} (需求≤${actualRate}) - 战术执行顺利`, false);
                 renderNode(choice.next);
             } else {
+                // 判定失败
                 gameState.morale -= 15;
                 updateMoraleUI();
                 
                 const rect = btnElement.getBoundingClientRect();
                 showFloatingText("-15 士气", rect.left + rect.width/2, rect.top);
                 
-                showSystemMsg(`【判定失败】 掷骰:${roll} (需求≤${actualRate}) <br>后果: ${choice.failText}`, true);
-
-                if (!gameState.failedOptions[gameState.currentNode]) {
-                    gameState.failedOptions[gameState.currentNode] = [];
+                // --- 修改逻辑：如果士气归零或更低，直接兵败如山倒 ---
+                if (gameState.morale <= 0) {
+                    showSystemMsg(`【彻底崩溃】 掷骰:${roll} (需求≤${actualRate}) <br>士气归零，全军溃散！`, true);
+                    
+                    // 强制渲染“兵败如山倒”结局
+                    const storyText = document.getElementById('story-text');
+                    const optionsDiv = document.getElementById('options');
+                    
+                    // 追加剧情描述
+                    storyText.innerHTML += `<br><br><span style="color: #d32f2f; font-weight: bold;">部队士气彻底崩溃，士兵们扔下武器四散而逃。你试图阻止，但无济于事...</span>`;
+                    
+                    // 覆盖选项为结局状态
+                    optionsDiv.innerHTML = `
+                        <div class="ending-stamp" style="transform: rotate(5deg); border-color: #d32f2f; color: #d32f2f;">
+                            结局：兵败如山倒
+                        </div>
+                        <button class="restart-btn" onclick="location.reload()">⟳ 重新开始</button>
+                    `;
+                    
+                    // 重要：这里 return，不执行 renderNode，否则会重置界面
+                    return; 
+                } else {
+                    // 士气尚存，允许重试，不加入 failedOptions
+                    showSystemMsg(`【判定失败】 掷骰:${roll} (需求≤${actualRate}) <br>后果: ${choice.failText}<br>(士气下降，但可整军再战)`, true);
+                    renderNode(gameState.currentNode, true);
                 }
-                gameState.failedOptions[gameState.currentNode].push(choiceIndex);
-                renderNode(gameState.currentNode, true);
             }
         });
     }
@@ -689,6 +679,7 @@
                 return;
             }
 
+            // 检查 failedOptions 逻辑保留（虽然普通失败现在允许重试，但如果未来添加不可重试的逻辑，这里兼容）
             let allFailed = false;
             if (node.choices) {
                 const failedList = gameState.failedOptions[nodeId] || [];
@@ -701,12 +692,13 @@
             }
 
             if (allFailed) {
+                // 这个逻辑现在只有在 failedOptions 被手动添加时才会触发
                 const failBtn = document.createElement('button');
                 failBtn.innerText = "【绝望】 局势失控，全线崩溃...";
                 failBtn.style.borderColor = 'red'; failBtn.style.color = 'red';
                 failBtn.onclick = () => {
                     storyText.innerHTML = "你的指挥失灵，部队在混乱中自行溃散。你看着这一切，无能为力。";
-                    optionsDiv.innerHTML = `<div style="text-align:center; color:#d32f2f; font-size:24px; font-weight:bold; margin-top:20px;">结局：兵败如山倒</div><br><button class="restart-btn" onclick="location.reload()">⟳ 重启</button>`;
+                    optionsDiv.innerHTML = `<div class="ending-stamp" style="border-color: #d32f2f; color: #d32f2f;">结局：兵败如山倒</div><br><button class="restart-btn" onclick="location.reload()">⟳ 重启</button>`;
                 };
                 optionsDiv.appendChild(failBtn);
             } else if (node.choices) {
@@ -736,7 +728,6 @@
                             rateDisplay = actualRate + "%"; rateClass = getRateColor(actualRate);
                         }
                         
-                        // 优化的按钮内容结构
                         btn.innerHTML = `
                             <div class="btn-content">
                                 <div class="btn-title">${choice.text}</div>
@@ -758,24 +749,18 @@
 
     updateMoraleUI();
     renderNode(1);
-// --- 繁简转换逻辑 ---
+
 const LangUtils = {
     isTraditional: localStorage.getItem('isTraditional') === 'true',
-    // 基础常用字库映射（示例，实际可根据需要扩充）
     s2t: {"兵":"兵","团":"團","士":"士","气":"氣","决":"決","战":"戰","辽":"遼","沈":"沈","指":"指","挥":"揮","官":"官","战":"戰","棋":"棋","辽":"遼","西":"西","会":"會","战":"戰","后":"後","路":"路","阵":"陣","地":"地","伤":"傷","亡":"亡","惨":"慘","重":"重","实":"實","力":"力","丧":"喪","失":"失","先":"先","机":"機","独":"獨","立":"立","解":"解","围":"圍","纵":"縱","横":"橫","突":"突","破":"破","进":"進","击":"擊","夺":"奪","回":"回","锦":"錦","州":"州","长":"長","春":"春","沈":"沈","阳":"陽","营":"營","口":"口","军":"軍","令":"令","哗":"嘩","变":"變","溃":"潰","败":"敗","俘":"虜","虏":"虜","胜":"勝","率":"率","预":"預","计":"計","系":"系","统":"統","模":"模","式":"式","选":"選","项":"項","开":"開","始":"始","重":"重","启":"啟","结":"結","局":"局","说":"說","话":"話","闻":"聞","讯":"訊"},
     
-    // 简单的转换函数
     convert(text, toTraditional) {
         if (!text) return text;
-        // 注意：实际项目中建议引入完整的 t2s.js 字典，这里演示核心逻辑
-        // 这里演示用正则表达式或遍历替换常用字
         let res = "";
         for (let char of text) {
             if (toTraditional) {
-                // 简体转繁体
                 res += this.s2t[char] || char;
             } else {
-                // 繁体转简体 (反向查找)
                 let sChar = Object.keys(this.s2t).find(key => this.s2t[key] === char);
                 res += sChar || char;
             }
@@ -783,17 +768,14 @@ const LangUtils = {
         return res;
     },
 
-    // 递归遍历并翻译所有文本节点
     translatePage() {
         const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
         let node;
         while (node = walk.nextNode()) {
-            // 排除脚本和样式
             if (node.parentElement.tagName !== 'SCRIPT' && node.parentElement.tagName !== 'STYLE') {
                 node.nodeValue = this.convert(node.nodeValue, this.isTraditional);
             }
         }
-        // 更新按钮文字
         document.getElementById('lang-btn').innerText = this.isTraditional ? "简体中文" : "繁體中文";
     }
 };
@@ -801,26 +783,19 @@ const LangUtils = {
 function toggleLanguage() {
     LangUtils.isTraditional = !LangUtils.isTraditional;
     localStorage.setItem('isTraditional', LangUtils.isTraditional);
-    
-    // 核心：实时翻译当前屏幕内容
     LangUtils.translatePage();
-    
-    // 提示反馈
     const msg = LangUtils.isTraditional ? "已切换至繁体" : "已切换至简体";
     showFloatingText(msg, window.innerWidth / 2, 50);
 }
 
-// 修改原有的 renderNode 函数，在渲染后自动执行一次翻译
 const originalRenderNode = renderNode;
 renderNode = function(nodeId, isReRender = false) {
     originalRenderNode(nodeId, isReRender);
-    // 给异步渲染留一点时间
     setTimeout(() => {
         if (LangUtils.isTraditional) LangUtils.translatePage();
     }, isReRender ? 10 : 210);
 };
 
-// 页面初始化加载设置
 window.addEventListener('DOMContentLoaded', () => {
     if (LangUtils.isTraditional) {
         LangUtils.translatePage();
