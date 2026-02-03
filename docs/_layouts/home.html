@@ -29,10 +29,10 @@ title: 主页
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
 
-  /* === “知识挑战”浮动按钮样式 (Updated) === */
+/* === “知识挑战”浮动按钮样式 (Resized to match) === */
   .floating-quiz-wrapper {
     position: fixed;
-    bottom: 85px; /* 调整位置，避免与“全部展开/收起”按钮重叠 */
+    bottom: 75px; /* Adjusted from 85px so the gap between buttons looks natural */
     right: 30px;
     z-index: 1000;
   }
@@ -40,22 +40,26 @@ title: 主页
     /* Modern Gradient Background */
     background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     color: white;
-    padding: 12px 24px;
+    
+    /* --- Size Adjustments Start --- */
+    padding: 8px 15px;       /* Changed from 12px 24px to match Toggle button */
+    font-size: 14px;         /* Changed from 16px to match Toggle button */
+    border-radius: 20px;     /* Changed from 50px to match Toggle button */
+    /* --- Size Adjustments End --- */
+
     border: none;
-    border-radius: 50px; /* Pill shape */
-    font-size: 16px;
-    font-weight: 600; /* Bolder text */
+    font-weight: 600; 
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3); /* Soft colored shadow */
+    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     display: flex;
     align-items: center;
-    gap: 6px; /* Space for icon */
+    gap: 6px; 
   }
   .floating-quiz-btn:hover {
     background: linear-gradient(135deg, #5b0eb0 0%, #1a60d6 100%);
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(37, 117, 252, 0.5); /* Glow effect on hover */
+    transform: translateY(-2px); /* Slight reduction in hover movement to match smaller size */
+    box-shadow: 0 6px 20px rgba(37, 117, 252, 0.5);
   }
   .floating-quiz-btn:active {
     transform: translateY(-1px);
