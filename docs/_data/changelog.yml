@@ -1,10 +1,15 @@
+- date: 2026-02-14
+  commit_message: "+ 1 回忆"
+  changes:
+    - title: "忆廖耀湘将军（王新）"
+      url: "/ten_year_memorial/忆廖耀湘将军（王新）.html"
 - date: 2026-02-10
   commit_message: "+ 2 采访"
   changes:
     - title: "在孟拱河谷前线访问孙廖两将军（乐恕人）"
       url: "/battles_history/1944/在孟拱河谷前线访问孙廖两将军（乐恕人）.html"
     - title: "远征军的将星群（吕德涧）"
-      url: "/ten_year_memorial/远征军的将星群（吕德涧）.html"
+      url: "/battles_history/1944/远征军的将星群（吕德涧）.html"
 - date: 2026-02-10
   commit_message: "+ 11 回忆"
   changes:
