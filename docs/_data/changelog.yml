@@ -1,8 +1,17 @@
+- date: 2026-02-19
+  commit_message: "+ 3 回忆"
+  changes:
+    - title: "”战犯楼“里的廖耀湘"
+      url: "/newspapers/”战犯楼“里的廖耀湘（高皋）.html"
+    - title: "《特别公民》节选"
+      url: "/ten_year_memorial/《特别公民》节选（周吉平）.html"
+    - title: "《四进长春》节选"
+      url: "/ten_year_memorial/《四进长春》节选（尚传道）.html"
 - date: 2026-02-14
   commit_message: "+ 1 回忆"
   changes:
     - title: "忆廖耀湘将军（王新）"
-      url: "/ten_year_memorial/忆廖耀湘将军（王新）.html"
+      url: "/newspapers/忆廖耀湘将军（王新）.html"
 - date: 2026-02-10
   commit_message: "+ 2 采访"
   changes:

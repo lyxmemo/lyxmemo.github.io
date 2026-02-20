@@ -22,3 +22,9 @@ weasyprint --base-url _site/ _site/book.html assets/与廖耀湘有关的文字�
 ```
 pandoc _site/book.html -o assets//与廖耀湘有关的文字资料合集.epub --toc
 ```
+
+4.
+
+```
+python3 -c "import re; html = open('_site/book.html').read(); clean = re.sub('<[^<]+?>', '', html); print('\n'.join(line.strip() for line in clean.splitlines() if line.strip()))" > assets/与廖耀湘有关的文字资料合集.txt
+```
