@@ -76,6 +76,10 @@ jekyll-archives:
   layout: category
   permalinks:
     category: '/categories/:name/'
+
+# Sitemap configuration
+jekyll-sitemap:
+  use_git: true
     
 # Pagination
 paginate: 10
