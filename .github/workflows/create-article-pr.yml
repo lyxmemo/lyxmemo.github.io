@@ -1,0 +1,91 @@
+name: Create Article PR
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  create-pr:
+    if: github.event.label.name == 'new-article'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r .github/scripts/requirements.txt
+
+      - name: Process article
+        id: process
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: python .github/scripts/process_article.py
+
+      - name: Validate article
+        run: python .github/scripts/validate_article.py "${{ steps.process.outputs.article_path }}"
+
+      - name: Create branch, commit, and push
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          BRANCH="article/issue-${ISSUE_NUMBER}"
+          git checkout -b "$BRANCH"
+          git add docs/ .github/
+          git commit -m "Add article from issue #${ISSUE_NUMBER}: ${{ steps.process.outputs.article_title }}"
+          git push origin "$BRANCH"
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh pr create \
+            --title "新文章: ${{ steps.process.outputs.article_title }}" \
+            --body "$(cat <<'EOF'
+          ## 自动生成的文章 PR
+
+          Closes #${{ github.event.issue.number }}
+
+          - 由 GitHub Action 自动从 issue 模板生成
+          - 文件路径: `${{ steps.process.outputs.article_path }}`
+
+          请审阅文章格式与内容。如需修改，可评论 `@claude fix XYZ`。
+
+          🤖 Generated with GitHub Actions + Claude API
+          EOF
+          )" \
+            --base main \
+            --head "article/issue-${ISSUE_NUMBER}"
+
+      - name: Comment on issue (success)
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "✅ 文章 PR 已自动创建！请查看 Pull Requests 页面进行审阅。"
+
+      - name: Comment on issue (failure)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --body "❌ 文章处理失败。请检查 [Action 运行日志](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})。"
