@@ -1,3 +1,8 @@
+- date: 2026-02-24
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "新一军的成立及其抗战概述（王大中）"
+      url: "/battles_history/1942/新一军的成立及其抗战概述（王大中）.html"
 - date: 2026-02-19
   commit_message: "+ 3 回忆"
   changes:
