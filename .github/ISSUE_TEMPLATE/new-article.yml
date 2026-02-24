@@ -1,0 +1,126 @@
+name: "新增文章 / New Article"
+description: "提交新文章以自动生成 PR / Submit a new article to auto-generate a PR"
+title: "[新文章] "
+labels: ["new-article"]
+body:
+  - type: dropdown
+    id: collection
+    attributes:
+      label: Collection / 文集
+      description: "选择文章所属的文集 / Choose which collection this article belongs to"
+      options:
+        - "liaos_writings (廖耀湘文集)"
+        - "liaos_tele (来往电报)"
+        - "newspapers (报刊杂志)"
+        - "n6a_memorial (新六军纪念)"
+        - "n22d_memorial (新二十二师纪念)"
+        - "ten_year_memorial (故人回忆)"
+        - "battles_history (战史)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: battles_subfolder
+    attributes:
+      label: Battles subfolder / 战史子目录
+      description: "仅 battles_history 需要选择子目录 / Only required for battles_history collection"
+      options:
+        - "N/A"
+        - "1939"
+        - "1942"
+        - "1943"
+        - "1944"
+        - "1945"
+        - "liaoshen/1946"
+        - "liaoshen/1947"
+        - "liaoshen/1948"
+    validations:
+      required: false
+
+  - type: input
+    id: title
+    attributes:
+      label: Title / 标题
+      description: "文章标题 / Article title"
+      placeholder: "例：昆仑关攻坚战亲历记"
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: Author / 作者
+      description: "文章作者 / Article author(s)"
+      placeholder: "例：郑洞国 郑庭笈"
+    validations:
+      required: true
+
+  - type: input
+    id: category
+    attributes:
+      label: Category / 分类
+      description: |
+        文章分类。以下三个文集有固定分类值：
+        - liaos_writings → 廖耀湘文集
+        - liaos_tele → Liao's Tele
+        - newspapers → 报刊杂志
+        其他文集请自行填写合适的分类。
+      placeholder: "例：文史资料"
+    validations:
+      required: true
+
+  - type: input
+    id: date
+    attributes:
+      label: Date / 日期
+      description: "文章日期，格式 YYYY-MM-DD / Article date in YYYY-MM-DD format"
+      value: "1900-01-01"
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Source / 来源
+      description: "文章来源（可选）/ Article source (optional)"
+      placeholder: "例：廖耀湘将军逝世十周年纪念集"
+    validations:
+      required: false
+
+  - type: input
+    id: transcriber
+    attributes:
+      label: Transcriber / 录入校对
+      description: "录入校对者（可选）/ Transcriber name (optional)"
+      placeholder: "例：观棋不语"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: toc
+    attributes:
+      label: Add TOC / 添加目录
+      description: "是否在文章开头添加目录 / Whether to add a table of contents"
+      options:
+        - "No"
+        - "Yes"
+    validations:
+      required: true
+
+  - type: textarea
+    id: content
+    attributes:
+      label: Content / 文章内容
+      description: "粘贴文章原文 / Paste the raw article text"
+      placeholder: "在此粘贴文章内容..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / 备注
+      description: "特殊说明（可选）/ Special instructions (optional)"
+      placeholder: "例：请保留原文中的繁体字"
+    validations:
+      required: false
