@@ -99,19 +99,8 @@ TOC 规则：
 
 请直接输出格式化后的 Markdown 正文，不要包含任何前言或后语。"""
 
-FOOTER_WITH_BOTH = """\
-- 如果有录入校对信息，在正文最后添加：`> *录入校对：{transcriber}*`
-- 如果有来源信息，在正文最后添加：`> 来源：{source}`
-- 录入校对行在前，来源行在后，各占一行，之间用空行分隔。"""
-
-FOOTER_TRANSCRIBER_ONLY = """\
-- 在正文最后添加：`> *录入校对：{transcriber}*`"""
-
-FOOTER_SOURCE_ONLY = """\
-- 在正文最后添加：`> 来源：{source}`"""
-
-FOOTER_NONE = """\
-- 不需要添加页脚。"""
+FOOTER_INSTRUCTIONS = """\
+- **不要添加页脚。** 录入校对和来源信息将由程序自动添加，你不需要输出它们。"""
 
 TOC_YES = """\
 - 在正文开头（作者行之后，如果有的话）插入以下两行：
@@ -126,27 +115,21 @@ TOC_NO = """\
 
 
 def build_system_prompt(data: dict) -> str:
-    # Footer instructions
-    has_source = bool(data.get("source"))
-    has_transcriber = bool(data.get("transcriber"))
-    if has_source and has_transcriber:
-        footer = FOOTER_WITH_BOTH.format(
-            transcriber=data["transcriber"], source=data["source"]
-        )
-    elif has_transcriber:
-        footer = FOOTER_TRANSCRIBER_ONLY.format(transcriber=data["transcriber"])
-    elif has_source:
-        footer = FOOTER_SOURCE_ONLY.format(source=data["source"])
-    else:
-        footer = FOOTER_NONE
-
-    # TOC instructions
     toc = TOC_YES if data.get("toc", "").lower() == "yes" else TOC_NO
-
     return SYSTEM_PROMPT.format(
-        footer_instructions=footer,
+        footer_instructions=FOOTER_INSTRUCTIONS,
         toc_instructions=toc,
     )
+
+
+def build_footer(data: dict) -> str:
+    """Build the footer deterministically (not by AI)."""
+    lines: list[str] = []
+    if data.get("transcriber"):
+        lines.append(f"\n> *录入校对：{data['transcriber']}*")
+    if data.get("source"):
+        lines.append(f"\n> 来源：{data['source']}")
+    return "\n".join(lines)
 
 
 def call_claude(data: dict) -> str:
@@ -322,8 +305,11 @@ def main() -> None:
     # Generate frontmatter deterministically
     frontmatter = generate_frontmatter(data)
 
+    # Build footer deterministically
+    footer = build_footer(data)
+
     # Combine into full markdown
-    full_content = frontmatter + "\n" + formatted_body + "\n"
+    full_content = frontmatter + "\n" + formatted_body + "\n" + footer + "\n"
 
     # Determine file path and write
     file_path = determine_file_path(data)
