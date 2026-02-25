@@ -17,6 +17,7 @@ jobs:
       contents: write
       pull-requests: write
       issues: write
+      id-token: write
 
     steps:
       - name: Checkout
@@ -27,4 +28,3 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           trigger_phrase: "@claude"
-          allowed_tools: "Edit,Write,Read,Bash(git commit:*),Bash(git add:*),Bash(git push:*),Bash(git status),Bash(git diff:*),Bash(git log:*)"
