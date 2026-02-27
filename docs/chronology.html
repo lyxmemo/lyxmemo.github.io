@@ -1,0 +1,3031 @@
+---
+layout: default
+title: 年谱
+---
+
+<style>
+.chronology-header {
+  margin-bottom: 1.5rem;
+}
+.chronology-header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+.chronology-header p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.2rem 0;
+}
+
+.chronology-year-nav {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.5rem;
+}
+.chronology-year-nav-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  flex-wrap: wrap;
+}
+.chronology-decade-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #999;
+  min-width: 45px;
+  flex-shrink: 0;
+}
+.chronology-year-link {
+  font-size: 0.85rem;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.chronology-year-link:hover {
+  background-color: #e8f0fe;
+  text-decoration: none;
+}
+
+.chronology-year-section {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 1.5s;
+}
+.chronology-year-section:first-of-type {
+  border-top: 1px solid #e0e0e0;
+}
+.chronology-year-section.highlight {
+  background-color: #fffde7;
+  transition: background-color 0s;
+}
+.chronology-year-summary {
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 0.6rem 0;
+  cursor: pointer;
+  list-style: none;
+  outline: none;
+  margin-bottom: 0 !important;
+  transition: background-color 0.2s;
+  color: #504949;
+}
+.chronology-year-summary:hover {
+  background-color: #f7f7f7;
+}
+.chronology-year-summary::-webkit-details-marker { display: none; }
+.chronology-year-summary::before {
+  content: '\2212';
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-right: 12px;
+  color: #888;
+  display: inline-block;
+  width: 20px;
+  text-align: center;
+}
+details.chronology-year-section:not([open]) > .chronology-year-summary::before {
+  content: '+';
+}
+
+.chronology-entries {
+  padding: 0 0 1rem 0;
+  margin: 0;
+}
+
+.chronology-entry {
+  display: flex;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  align-items: flex-start;
+}
+.chronology-date {
+  flex-shrink: 0;
+  min-width: 85px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  padding-top: 2px;
+}
+
+.chronology-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.chronology-content p {
+  margin: 0 0 0.3rem 0;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.chronology-source {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.3rem;
+  line-height: 1.5;
+  word-break: break-all;
+}
+.chronology-source a {
+  color: #6b8eb5;
+  text-decoration: none;
+}
+.chronology-source a:hover {
+  text-decoration: underline;
+}
+
+.chronology-note {
+  font-size: 0.85rem;
+  color: #777;
+  font-style: italic;
+  margin-top: 0.2rem;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.chronology-detail-toggle {
+  margin-top: 0.4rem;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+.chronology-detail-toggle summary {
+  font-size: 0.8rem;
+  color: #888;
+  cursor: pointer;
+  padding: 4px 10px;
+  margin-bottom: 0 !important;
+  font-weight: normal;
+}
+.chronology-detail-toggle summary:hover {
+  background-color: #f0f0f0;
+}
+.chronology-detail-toggle summary::before {
+  content: '' !important;
+  margin-right: 0 !important;
+  width: 0 !important;
+}
+.chronology-detail-text {
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  color: #555;
+  line-height: 1.7;
+  border-top: 1px solid #e8e8e8;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.chronology-detail-text p {
+  margin: 0.4rem 0;
+}
+
+@media (max-width: 600px) {
+  .chronology-entry {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .chronology-date {
+    min-width: auto;
+    font-size: 0.8rem;
+    color: #888;
+  }
+  .chronology-year-nav-row {
+    gap: 0.3rem;
+  }
+  .chronology-decade-label {
+    min-width: 40px;
+  }
+}
+
+.chronology-toggle-wrapper {
+  position: fixed;
+  bottom: 170px;
+  right: 30px;
+  z-index: 1000;
+}
+.chronology-toggle-btn {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 20px;
+  outline: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  transition: all 0.2s ease-in-out;
+}
+.chronology-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+</style>
+
+<p><a href="/" style="color:#888;font-size:0.9rem;text-decoration:none;">← 返回主页</a></p>
+
+<div class="chronology-header">
+  <h1>年谱</h1>
+  <p>依据《抗日名将廖耀湘》等资料整理，报刊杂志及外国档案补充</p>
+</div>
+
+<div class="chronology-year-nav">
+
+  <div class="chronology-year-nav-row">
+    <span class="chronology-decade-label">1900s</span>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1906')">1906</a>
+  </div>
+  <div class="chronology-year-nav-row">
+    <span class="chronology-decade-label">1910s</span>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1911')">1911</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1916')">1916</a>
+  </div>
+  <div class="chronology-year-nav-row">
+    <span class="chronology-decade-label">1920s</span>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1920')">1920</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1921')">1921</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1924')">1924</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1925')">1925</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1926')">1926</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1928')">1928</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1929')">1929</a>
+  </div>
+  <div class="chronology-year-nav-row">
+    <span class="chronology-decade-label">1930s</span>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1930')">1930</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1931')">1931</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1932')">1932</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1933')">1933</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1934')">1934</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1935')">1935</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1936')">1936</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1937')">1937</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1938')">1938</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1939')">1939</a>
+  </div>
+  <div class="chronology-year-nav-row">
+    <span class="chronology-decade-label">1940s</span>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1940')">1940</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1941')">1941</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1942')">1942</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1943')">1943</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1944')">1944</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1945')">1945</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1946')">1946</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1947')">1947</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1948')">1948</a>
+  </div>
+  <div class="chronology-year-nav-row">
+    <span class="chronology-decade-label">1950s</span>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1951')">1951</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1956')">1956</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1957')">1957</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1958')">1958</a>
+  </div>
+  <div class="chronology-year-nav-row">
+    <span class="chronology-decade-label">1960s</span>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1961')">1961</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1962')">1962</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1963')">1963</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1964')">1964</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1965')">1965</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1966')">1966</a>
+    <a class="chronology-year-link" onclick="jumpToYear('year-1968')">1968</a>
+  </div>
+</div>
+
+<div class="chronology-toggle-wrapper">
+  <button class="chronology-toggle-btn" onclick="toggleAllChronology()">全部展开/收起</button>
+</div>
+
+<details class="chronology-year-section" id="year-1906">
+  <summary class="chronology-year-summary">【1906】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">5月16日</div>
+      <div class="chronology-content">
+        <p>出生于湖南邵阳县三民乡土桥村（今邵阳市新邵县酿溪回龙村）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">按：该日期依据廖氏族谱记载农历四月二十三日推算，墓碑日期为1906.04.12，亦有说法（《国民革命军第五军将官录》）为5月17日（农历四月二十四）出生。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1911">
+  <summary class="chronology-year-summary">【1911】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>正式从祖父在塾馆受业。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1916">
+  <summary class="chronology-year-summary">【1916】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>入县立高等小学，习现代教育。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1920">
+  <summary class="chronology-year-summary">【1920】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>县立小学毕业，考入长沙私立岳云中学。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1921">
+  <summary class="chronology-year-summary">【1921】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">注①：农历辛酉年葭月下浣谷旦，即民国十年农历十一月下旬某吉日。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">春</div>
+      <div class="chronology-content">
+        <p>入岳云中学读书。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">冬</div>
+      <div class="chronology-content">
+        <p>撰写廖氏辛酉族谱序言。①</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1924">
+  <summary class="chronology-year-summary">【1924】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">5月</div>
+      <div class="chronology-content">
+        <p>代表岳云中学参加第七届省运会（第二届华中运动会湖南预选赛），获长跑冠军。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1925">
+  <summary class="chronology-year-summary">【1925】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月</div>
+      <div class="chronology-content">
+        <p>与汪青结婚。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月</div>
+      <div class="chronology-content">
+        <p>与萧自诚、孙佐齐、肖竹轩等组织“合刚学友会”。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">夏</div>
+      <div class="chronology-content">
+        <p>岳云中学读高中二年级，因家贫辍学，南下报考黄埔军校，因错过第五期招生，就近从军，入赵恒惕属下的湖南陆军第三师叶开鑫部第三旅教导总队当学兵。年底考试在360名学兵中成绩名列第一。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1926">
+  <summary class="chronology-year-summary">【1926】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">5月</div>
+      <div class="chronology-content">
+        <p>离开叶开鑫部，回邵阳筹集赴广州路费。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月</div>
+      <div class="chronology-content">
+        <p>国民革命军北伐，湖南唐生智率部响应，称第八军。地方政府应其要求，征收军费捐款。三民乡配额三万元，指定应捐者遍及全乡，尤以酿溪沙湾为甚，民多怨言。廖耀湘、萧自诚等“合刚学友会”成员分赴全乡调查真相，发现浮收军费捐款多至十余万元，乃检举揭发，请求严惩不法。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月</div>
+      <div class="chronology-content">
+        <p>考入黄埔军校长沙第三分校第六期骑兵科学习。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1928">
+  <summary class="chronology-year-summary">【1928】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">3月</div>
+      <div class="chronology-content">
+        <p>黄埔军校迁入南京，更名中央陆军军官学校，简称中央军校。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月</div>
+      <div class="chronology-content">
+        <p>转入该校继续习骑兵科。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1929">
+  <summary class="chronology-year-summary">【1929】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">5月</div>
+      <div class="chronology-content">
+        <p>中央军校毕业，考入留法预备科，列入留法学生名单。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月</div>
+      <div class="chronology-content">
+        <p>如中央陆军军官学校留学预备班学习。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1930">
+  <summary class="chronology-year-summary">【1930】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">5月</div>
+      <div class="chronology-content">
+        <p>奉派法国。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月</div>
+      <div class="chronology-content">
+        <p>入陆军第一预备学校高等科学习。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月</div>
+      <div class="chronology-content">
+        <p>派任陆军军事专科学校准尉教育班长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月</div>
+      <div class="chronology-content">
+        <p>入陆军骑兵学校轻型机械化部队指挥班学习。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>8、9月间，以上士军衔工费赴法国留学。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1931">
+  <summary class="chronology-year-summary">【1931】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">8月</div>
+      <div class="chronology-content">
+        <p>转入圣西尔陆军军官学校骑兵科学习。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1932">
+  <summary class="chronology-year-summary">【1932】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>妻子汪青在邵阳老家病逝。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1933">
+  <summary class="chronology-year-summary">【1933】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>加入复兴社（欧洲方面）。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1934">
+  <summary class="chronology-year-summary">【1934】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">6月</div>
+      <div class="chronology-content">
+        <p>军校毕业后派任法国陆军第14步兵师少尉副官。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月25日</div>
+      <div class="chronology-content">
+        <p>复兴社成立支社并任干事及小组组长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>在法国与黄寿仁之女黄伯溶女士结婚。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">同年</div>
+      <div class="chronology-content">
+        <p>著《法国骑辎专门学校组织设备概况》。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">注：黄伯溶系辛亥革命元勋黄兴（黄克强）之堂侄女。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1935">
+  <summary class="chronology-year-summary">【1935】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">7月</div>
+      <div class="chronology-content">
+        <p>独子廖定一出生。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月</div>
+      <div class="chronology-content">
+        <p>调升法国陆军第1隘口龙骑兵团中尉代理排长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月</div>
+      <div class="chronology-content">
+        <p>蒋百里赴法考察留学生，对其大为赞许。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1936">
+  <summary class="chronology-year-summary">【1936】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">10月</div>
+      <div class="chronology-content">
+        <p>毕业回国。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月23日</div>
+      <div class="chronology-content">
+        <p>派任中央陆军军官学校教导总队（总队长桂永清）骑兵队（队长王翰卿）第2连少校连长。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1937">
+  <summary class="chronology-year-summary">【1937】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">4月</div>
+      <div class="chronology-content">
+        <p>调任教导总队军士营（营长王公亮）学兵连少校连长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月1日</div>
+      <div class="chronology-content">
+        <p>以教导总队骑兵连连长身份随艾尔伯特·德·斯坦法尼、蒋百里等赴各地考察，往复约三星期，沿途经上海、北京、太原、郑州、汉口、广州等地。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月8日</div>
+      <div class="chronology-content">
+        <p>自北京至平地泉考察。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月14日</div>
+      <div class="chronology-content">
+        <p>至太原。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月9日</div>
+      <div class="chronology-content">
+        <p>叙任陆军骑兵少校。参加淞沪会战。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月25日</div>
+      <div class="chronology-content">
+        <p>上海告陷，至书其父曰：“上海已不幸失守，改兵分三线直捣京城，为我民族五千年来之大难……男身受国恩、成仁赴义，此分内事也。”</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月</div>
+      <div class="chronology-content">
+        <p>升任教导总队第2旅（旅长胡啟儒）中校参谋主任</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月</div>
+      <div class="chronology-content">
+        <p>日军进攻南京，参加南京保卫战，率领学生防守南京北门。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月13日</div>
+      <div class="chronology-content">
+        <p>南京陷敌，因未及撤离，陷困城内，辗转逃至下关江边，夜宿荒坟，避难栖霞寺，后被和广舒所救。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1938">
+  <summary class="chronology-year-summary">【1938】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月</div>
+      <div class="chronology-content">
+        <p>国民党政府军事委员会成立机械化师（番号二〇〇师）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月</div>
+      <div class="chronology-content">
+        <p>调升武汉卫戍总司令部（总司令陈诚）军官训练总队上校大队长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月22日</div>
+      <div class="chronology-content">
+        <p>由南京脱险后抵天长（安徽境内）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月</div>
+      <div class="chronology-content">
+        <p>调任200师（师长杜聿明）上校参谋长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月9日</div>
+      <div class="chronology-content">
+        <p>晋任陆军骑兵中校。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月1日</div>
+      <div class="chronology-content">
+        <p>升任少将参谋长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月</div>
+      <div class="chronology-content">
+        <p>200师扩编为新11军，增编新22师（师长邱清泉），成立于湘潭。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月1日</div>
+      <div class="chronology-content">
+        <p>调升新编第22师（师长邱清泉）少将副师长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月15日</div>
+      <div class="chronology-content">
+        <p>前，于湖南桃源讲授火线构成阵地攻防（同时，蒋百里讲述精神道德注意点）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月17日</div>
+      <div class="chronology-content">
+        <p>由戴笠保荐为考察驻外武官人选（驻法）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>2月初，渡江至谢家店，奔浦镇，抵滁县，乘火车经蚌埠，达徐州，转车郑州而南，终抵武汉。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">按：据刘建章言，该年任N22D副师长兼64i团长，曾赴邵阳接兵，廖曾向邱清泉举荐刘建章任中校参谋。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">按：因其自南京后上书蒋介石，详陈建军方略，破格提升为二百师少将参谋长，成为国民党军中由中校越阶晋升少将第一人。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">年末</div>
+      <div class="chronology-content">
+        <p>以南京保卫战为教训，著文《国军今后建军应有之改进》。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1939">
+  <summary class="chronology-year-summary">【1939】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月</div>
+      <div class="chronology-content">
+        <p>新十一军加编荣誉第一师，改为第五军，仍担任新编第22师副师长，并任军干训班主任。新编第22师驻湖南东安整训，师部设黎家坪，创著《小部队战术》作为训练教材。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月</div>
+      <div class="chronology-content">
+        <p>国民党军委会校阅第5军，将第五军军事训练列为西南各军第一，新编第22师列第5军第一。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月</div>
+      <div class="chronology-content">
+        <p>以副师长、代理师长参加昆仑关战役并大捷，击毙号称“钢军”的日军第五师团第二十一旅团少将团长中村正雄。剧作家田汉捷后采访并誉其为北宋名将狄青。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月30日</div>
+      <div class="chronology-content">
+        <p>攻克昆仑关，开攻坚克险之先声。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1940">
+  <summary class="chronology-year-summary">【1940】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">5月1日</div>
+      <div class="chronology-content">
+        <p>参加陆军第5军贵南昆仑关战役阵亡将士追悼大会，题挽辞并致辞。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月7日</div>
+      <div class="chronology-content">
+        <p>升任新编第22师（辖三团）少将师长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月</div>
+      <div class="chronology-content">
+        <p>新22师长途行军至贵州芦山县，杜聿明检阅新22师。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">同年</div>
+      <div class="chronology-content">
+        <p>成立军士队，开学典礼当日从东安师部至白牙市军士队祝贺、训话。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">春</div>
+      <div class="chronology-content">
+        <p>部队集中东安整训，设立战术训练班任副主任（主任邱清泉）。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1941">
+  <summary class="chronology-year-summary">【1941】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">6月</div>
+      <div class="chronology-content">
+        <p>第5军移驻贵州及云南，新二十二师随军移驻。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月</div>
+      <div class="chronology-content">
+        <p>随第5军入缅。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">冬</div>
+      <div class="chronology-content">
+        <p>N22D64i由湖南东安白牙市出发，沿湘黔公路到云南楚雄。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">年末</div>
+      <div class="chronology-content">
+        <p>到达楚雄。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1942">
+  <summary class="chronology-year-summary">【1942】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">3月</div>
+      <div class="chronology-content">
+        <p>奉命随军远征印缅。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月1日</div>
+      <div class="chronology-content">
+        <p>暂停开拔。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月8日</div>
+      <div class="chronology-content">
+        <p>日军攻占仰光，分三路积极北进。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月14日</div>
+      <div class="chronology-content">
+        <p>N22D在芒市待命。后在遮放集结。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月15日</div>
+      <div class="chronology-content">
+        <p>N22D由遮放开始运输，乘便车至腊戍，改乘火车向曼德勒（不含）以东地区集中。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月19日</div>
+      <div class="chronology-content">
+        <p>率N22D经腊戍、曼德勒到达缅甸皎楼（皎栖Kuyaukse）集结待命。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月21日</div>
+      <div class="chronology-content">
+        <p>推进至淡文伊、苗拉林之线，占领阵地。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月22日</div>
+      <div class="chronology-content">
+        <p>在曼德勒附近集结完毕，23日即可向平满那输送。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月25日</div>
+      <div class="chronology-content">
+        <p>N22D先头部队与敌143联队在同古以北之叶达西接触。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月27日</div>
+      <div class="chronology-content">
+        <p>N22D师主力逐次集结，向叶达西推进。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月28日</div>
+      <div class="chronology-content">
+        <p>夜，到达同古以北之南阳车站附近，与敌遭遇并交战。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月29日</div>
+      <div class="chronology-content">
+        <p>攻克南阳车站。后敌增援反扑易手。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月30日</div>
+      <div class="chronology-content">
+        <p>奉命率部守于叶达西至平蛮纳地区，掩护军在平满那会战，阻止日军北进达20余日之久。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月16日</div>
+      <div class="chronology-content">
+        <p>因右翼英军败退，平蛮纳阵地侧背暴露，只得率部正面与日军作战，阻敌前进。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月16日</div>
+      <div class="chronology-content">
+        <p>N22D奉命以64i守瓢背、65i增援赫河、师主力控制于他希。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月20日</div>
+      <div class="chronology-content">
+        <p>罗衣考与平满那失守。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月25日</div>
+      <div class="chronology-content">
+        <p>64i与敌在瓢背激战竟日，黄昏后向北转移。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月25日</div>
+      <div class="chronology-content">
+        <p>雷列姆陷敌。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月28日</div>
+      <div class="chronology-content">
+        <p>细包、南马被陷。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月29日</div>
+      <div class="chronology-content">
+        <p>转进至曼德勒，知腊戍失守后仓促撤离曼德勒。欲渡伊洛瓦底江向密支那转进。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月</div>
+      <div class="chronology-content">
+        <p>率部向孟关、大洛之线转进，掩护军之撤退，入野人山，适逢雨季，部队死伤惨重。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月1日</div>
+      <div class="chronology-content">
+        <p>新维陷敌。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月1日</div>
+      <div class="chronology-content">
+        <p>掩护全军向曼德勒西北之新果转进。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月4日</div>
+      <div class="chronology-content">
+        <p>全师渡伊洛瓦底江，始告脱离战场。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月5日</div>
+      <div class="chronology-content">
+        <p>八莫陷敌。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月8日</div>
+      <div class="chronology-content">
+        <p>密支那陷敌。被迫向野人山转进。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月14日</div>
+      <div class="chronology-content">
+        <p>至堪地，渡更的宛江。自此进入野人山。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月29日</div>
+      <div class="chronology-content">
+        <p>抵达哈巴寨。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月5日</div>
+      <div class="chronology-content">
+        <p>抵达印度东境小镇列多，编入中国驻印军，新编第22师隶属新编第1军。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月</div>
+      <div class="chronology-content">
+        <p>进驻印度比哈尔省蓝姆伽整训。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>详情及部署：师沿仰曼铁路担任正面攻击，三团及师直属部队分四梯次乘火车南下同古，增援二百师，以解同古二百师之围。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>详情及部署：晨向敌攻击，晚右翼64i在南阳车站北端附近与敌（55师团之运输营）发生遭遇，师即下车配置，64i、65i分别于仰曼铁路两侧展开，激战数小时后64i占领沙洼地附近村落数处，虏敌战马颇多。65i猛攻南阳车站，激战彻夜。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>详情及部署：66i担任叶达西之线的守备、64i转进至沙加雅东西之线占领阵地、65i在斯瓦东西之线占领阵地。激战三日四夜后，66i在64i掩护下转进至苗拉东西之线占领阵地，65i自斯瓦转进至耶尼东西之线占领阵地。三个团依次相互掩护，向平满那西北转进。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">同年</div>
+      <div class="chronology-content">
+        <p>戴安澜将军去世，率新22师全体挽戴安澜。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1943">
+  <summary class="chronology-year-summary">【1943】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">9月</div>
+      <div class="chronology-content">
+        <p>奉命率部集结列多，准备反攻。手著《森林作战法》，用于军事演练。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月</div>
+      <div class="chronology-content">
+        <p>第二次缅甸战役打响。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月30日</div>
+      <div class="chronology-content">
+        <p>与蒋介石访问驻印军会餐和交谈</p>
+        <div class="chronology-source">来源：<a href="https://history.army.mil/portals/143/Images/Publications/catalog/9-2.pdf" target="_blank" rel="noopener">https://history.army.mil/portals/143/Images/Publications/catalog/9-2.pdf</a><br>P123</div>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>1943年11月30日，蒋介石夫妇在从开罗返回途中访问了中国驻印军司令部；他们当时仍然相信盟军在缅甸作战问题上意见一致。蒋介石与孙立人将军和廖耀湘将军交谈时，宋美龄问博特纳将军，中国军队是否未能绕过日军继续前进。博特纳将军也持同样的看法。宋美龄请他解释，孙立人回答说前线没有预备队。博特纳问如果预备队到达，他是否会包围日军，孙立人表示同意。宋美龄再次提出这个问题，孙立人再次表示同意。随后，蒋介石召见博特纳，听取他的意见，宋美龄担任翻译。蒋介石要求将他的意见转达给史迪威。博特纳报告说，蒋介石表示： ……我军处于非常不利的境地，补给极其困难，没有道路可以快速调动部队，而日军拥有各种优势，包括在我军正前方部署了大量兵力。他表示，我们不应该与日军进行大规模作战，也不应该在二月份之前渡过塔隆河-塔奈河，因为届时英军将向南推进，中国军队也将从云南出兵。他指出，用于守卫目前河防线的中国军队不应超过一个团。他解释说，之所以需要这支部队，是因为我们只有六个团，如果两个团被敌人切断，我们就只剩下四个团了。3 博特纳将军回答说，第38师面对的日军最多只有两个营。随后，会议暂停，大家共进晚餐。 会议记录显示，鉴于第一次缅甸战役的经验，博特纳将军对蒋介石在孙立人和廖耀湘面前的言论感到担忧，蒋介石当时表示应该坚持防御，并且只派一个团参战。蒋介石一行人刚坐下用餐，他就再次重申，他认为只需一个团防守河岸线。当被问及如果一个团兵力不足怎么办时，蒋介石回答说：“嗯，当然你们得想个办法（想一个办法）。”博特纳立即采取行动，并： ……立即告诉蒋夫人，他认为蒋介石关于只使用一个团的说法至关重要；如果蒋介石告诉他的师长们只使用一个团，而他本人又离开该地区，那么局势可能会突然发生变化，在他能够做出必要的命令调整之前，可能会发生灾难。我迅速补充说（也是对蒋夫人说的），这件事极其重要，蒋介石必须意识到，他的许多军官都把他的观点和愿望当作明确的命令，而这将严重阻碍该地区未来的军事行动。在听完蒋夫人的翻译后，蒋介石迅速回答说，这些不是命令，只是他的个人看法，而且你们（史迪威）拥有完全的指挥权。然后我问蒋夫人，她是否能确保蒋介石向孙立人和廖耀湘将军明确说明这一点。蒋介石同意了。 晚餐后，蒋介石以非常正式的方式告诉孙立人和廖耀湘，他关于作战的言论只是他的个人看法，史迪威的命令必须完全执行。博特纳将军认为，整个会议气氛友好融洽，他也如此向上级汇报。 （中緬印战区盟军将帅图志P89）</p></div>
+        </details>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1944">
+  <summary class="chronology-year-summary">【1944】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月</div>
+      <div class="chronology-content">
+        <p>所属六十五团聚歼日军五十五联队第三大队于百贼河南岸。克大洛。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月19日</div>
+      <div class="chronology-content">
+        <p>新22师66团驰援新38师114团 廖耀湘表达了对空投补给的担忧</p>
+        <div class="chronology-source">来源：<a href="https://history.army.mil/portals/143/Images/Publications/catalog/9-2.pdf" target="_blank" rel="noopener">https://history.army.mil/portals/143/Images/Publications/catalog/9-2.pdf</a><br>P134</div>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月20日</div>
+      <div class="chronology-content">
+        <p>手书一封（傅宗良）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月20日</div>
+      <div class="chronology-content">
+        <p>史迪威对廖耀湘说要枪毙傅宗良（Stillwell&#x27;s Command Problems  P137，援引史迪威日记）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月21日</div>
+      <div class="chronology-content">
+        <p>Memo, Liao for Stillwell （Stillwell&#x27;s Command Problems  P137引用部分）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月23日</div>
+      <div class="chronology-content">
+        <p>新22师歼灭55联队第3营</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月18日</div>
+      <div class="chronology-content">
+        <p>廖耀湘与史迪威前往66团视察缴获日军文件（Stillwell&#x27;s Command Problems P145）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月5日</div>
+      <div class="chronology-content">
+        <p>率部攻克孟关，歼灭日军号称“丛林之王”的第18师团主力、取得胡康河谷作战大捷。盟军东南亚战区最高司令官、英国海军上将蒙巴顿勋爵亲临孟关表示祝贺。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月19日</div>
+      <div class="chronology-content">
+        <p>攻克间布班山隘口。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月21日</div>
+      <div class="chronology-content">
+        <p>66团坦克进攻失败，64团包抄迂回成功（廖在他的西侧为坦克开辟了一条绕行道路）Stillwell&#x27;s Command Problems P187</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月29日</div>
+      <div class="chronology-content">
+        <p>占据整个间布班山区。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月29日</div>
+      <div class="chronology-content">
+        <p>65团攻克Shaduzup</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月15日</div>
+      <div class="chronology-content">
+        <p>新22师总计阵亡650人，受伤2000人。Stillwell&#x27;s Command Problems P188</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月15日</div>
+      <div class="chronology-content">
+        <p>史迪威向廖耀湘谈话问是否因为蒋介石命令才不前进，廖耀湘予以否认。Stillwell&#x27;s Command Problems P212</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月23日</div>
+      <div class="chronology-content">
+        <p>史迪威以书面命令下达了迂回卡马英的命令 不久廖耀湘与孙立人共同向史迪威抗议此命令不适当Stillwell&#x27;s Command Problems P206</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月24日至4</div>
+      <div class="chronology-content">
+        <p>月底 廖本人的指挥部不断向前移动 但并为发起进攻 据一个装甲高级军官说是蒋介石不允许进攻Stillwell&#x27;s Command Problems P208</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月</div>
+      <div class="chronology-content">
+        <p>率部先后攻克瓦康、瓦拉渣、马拉高、英克塘和拉其卡五个据点，取得孟拱河谷攻坚战的胜利。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月1日</div>
+      <div class="chronology-content">
+        <p>廖耀湘、李涛、刘建章、卡尔史密斯研究地图（中缅印战区盟军将帅图志P263）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月4日</div>
+      <div class="chronology-content">
+        <p>史迪威日记抱怨廖和孙都拒绝前进（史迪威日记）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月5日</div>
+      <div class="chronology-content">
+        <p>廖耀湘见史迪威，长谈，廖耀湘表示连级军官的损失很大，他无法前进（史迪威日记）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月12日</div>
+      <div class="chronology-content">
+        <p>郑洞国电蒋中正转发廖耀湘电：新二二师参战以来伤亡三千六百人以上，补充甚微，且官兵疲惫，加以史迪威分散国军兵力，以此疲惫之军续攻，久之恐生意外（国史馆）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月19日</div>
+      <div class="chronology-content">
+        <p>廖将65团调至前线，延长了64团的右翼，并将66团派往更西 Stillwell&#x27;s Command Problems P210</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月24日</div>
+      <div class="chronology-content">
+        <p>史迪威为廖耀湘授予锦旗“间本布”“瓦康” (東南日報) 1944.05.26: Page 2 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/dnrb19440526-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/dnrb19440526-01.1.2</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月27日</div>
+      <div class="chronology-content">
+        <p>新22师抵达Chishidu  Stillwell&#x27;s Command Problems P210</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月9日</div>
+      <div class="chronology-content">
+        <p>率部围研索卡道地区日军五千余人，生俘樱井中队长。蒋介石在电报中以“中国虎”三字予以称许，并嘉奖新编第22师虎旗一面。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月16日</div>
+      <div class="chronology-content">
+        <p>率部攻克卡盟（卡马英），与新编第38师及英军空降第7师7旅会师，完成缅北反攻战的第一阶段胜利。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月</div>
+      <div class="chronology-content">
+        <p>以战功分别获颁美英及金质自由勋章、爵士司令级巴斯勋章和青天白日勋章。时中国驻印军编为新一军、新六军两个军，廖耀湘晋升新六军首任军长，统辖新二十二师、第十四师和第五十师。新六军利用雨季就战地加强训练，廖耀湘预测未来战场多为城镇村落，手撰《城镇村落战斗》，督导部队训练。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月4日</div>
+      <div class="chronology-content">
+        <p>升任新编第6军（辖第14师、第50师、新编第22师）中将军长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月1日</div>
+      <div class="chronology-content">
+        <p>英36师师长菲斯廷与中美军官视察孟关以南的Mu Valley地区，菲斯廷驾驶吉普火车行驶在曼德勒到密支那的铁轨上，廖耀湘陪同。（中缅印战区盟军将帅图志P 076) P78疑似還是廖耀湘</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月1日</div>
+      <div class="chronology-content">
+        <p>率部进抵伊洛瓦底江北岸。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月5日</div>
+      <div class="chronology-content">
+        <p>强渡伊洛瓦底江。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月7日</div>
+      <div class="chronology-content">
+        <p>率部攻克瑞古（史维古），向瑞丽河之线推进。于缅北前线著《欣闻知识青年从军有感》。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月23日</div>
+      <div class="chronology-content">
+        <p>与蒙大拿州众议员Michael J.Mansfield见面 [source: history.state.gov/historicaldocuments/frus1945v07/d2;</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>FOREIGN RELATIONS OF THE UNITED STATES, DIPLOMATIC PAPERS, 1945, THE FAR EAST, CHINA, VOLUME VII 893.00/1–1645 Representative Michael J. Mansfield, of Montana, to President Roosevelt Washington, January 3, 1945 我于11月23日离开孟拱，乘坐吉普车改装的火车前往密支那。不过，在离开莫冈之前，我有机会拜访了中国第六军军长廖耀湘将军和他的美军联络官菲利普上校。廖耀湘将军率领的第六军和孙立人中将率领的第一军都在公路以南地区表现出色，这两支军队之所以赢得美军的尊重和信任，是因为他们伙食充足、训练有素、装备精良、指挥得当。我当天下午抵达密支那，并于当晚与丹尼尔·I·苏尔坦中将共进晚餐。 I left Mogaung on November 23rd, and took the jeep train from there to Myitkyina. However, before I left Mogaung, I had a chance to visit General Liao Yao-hsiang of the Chinese 6th Army and his American liaison officer, Colonel Philipp. General Liao Yao-hsiang, with his 6th, and Lieutenant General Sun Li-jen of the 1st, were both doing a grand job to the south of the Road and the reason that these two armies had the respect and confidence of the American military was because they were well-fed, well-trained, well-equipped, and well-led. I arrived in Myitkyina that same afternoon and had dinner with Lieutenant-General Daniel I. Sultan6 that night]</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月30日</div>
+      <div class="chronology-content">
+        <p>与索尔登、坎农商讨进攻密支那计划（中缅印战区盟军将帅图志P250）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月</div>
+      <div class="chronology-content">
+        <p>新六军大部空降云南沾益，日军闻风后撤，廖耀湘率部驻节曲靖。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>1月初，新22师乘车至前线接替新38师，对胡康河谷之敌展开攻击。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>随后与新38师于八莫会师，扫灭日军56联队，强渡瑞丽河，连克曼纳、派来和贵街三大据点，迫使日军由南坎向芒密总退却。此时的国内战场，日寇进犯独山，贵阳告急，重庆震动。廖耀湘奉命率新六军回国驰援，留置第50师协同新1军继续打通中印公路。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">同年</div>
+      <div class="chronology-content">
+        <p>报纸登载其文《胜利的一年》。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1945">
+  <summary class="chronology-year-summary">【1945】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月</div>
+      <div class="chronology-content">
+        <p>青年军207师编入新编第6军。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月1日</div>
+      <div class="chronology-content">
+        <p>获颁青天白日勋章。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月4日</div>
+      <div class="chronology-content">
+        <p>在陆军大学19期战教班毕业典礼讲演。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月4日</div>
+      <div class="chronology-content">
+        <p>中印公路通车典礼主宾台观礼（中缅印战区盟军将帅图志P267）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月9日</div>
+      <div class="chronology-content">
+        <p>晋任陆军骑兵少校。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月20日</div>
+      <div class="chronology-content">
+        <p>上午9时曲靖劳军（来源：新疆日报曲靖勞軍盛會-新疆日报1945年03月25第2版）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月24日</div>
+      <div class="chronology-content">
+        <p>与蒋介石合影（来源：背后是花坛那个照片）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月8日</div>
+      <div class="chronology-content">
+        <p>云南沾益，廖耀湘视察新六军训练（中缅印战区盟军将帅图志P251）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月29日</div>
+      <div class="chronology-content">
+        <p>云南沾益，廖耀湘、杜聿明。（中缅印战区盟军将帅图志P255）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月</div>
+      <div class="chronology-content">
+        <p>新编第6军空运湖南芷江，作为湘西会战总预备队，增员王耀武第4方面军，负责保卫芷江机场。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月6日</div>
+      <div class="chronology-content">
+        <p>获颁金质棕榈叶勋饰自由勋章（美）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月21-23日</div>
+      <div class="chronology-content">
+        <p>列席芷江洽降仪式。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月15日</div>
+      <div class="chronology-content">
+        <p>日本宣布无条件投降。新编第6军负责日本投降签字典礼筹备工作及安保工作。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月18日</div>
+      <div class="chronology-content">
+        <p>日本签字典礼筹备处全体职员在中美空军联队俱乐部前合影。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月4日</div>
+      <div class="chronology-content">
+        <p>晨 新六军开始空运南京（Dong nan ri bao (東南日報), 1945.09.05 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/dnrb19450905-01.1.3" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/dnrb19450905-01.1.3</a> ）▲重慶五日電  軍委會五日發表，我新六軍廖耀湘部，原定自四日晨起開始空運南京，惟是日氣候惡劣，乃臨時停士，五日晨氣候轉佳，已開始空運。《申报》1945年09月06日  第1版  第25659期</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>▲南京五日電  美國空運大隊已於今日起開始運送國軍新六軍至京，五日晨四時起，美機三十二架，分別自芷江起飛，八時許，南京上空即不斷有飛機翱翔，城內市民仰望國軍天外飛來，無不歡躍異常，八時半起，各機陸續降陸，新六軍健兒一營下機後，即迅速開往指定地點，担任警衛工作，六日美空運大隊繼續運輸，據悉，約半月可竣事。《申报》1945年09月06日  第1版  第25659期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月4日</div>
+      <div class="chronology-content">
+        <p>芷江四日電  芷江各界四日晨九時於體育塲𤍠烈𦦙行慶祝勝利日大會，同時歡迎駐於芷江之何總司令應欽進駐芷江，歡送即將赴京之新六軍，會塲佈置莊嚴燦爛，到會軍民萬餘人。大會開始以警報解放和平之聲歷十分鐘，並鳴禮砲一○一響。主席致開會詞後，何總司令廖耀湘軍長相繼演說，嗣由兩女生代表芷江各界，向何氏獻錦旗鮮花，並以芷江各界簽名書贈廖軍長，以酬其保衛湘西之功。《申报》1945年09月05日  第1版  第25658期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月5日</div>
+      <div class="chronology-content">
+        <p>为接受占领南京、控制冈村宁次总部，接受京沪铁路沿线防务，确保南京、上海交通畅通，新编第6军空运南京，并担任防城任务。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月9日</div>
+      <div class="chronology-content">
+        <p>受降签字仪式在南京举行，参加观礼。投降签字仪式所有安保工作全由新6军第14师40团担任。同时第二次国共内战开始，新编第6军空运至上海待命。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月9日</div>
+      <div class="chronology-content">
+        <p>谒陵合影（中缅印战区盟军将帅图志P252）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月15日</div>
+      <div class="chronology-content">
+        <p>廖耀湘向美联社记者表示：由久历缅甸战事之部队组成中国之新六军，定于国庆日正式进入南京。廖耀湘之部队已占领南京之数商业区，南京之新六军每日增加数百人。(時事新報), 1945.09.17 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19450917-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19450917-01.1.2</a></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>▲中央社重慶十六日電  據美新聞處南京十五日電：新六軍軍長廖耀湘，於此間向美聯社記者談稱，由久歷緬甸戰事之部隊組成之中國新六軍，定於國慶日正式進入南京。廖將軍之部隊已佔領南京之數商業區，南京之第六軍每日增加數百人，美陸軍航空隊則繼續自芷江方面空運裝備精良之部隊進南京。日軍已奉令將其在南京區所有之貨車移交華軍。截至目前止，大多數交通工具在日軍掌握中，南京之日本平民大都為婦女及受傷者，將集中於城內之指定地區，並將歸中國衛隊管理，以迄決定如何處置渠等為止。《申报》1945年09月17日  第1版  第25670期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月</div>
+      <div class="chronology-content">
+        <p>于南京题词“先烈之血，民族之光”、“凯旋还京与旧友重临栖霞”。在南京龙门酒家宴请葛顿南少校，并在便签上留名。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月6日</div>
+      <div class="chronology-content">
+        <p>新6军几十位军官与美军联络官们在“新六军军官俱乐部”联欢并合影留念。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月6日</div>
+      <div class="chronology-content">
+        <p>新六军军官合影（中缅印战区盟军将帅图志P264）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月8日</div>
+      <div class="chronology-content">
+        <p>在约翰·葛顿南少校的记事本上签名留念并写下通讯地址。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月10日</div>
+      <div class="chronology-content">
+        <p>获颁忠勤勋章。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月10日</div>
+      <div class="chronology-content">
+        <p>宴会上正式赠送纪念品给美国联络官们，赠送即将归国的约翰·葛顿南（John J Gardner，14师联络官）一幅中国花鸟字画长轴，字画噢诶呦英文译文。14师师长龙天武少将正式颁发嘉奖状给葛顿南少校，以及锦旗给其他美军军官。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月12日</div>
+      <div class="chronology-content">
+        <p>晚接见记者，对日军缴械情形发表谈话，表示八万日军已全部缴械完成。(聯合日报), 1945.10.14  <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/lhrb19451014-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/lhrb19451014-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月24日</div>
+      <div class="chronology-content">
+        <p>金门酒家宴请晚饭，在座者有杜聿明、赵家骧、李诚毅等</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月25日</div>
+      <div class="chronology-content">
+        <p>晨七时，谒陵；九点半，金门酒家宴请早饭，随后，明孝陵机场送行杜聿明等飞沪</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月29日</div>
+      <div class="chronology-content">
+        <p>廖耀湘离沪赴京（Dong nan ri bao (東南日報) 1945.10.30: Page 2 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/dnrb19451030-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/dnrb19451030-01.1.2</a>）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月25日</div>
+      <div class="chronology-content">
+        <p>［本報蘇州廿五日電］㊀江蘇高等法院遷署鎮江，茲因無適當房屋，決仍設蘇州。江都·淮陰·銅山三處設立分院，部派樓英，楊立基·陳素為一·二·三分院長，各縣恢復地院，計有首都等十五縣，司法計有崑山等廿一縣，至全省監獄全部調整，在蘇州·鎮江·無錫·南通·東海設五個監獄，專押已決犯。㊁吳縣郵局奉令，廿六日開始兌換偽幣。㊂新六軍軍長廖耀湘，今午抵蘇視察，廿六日返滬。《申报》1945年11月26日  第1版  第24342期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月26日</div>
+      <div class="chronology-content">
+        <p>由苏州返回上海。同上。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月20日</div>
+      <div class="chronology-content">
+        <p>马歇尔下午1时55分乘飞机抵沪，在江湾机场降落。何应钦、钱大钧、张治中、郑洞国、廖耀湘、魏德迈等六百余人到场迎接。随后马歇尔与魏德迈同车赴华懋饭店，魏德迈于下午六点设宴，中美各首长作陪。（(建國日報), 1945.12.21 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/jgrb19451221-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/jgrb19451221-01.1.1</a> ） 新六军新二二师六五团三营第七、八连担任警卫和仪仗。(民國日報), 1945.12.21 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/mgrg19451221-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/mgrg19451221-01.1.1</a></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報訊〕啣有執行杜羅門總統在華新政策使命之美新駐華特使馬歇爾元帥，昨（廿）日午後一時五十五分，在熱烈歡迎情况中，飛抵江灣機塲。前往歡迎者，計有昨日由京抵滬之蔣主席代表何應欽上將，中國戰區美軍總司令魏德邁上將，宋院長代表彭學沛，市長錢大鈞，市府秘書長沈士華，第三方面軍張雪中，鄭洞國，謝灝齡，外交部代表陳國廉，淞滬警備副總司令李及蘭，新六軍軍長廖耀湘，市黨部主任委員吳紹澍，地方協會會長杜月笙，市商會會長王曉籟，及美大使館代辦勞勃生，史特拉斯梅耶中將，巴貝海軍中將等三百餘人。 1945年12月21日  第1版  第24367期</p></div>
+        </details>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1946">
+  <summary class="chronology-year-summary">【1946】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月</div>
+      <div class="chronology-content">
+        <p>新编第6军从上海海运至秦皇岛，后自葫芦岛登陆出关至沟帮子，升任东北行营第4绥靖区司令官，兼第六军军长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月2日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>1946年01月03日  第3版  第24380期 本巿軍事首長商決　各軍師辦事處一律取消 不得佔用民房 逮捕人犯搬取物資須經核准　軍人娛樂憑票入場對號入座 本巿娛樂塲所，如滬光電影院，中國大戲院，金山舞□等，迭次發生軍人滋擾情事，淞滬營備總司令部錢兼總司令曁李副總司令，對此極端重視，已將滋事官兵姓名，職級，及所屬部隊調査明確，呈報層峯，並重申委座前頒手令，飭本巿各軍事機關主管切實注意，所有拘押官兵，除禁閉三天外，由總部交各該所屬部隊領回嚴加管束。 　　軍事長官昨日會商 　　各軍事機關主官，於昨日下午三時，在巿府會議室談話，到第三方面軍副司令官鄭洞□，淞滬警備總部副總司令李及蘭，新六軍軍長廖耀湘，第十四師師長龍天武，第二十二師師長李澍，憲兵二十三團團長沈萬千，八十八師參謀長傅碧人，及海軍空軍方面代表等共十餘人，由錢兼總司令主席，商談結果，探錄如下： 　　商定辦法計有六項 　　㊀各部隊在淞滬地區駐防人數及主官姓名，應報警備總部備查。 　　㊁恪遵委座申寢侍參電令，各飭所屬官兵，嚴守紀律。 　　㊂各部隊非報經警備總部核准□□同憲警，不得擅自逮捕人犯及搬取敵偽物資。 　　㊃過境部隊，須向警備總部報到。 　　㊄軍人娛樂，以每人每月能得二次為原則，由警備總部會同警察局，召集影院，平劇，話劇各業負責人，商定辦法後，通知各部隊實施，並須憑票入塲，對號入座。 　　㊅各軍師及一切部隊辦事處通訊處，均須一律取消，尤不得佔用學校民房，否則拿辦。</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月9日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>1946年01月10日  第5版  第24387期 宋院長於紡織公司會議散後，復接見錢巿長，新六軍軍長廖耀湘，及申新紡織廠榮鴻元·榮鴻三·昆仲，彭學沛·劉攻芸·二氏，亦曾謁見宋氏，報吿上海區敵偽產業處理情形，直至下午一時出外。至三時，復到處辦公，晚七時返私邸。</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月20日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>檢閱上海地區駐軍 白崇禧將軍蒞滬（附圖片）並代表委座慰問將士 軍事委員會副參謀總長，兼軍訓部部長白崇禧將軍，於昨晨十時一刻，乘我軍用專機，由空軍第一地區司令孫桐崗將軍親自駕駛，飛抵江灣機塲。隨白氏同來者，有孫參事國銓，陳副兵監蔭鴻，馮參事衍，楊秘書受瓊，楊股長能達等八人。本市軍政當局錢大鈞．湯恩伯·張雪中·鄭洞國·廖耀湘·李及蘭·趙志堯·吳紹澍·陳仲明·胡家驥·龍天武·劉德銘，及在滬各高級軍事長官。曁回敎代表呂恩潭等數十人，均至機塲迎迓。 　　發表談話 　　十時一刻，白將軍專機飛抵汀灣機塲。白氏衣草綠色戎裝，在樂聲中徐徐下機，與各歡迎者一一握手。寒暄後，即在機塲檢閱新六軍儀仗隊，旋登車赴黃陸路湯司令官官邸休息，並接見各軍事長官，及市黨部主委吳紹澍，回敎代表呂恩潭等。並對記者發表書面談話稱：“余於今（十九）日上午十時許，自京飛抵滬，此來任務，即檢閱上海駐軍，視察其訓練實况，務期各整訓部隊，皆能恪遵軍訓部近頌之陸軍敎育令，切實訓練，使具備現代軍事學術，俾成精粹勁練之現代國軍，而足負起國防，及協同盟邦共維世界和平之重任。又各將士在抗戰八年中，忠勇奮發，倍歷艱辛，本席特代表委員長，面致慰問之忱。 　　檢閱駐軍 　　下午二時，白氏至虹口公園檢閱新六軍，及已撥歸新六軍統轄之靑年軍第二○七師。此間三方面軍·警備總部·憲兵司令部·之高級軍官，曁七十一軍八十八師上校以上軍官，亦均參加。在虹口公園廣坪上，列成曲尺隊形，某最前列為新六軍樂隊，次為各部隊高級軍官，新六軍吉普卡一排，騎兵搜索連，第十四師二六○團全體官兵，再次即為甫於週前開抵此間之靑年軍二○七師·二時十分，廖耀湘將軍伴同白副參謀總長蒞臨虹口公園，白氏檢閱部隊完畢後，即登塲中司令台上，向全體官兵訓話。三時一刻，白氏訓話完畢後，即赴靑年軍師部視察。並定於今日召集砲兵團，汽車兵團訓話。又訊，白氏為中國回敎協會理事長，本市回胞將於日內𦦙行盛大歡迎會，歡迎白氏云。 《申报》1946年01月20日  第5版  第24397期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月26日</div>
+      <div class="chronology-content">
+        <p>沪市各界于“大光明”欢送廖耀湘 （Nanjing wan bao (南京晚報) 1946.01.25: Page 1 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/njwb19460125-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/njwb19460125-01.1.1</a>）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月2日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>魏德邁將軍昨日下午一時半，與廖耀湘軍長，由謝灝齡將軍及其他中美官員，陪同視察各地。魏將軍先後巡視美軍需處，美海防司令部，及虬江碼頭日人撇退情形，新六軍第三批運輸北上情形。新六軍第三批約五千人左右由登陸艦六艘，分別北上。廖耀湘將軍曾定期四五日內乘機北上，新六軍之被運北上者，此為第三批，已達萬人左右，日軍則約有千人，外傷兵四百人，分別由明優丸及醫院船，昨午啟程運回日本。魏將軍巡視各地時，對各節垂詢至詳，對於美軍防務，亦甚多指示。第3版  第24410期 《申报》</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月4日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>1946年02月05日  第3版  第24413期 靑年軍入伍周年 觀光雄師受檢 潔 一年前，在我們賢明的領袖號召之下，全國各地知識靑年風起雲湧，投筆從戎，不到三月竟超過了十萬的預定目標，當時抗戰正在最艱難階段，他們抱定了為國犧牲的精神，在大後方受着最嚴格的訓練，準備和敵人拼個你死我活，誰知出師有日，敵人竟全面投降了，使這支新中國的“雄師”未遂夙願。 　　昨天正是“雄師”入伍一週年紀念日，靑年遠征軍二○七師特地在北四川路底中正公園內𦦙行一個盛大的閱兵典禮來紀念他，未到一時，全師官兵全副武裝精神飽滿，巳列隊等候着检閱，巿民專程前往參觀的約有數千人，其中還有從江灣趕來的農民。 　　一時廿分閱兵儀式開始，先由新六軍軍長廖耀湘，靑年軍二○七師師長羅又倫陪同錢巿長大鈞，吳主委紹澍，副巿長何德奎，副司令李及蘭，敎育局長顧毓琇，巿商會理事長王曉籟等於軍樂聲中檢閱一週後，登閱兵台，當分列式行經閱兵台時，不禁使每個參觀的人報以𤍠烈的掌聲，的確步伐太齊整了，同時每個都有健全的體格，一切均象徵着未來新中國的光明。 　　檢閱完畢，首由錢巿長致訓詞，略謂：“去年三月廿日本人曾隨從  委座由渝飛昆，在北校場檢閱諸君一次，那時委座對你們的生活及訓練狀况，非常關切。至於靑年軍產生在前年秋天，敵人正在瘋狂進攻的時候，委座感到國軍素質欠佳，訓練不夠，才發動十萬靑年從軍，把全國知識靑年編成十師，所有裝備給養莫不盡力提高，並予嚴格訓練，務使成為素質高於一切的生力軍，用以摧滅敵人，去年八月抗戰勝利，本人今日又得與二○七師士兵相見，甚感愉快，今後在建國必先建軍的前提下，諸君責任重大，深望每個士兵，勿辜負委座一番訓導誠意，注意前程，確守紀律，鍛鍊體格，使人人成為建軍的幹部。” 　　接着敎育局長顧毓琇，巿商會理事長王曉籟，新六軍軍長廖耀湘，二○七師師長羅又倫等致詞，語多勉勵，典醴於二時三刻吿終，然而參觀的巿民包圍着“雄師”不願散去，最後他們臨時推出幾位同志，表演了一套剌槍技術，獲得了全場的叫好。</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月8日</div>
+      <div class="chronology-content">
+        <p>以新22师第66团为右纵队，自沟帮子向盘山挺近。9日，新22师第66团先头部队抵达盘山，下午14时左右发生交战，占领盘山，共军向牛庄撤退。16日午后16时至19日，沙岭激战。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月10日</div>
+      <div class="chronology-content">
+        <p>207师今日开拔 廖耀湘明日北飞 　〔本報訊〕抗戰勝利後，新六軍奉命衛戍首都，後又調防來滬，茲以東北接收工作迫不容緩，該軍於上月初即陸續海運離滬，其先頭部隊十四師業已到達新民。配屬該軍之靑年軍二○七師亦定今日開拔。軍長廖耀湘，二○七師師長羅又倫，聞明日將乘專機飛錦州，謁見杜長官聿明後，即親往指揮所部。《申报》1946年02月10日  第4版  第24418期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月11日</div>
+      <div class="chronology-content">
+        <p>下午由沪飞抵北平</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月12日</div>
+      <div class="chronology-content">
+        <p>晨偕东北长官部留守处长李诚毅，分谒东北行营主任熊式辉、北平行营主任李宗仁、第十一战区长官孙xx（连仲？）。　并嘱记者前往秦皇岛拍摄新六军罗又伦207师登陆影。(華北日報), 1946.02.13 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/hbrb19460213-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/hbrb19460213-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月14日</div>
+      <div class="chronology-content">
+        <p>廖耀湘抵达北平与李宗仁会面，廖有望两三日内抵沈阳与杜聿明会面，据悉新六军已至沈阳西方九十华里处。 (時事新報), 1946.02.15 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19460215-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19460215-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月14日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報北平十四日電〕新六軍軍長廖耀湘抵平後，稍事聯絡即將飛錦晤杜聿明，杜氏現正臥病，目前曾有三名大夫同機飛錦，為之醫療。新六軍廿二師接防盤山後，十二日已續開入台安，遼中兩縣接防，新大軍二零七師靑年軍，十二日晨亦乘美運輸艦八艘由滬抵秦皇島，十三日開入錦州，因杜長官臥病，由趙家讓參謀長代表閱兵。長官部瀋陽前進指揮所近日之工作似屬順利，長官部政治部並準備在瀋陽出版中蘇日報，欲以促進中蘇友好關係。 1946年02月16日  第1版  第24424期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月16日</div>
+      <div class="chronology-content">
+        <p>上午10时，廖耀湘专机由北平飞锦州。东北长官部留守处长李诚毅等人到南苑机场送行。宣抚特使张继、军政部军需署严副署长、步兵司卢司长、东北长官部文处长、第五补给区谭参谋长等十余人同机飞锦。 (華北日報), 1946.02.17 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/hbrb19460217-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/hbrb19460217-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月17日</div>
+      <div class="chronology-content">
+        <p>（陈明仁邱清泉王耀武梁华盛都在南京开会了，廖去没去）军事复员会议</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月17日</div>
+      <div class="chronology-content">
+        <p>廖耀湘已由北平飞抵锦州会晤杜聿明。军政部次长俞大维、军医署长林可胜亦到达锦州。(時事新報), 1946.02.18<a href="https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19460218-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19460218-01.1.1</a>  (時事新報), 1946.02.17, #02 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19460217-02.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19460217-02.1.2</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月10日</div>
+      <div class="chronology-content">
+        <p>新6军由辽中进攻辽南。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月21日</div>
+      <div class="chronology-content">
+        <p>新六军攻占辽阳 （Jie fang (解放), 1946.04.02 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/jfbc19460402-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/jfbc19460402-01.1.1</a>）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月31日</div>
+      <div class="chronology-content">
+        <p>廿一日攻佔瀋陽以南的遼陽的新六軍廖耀湘部主力 ， 現正沿南滿綫向遼陽西南三十公里的工業城市鞍山及遼陽以西二十五里劉二堡 ， 遼陽以南二十公里的七嶺子等方向進攻 ；(時代日報), 1946.04.02 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/shid19460402-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/shid19460402-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月2日</div>
+      <div class="chronology-content">
+        <p>新6军展开对本溪之攻击。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月4日</div>
+      <div class="chronology-content">
+        <p>会同52军占领本溪。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月5日</div>
+      <div class="chronology-content">
+        <p>获颁胜利勋章。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月6日</div>
+      <div class="chronology-content">
+        <p>新6军结束本溪方面战役。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月7日</div>
+      <div class="chronology-content">
+        <p>新6军回至辽阳南北地区。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月8日</div>
+      <div class="chronology-content">
+        <p>新6军先遣人员开赴开原。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月9日</div>
+      <div class="chronology-content">
+        <p>新6军在辽阳南北各火车站开始车运。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月12日</div>
+      <div class="chronology-content">
+        <p>由辽阳乘火车经沈阳去开原（路过沈阳时下车至长官部见杜聿明了解情况并接受任务，同时也曾研究四平战役结束后下一阶段作战问题）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月13日</div>
+      <div class="chronology-content">
+        <p>新6军两个先头师在新、旧开原以东地区集结完竣（后两个师及军直属部队在5月16日黄昏以前可集中完毕。）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月14日</div>
+      <div class="chronology-content">
+        <p>新6军14师（师长龙天武）指派刘梓皋团进出貂皮屯（未遇战斗即达到目的地）。新6军新22师（师长李涛）指派65团（团长李定一）占领南城子，其后发生威远堡门之激战。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月15日</div>
+      <div class="chronology-content">
+        <p>早晨获得军指挥所参二科连夜整理的在威远堡门所获资料。上午，乘汽车至威远堡门实地了解情况。晚上，给各部队以电话命令，告知下一步作战计划并要求团长以上人员于次日上午8时至新开原指挥所开会，当面给以详细命令和指示。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月16日</div>
+      <div class="chronology-content">
+        <p>上午8时在新开原指挥所开会。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月18日</div>
+      <div class="chronology-content">
+        <p>晚，根据12日与杜聿明商定的战斗指导方案，电令88师（于19日拂晓由开原地区兼程前进至火石岭子地区，限20日拂晓前全部到达，与新22师组成第一线师，由李涛统一指挥）；令207师接平岗之防务（指派一个加强团接替14师平岗之防务）；令14师（与207师交换防务后集结于平岗、火石岭子之间地区）作军之预备队……决心在19日调整部署，20日集中兵力攻击四平街共军之主力（19日晚共军已撤退，未付实施）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月18日</div>
+      <div class="chronology-content">
+        <p>晚，得到新22师电报（火石岭子以西及西北约30华里无共军踪迹）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月19日</div>
+      <div class="chronology-content">
+        <p>下半夜得到（新1军第30师及新38师）进入四平的消息。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月23日</div>
+      <div class="chronology-content">
+        <p>蒋介石夫妇到沈阳视察（廖耀湘和李涛等被视察，国史馆：国民政府主席蒋中正巡视沈阳党政军措施079）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月24日</div>
+      <div class="chronology-content">
+        <p>蒋介石莅临沈阳东北长官部（好像没有廖耀湘，合照里有杜聿明、郑洞国、梁华盛、赵家骧，但没有廖）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月24日</div>
+      <div class="chronology-content">
+        <p>蒋介石召见刘徳溥、张嘉敖、熊式辉、并巡视沈阳故宫。（未见接见廖耀湘报道）（<a href="https://gpa.eastview.com/crl/lqrcn/newspapers/mgrg19460525-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/mgrg19460525-01.1.1</a>）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月25日</div>
+      <div class="chronology-content">
+        <p>廖耀湘被任命为长春警备司令（Qian feng bao (前鋒報) 1946.05.25: Page 1 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/qifb19460525-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/qifb19460525-01.1.1</a>）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月27日</div>
+      <div class="chronology-content">
+        <p>兼任长春警备司令（建康日报1946年05月27第3版）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月28日</div>
+      <div class="chronology-content">
+        <p>警備司令廖耀湘將軍，副司令舒適存將軍在廿八日那天，正式就了職，代長春市長尚傳道率領秘書長劉守剛等，也在廿九日趕到視事，其他機關相繼成立，也有的在籌備中。1946年06月14日  第7版  第24542期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月30日</div>
+      <div class="chronology-content">
+        <p>蒋介石偕宋美龄、白崇禧、杜聿明下午12时半离开沈阳，1时10分飞抵长春。鄭副長官洞國、警備司令廖耀湘、代市长尙傳道及士紳在机场迎接。（ (華光日報), 1946.05.31 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/hgrb19460531-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/hgrb19460531-01.1.2</a> ）</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔中央社長春卅日電〕蔣主席偕白副總長，杜長官於卅日下午一時十分，由瀋乘美齡號專機飛抵長，記者隨機同來，鄭副長官洞國，警備司令廖耀湘，代市長尚傳道及士紳百餘人，在機塲迎候，主席下機後，至空軍站招待所休息，主席在瀋八日，辛勞並無倦容 1946年05月31日  第1版  第24528期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月3日</div>
+      <div class="chronology-content">
+        <p>廖耀湘告知记者长春至吉林明日火车即可恢复，客运可以开始售票，国军将向拉法推进。（民报晚刊1946年6月5日 国家文化资料库）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月7日</div>
+      <div class="chronology-content">
+        <p>停止攻击 (時事新報), 1946.06.08 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19460608-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19460608-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月9日</div>
+      <div class="chronology-content">
+        <p>打电话报告拉法受到攻击</p>
+        <div class="chronology-source">来源：history.state.gov/historicaldocuments/frus1946v09/d527<br>FOREIGN RELATIONS OF THE UNITED STATES, 1946, THE FAR EAST: CHINA, VOLUME IX<br>Marshall Mission Files, Lot 54–D270<br>Minutes of Conference Between General Marshall and General Chou En-lai at 5 Ning Hai Road, Nanking, June 10, 1946, 10:10 a.m.</div>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>廖将军（新6军）今晚（9日）第二次来电报告，称共产党军队正在吉林以东40英里的拉法地区发动大规模进攻。报告称，进攻始于7日下午3点，最初由一个团发起，但现​​在已扩大到两个步兵团和一个炮兵团。拉法这个地点已被推荐给三位委员，作为即将派往满洲的考察队的初始驻地。鉴于上述报告，我立即派遣塔布斯科特上校作为美方观察员前往该地区（拉法）。计划一旦其他考察队抵达，就立即派人接替他。我请求第27考察队在沈阳召开特别会议讨论此事，并请廖将军立即对此事进行调查。 Gen. Liao, 6th Army, called tonight (the 9th) to report for a second time that large scale attacks are being launched by the Communist troops in the Lafa area 40 miles east of Kirin. Reports attack was launched at 15 hours on the 7th by one regiment, but is now grown to two infantry regiments and one artillery regiment. This location (Lafa) has already been recommended to the three commissioners as the initial station of a team now being sent to Manchuria. In view of the foregoing report, I am sending Col. Tabscott38 as an American observer immediately to that area (Lafa). It is planned to replace him as quickly as one of the other teams arrives. I request this situation be made the subject of a special meeting by Team 27 in Mukden and that Gen. Liao39 be requested to have this action investigated immediately.”]</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月12日</div>
+      <div class="chronology-content">
+        <p>获颁三等巴斯武士勋章（英）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月13日</div>
+      <div class="chronology-content">
+        <p>杜聿明在长春视察，廖耀湘等出席欢迎（国家文化资料库照片：长春欢迎杜聿明将军）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月15日</div>
+      <div class="chronology-content">
+        <p>杜聿明偕廖耀湘于下午八时半由永吉专车返回长春 （杜聿明晚间飞沈阳）（工商晚報, 1946-06-16 <a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=14" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=14</a>&amp;searchId=c56e00adc51549839dcc00f56fb7934d&amp;catalogueId=2e0e00a69cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP=）　〔中央社永吉十五日電〕杜長官聿明，梁兼主席華盛，廖司令官耀湘，十五日上午十時出席此間在北山廣塲𦦙行之市民大會，到市民四萬餘人，下午一時杜長官等前往永吉西南廿五公里之小豐滿水力發電所視察，杜長官為嘉奬該所員工保護設備起見，特撥發流通劵廿萬。下午四時由小豐滿抵永吉，即轉車站搭四時五十分專車返長。廖司令官等同行《申报》1946年06月16日  第1版  第24544期</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔中央社長春十五日電〕杜聿明長官今偕廖耀湘司令官，於下午八時半由永吉專車返此，杜長官可能於明日飛返瀋陽《申报》1946年06月16日  第1版  第24544期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月21日</div>
+      <div class="chronology-content">
+        <p>？ 軍事調處執行部東北前進小組美代表白魯德將軍抵長春與東北軍事當局合影。自右至左：廖耀湘，白魯德，鄭洞國，關邦傑，尚傳道。《申报》1946年06月21日  第1版  第24549期</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>￼</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月22日</div>
+      <div class="chronology-content">
+        <p>長春巿民慰勞國軍大會（上）會塲一瞥（下）鄭沿國（右）廖耀湘接受獻花·（中央社攝）《申报》1946年06月22日  第1版  第24550期</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>￼</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月28日</div>
+      <div class="chronology-content">
+        <p>何应钦上午11时飞抵长春视察，廖耀湘等陪同，下午16时游览长春名胜。（民报晚刊1946年6月29日 国家文化资料库）</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔中央社長春廿八日電〕何應欽上將於廿八日上午十一時十分由瀋專機飛抵長，同來者有李副部長惟果，蔡參謀長文治，趙參謀長家驥，及潘公弼，王若僖等，鄭副長官洞國，梁兼主席華盛，廖司令官耀湘等，均在機塲歡迎，何氏下機接受獻花，檢閱儀隊後，即乘車逕駛市內前滿鐵總裁公館休息，道經市內大街，歡迎行列長達數里，歡呼不已，情形極為熱烈，何氏將於午參觀各地，可能於廿九日離長轉平。《申报》1946年06月29日  第1版  第24557期</p>
+<p>〔中央社長春廿八日電〕何應欽今日下午四時巡視此間名勝及各大建築，由鄭洞國，梁華盛，廖耀湘，尚傳道等陪同前往，迄七時半始返前滿鐵總裁公館，夜間鄭洞國設宴歡迎，並放映汪逆訪東北之影片助興。《申报》1946年06月29日  第1版  第24557期</p>
+<p>〔本報北平廿八日電〕今日東北來人稱：東北行營醖釀改組聲中，何應欽突蒞東北，極惹人注視，長春頗有何將繼熊主持東北說，惟此說並未能自最可靠方面證實。《申报》1946年06月29日  第1版  第24557期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月2日</div>
+      <div class="chronology-content">
+        <p>〔中央社長春二日電〕廖耀湘司令官，今日上午十時在中正塲閱兵，長征印緬為國軍爭光之健兒整隊出現長春街頭，時市民爭先出睹，掌聲不絕。《申报》1946年07月03日  第1版  第24561期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月3日</div>
+      <div class="chronology-content">
+        <p>郑洞国在永吉视察小丰满发电所（是否廖耀湘同行待查，民报1946年7月5日）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月5日</div>
+      <div class="chronology-content">
+        <p>郑洞国由永吉专车返长。（是否廖耀湘接待待查，民报1946年7月6日）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月15日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報長春十五日電〕廖耀湘十五日晨，赴德惠（位於長春東北）視察防務。1946年07月16日  第1版  第24574期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月19日</div>
+      <div class="chronology-content">
+        <p>廖耀湘今午自永舌（吉？）飞长春。（民报晚刊7月20日 国家文化资料库）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月23日</div>
+      <div class="chronology-content">
+        <p>郑洞国廖耀湘等与李立三（敏然）于长春会谈，晚间与尚市长等设宴招待。（民报晚刊7月24日 国家文化资料库）  (民國日報) 1946.07.24: Page 1 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/mgrg19460724-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/mgrg19460724-01.1.1</a></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報長春廿四日電〕廖耀湘，尚傳道聯名，於昨晚在鐵路賓館歡宴李敏然，鄭洞國。李敏然及泰森上校（戴伯爾門代表）均一致對和平寄予殷切之希望。李敏然更認為，東北之和平，已有助南京之談判與全國之和平。1946年07月26日  第1版  第24584期</p>
+<p>〔中央社長春二十三日電〕鄭副長官洞國，□司令耀湘，今日分別與共軍代表李敏然（即李立三）晤談，晚間□廖及尚代市長聯合𦦙行歡宴晚會招特。聞李氏日內將飛瀋一行。1946年07月24日  第1版  第24582期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月13日</div>
+      <div class="chronology-content">
+        <p>长春警备司令部通信布告（Dong bei shi bao (東北時報), 1946.08.13 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/dngb19460813-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/dngb19460813-01.1.2</a> ）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月19日</div>
+      <div class="chronology-content">
+        <p>长春警备司令廖耀湘奉令绥靖四平西安一带，遗缺由孙立人担任。19日晚孙抵长春，会晤廖司令商议交接事宜。廖已饬准备移交，一部开往四平，一部开往松花江。 (華北日報), 1946.08.21 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/hbrb19460821-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/hbrb19460821-01.1.2</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月7日</div>
+      <div class="chronology-content">
+        <p>〔聯合社天津八日電〕報載：新六軍軍長廖耀湘七日抵瀋，新一軍軍長孫立人及第六十軍軍長八日亦可抵瀋，指示瀋陽或將𦦙行重要軍事會議。《申报》1946年10月09日  第1版  第24659期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月10日</div>
+      <div class="chronology-content">
+        <p>为《边疆建设》作创刊词。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月26日</div>
+      <div class="chronology-content">
+        <p>郑洞国由沈飞长。（是否廖耀湘接待待查，民报1946年10月28日）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月2日</div>
+      <div class="chronology-content">
+        <p>杜聿明返回沈阳后，廖耀湘等由防区来沈举行军事会议。据悉大连共军已开始撤退，国军前进至距离大连不到120里处。(立報), 1946.12.03</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p><a href="https://gpa.eastview.com/crl/lqrcn/newspapers/libo19461203-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/libo19461203-01.1.1</a></p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月3日</div>
+      <div class="chronology-content">
+        <p>东北将领普获杜鲁门颁发自由勋章，由杜聿明带回沈阳。(中央日報), 1946.12.04 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/zhyc19461204-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/zhyc19461204-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>（5月12日晚采取决心与计划，13日早下达相关战斗指令。）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">拂晓</div>
+      <div class="chronology-content">
+        <p>65团以战备行军态势由旧开原城出发向南城子搜索前进；9时左右，在南城子以南五华里之威远堡门与共军发生遭遇战；12时左右，得到关于威远堡门激战消息并做出判断及相关指示；16时左右，共军撤退威远堡门。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>（19日下半夜或20日拂晓前，接长官部向辽河河套发起追击的电令，并指挥195师陈林达部按已策定的作战方案实行。）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">同年</div>
+      <div class="chronology-content">
+        <p>为军民日报国庆专刊题词：“为民前锋，为军喉舌，军民相辅，一心一德”。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">按：兼第六军军长（《抗日名将廖耀湘》）应似有误。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1947">
+  <summary class="chronology-year-summary">【1947】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月31日</div>
+      <div class="chronology-content">
+        <p>廖耀湘由鞍山抵达普兰店 廖耀湘对民众讲话  (時事新報), 1947.02.03 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19470203-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/ssxb19470203-01.1.1</a>  (武漢日報 (宜昌版)) 1947.02.03: Page 2</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p><a href="https://gpa.eastview.com/crl/lqrcn/newspapers/wury19470203-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/wury19470203-01.1.2</a></p>
+<p>〔本報瀋陽二日電〕廖司令官耀湘，卅一日晚離普蘭店前綫，一日午到達營口視察。</p>
+<p>〔本報瀋陽一日電〕第八兵團廖司令官耀湘，卅一日午到達普蘭店視察，該地居民五十二年來重視漢官儀，頗感興奮。因自甲午戰後，普蘭店一併割讓，現經國軍收復後，廖為親歷斯地之最高長官。另訊共軍獨立師一部刻正在普蘭店以南杏樹口子東西之綫構築强固工事。</p>
+<p>〔本報瀋陽二日電〕普蘭店前綫國共軍，仍不斷有衝突，普蘭店東南二十華里台山附近，共軍卅一日晚曾以山砲向國軍陣地射擊。《申报》1947年02月03日  第1版  第24771期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月1日</div>
+      <div class="chronology-content">
+        <p>廖耀湘偕政治部主任周霁光今晨由鞍山乘专车前往普兰店视察。（民报1947年2月1日 国家文化资料库） 晚八时返回鞍山（(武漢日報 (宜昌版)) 1947.02.03: Page 2 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/wury19470203-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/wury19470203-01.1.2</a>）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月2日</div>
+      <div class="chronology-content">
+        <p>廖耀湘由普兰店赴营口视察 新六军调至大连附近 当日晚返回鞍山（大公报 1947-02-03 廖耀湘赴營口視案新六軍駐大連附近大連蘇軍已全部撤至旅順 <a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=11" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=11</a>&amp;searchId=c56e00adc51549839dcc00f56fb7934d&amp;catalogueId=24acba869cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP=）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月2日</div>
+      <div class="chronology-content">
+        <p>廖耀湘抵达沈阳见杜聿明，后即赴辽东视察，自信接收旅大无问题。（大公報, 1947-02-04 = Ta Kung Pao <a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=16" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=16</a>&amp;searchId=c56e00adc51549839dcc00f56fb7934d&amp;catalogueId=24acc2f29cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP=）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月3日</div>
+      <div class="chronology-content">
+        <p>〔本報瀋陽三日電〕廖耀湘談東北當前唯一急務，為認眞推行縣政，如此松花江南共軍無活動餘地矣，否則一切均無辦法。遼東半島民衆發揮之力量為一最好例證，行政人員需負起責任《申报》1947年02月04日  第1版  第24772期</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報瀋陽三日電〕廖司令官耀湘對記者談稱：大迎接收在軍事上無問題，陸路水路均可前往，行政人員如肯率少數警察，即可至大連執行接收工作。蘇軍因有條約及友好關係，必不能加以阻碍，同時亦不能支援共軍。《申报》1947年02月04日  第1版  第24772期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月21日</div>
+      <div class="chronology-content">
+        <p>廖耀湘等来沈阳，即返长春，据称：大连接防遥遥无期，市内难民多逃往普兰店。 (大江南報), 1947.02.22 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/dajn19470222-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/dajn19470222-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月11日</div>
+      <div class="chronology-content">
+        <p>〔本報瀋陽十一日電〕廖耀湘在鞍山對本報記者談：東北共軍經八個月整訓，或使人增加對共軍有新的神秘之感，但經此次共軍春季攻勢，□□□□無遺。缺點中如對松花江橋頭堡未能攻下，對新武器不善使用等，都是很好的例證。國□□前或不致攻取哈爾濱。1947年03月12日  第1版  第248</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月14日</div>
+      <div class="chronology-content">
+        <p>获颁四等云麾勋章。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月17日</div>
+      <div class="chronology-content">
+        <p>沈阳行辕为防止国军进入大连后发生接收机关抢占房屋及其他物资流弊，行辕决定由大一連市政府統一接收，然後再作台理分配，並飭令廖耀湘所部協一助。1947.03.18: Page 1/4</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p><a href="https://gpa.eastview.com/crl/lqrcn/newspapers/libo19470318-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/libo19470318-01.1.1</a></p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月18日</div>
+      <div class="chronology-content">
+        <p>上周，廖耀湘来沈向杜聿明汇报与大连市委秘书长黄光斗洽谈事 (蘇州明報), 1947.03.19 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/sumb19470319-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/sumb19470319-01.1.1</a>  (福建時報), 1947.03.19 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/fusb19470319-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/fusb19470319-01.1.2</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月21日</div>
+      <div class="chronology-content">
+        <p>大連市黨部主任委員王傑夫 ，靑年圑組長高廣溥，市商會常務理事韓岡蘊等廿一日上午四時同訪廖耀湘 ， 洽商大連事務 （Da jiang nan bao (大江南報), 1947.03.24 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/dajn19470324-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/dajn19470324-01.1.1</a> ）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月3日</div>
+      <div class="chronology-content">
+        <p>廖耀湘谈接收大连无问题 Yue bao (越報) 1947.04.04: Page 1 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/yueb19470404-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/yueb19470404-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月6日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報瀋陽六日電〕旅大接收問題日趨具體，旅大方面蘇軍指揮官，特約我前綫指揮官周璞上校於六日上午十一時在普蘭店會談，長官部除派高級參謀詹實之前往參與外，並有參謀二人，詹日內返瀋。</p>
+<p>〔又電〕普蘭店中蘇將領，六日午會晤，為我接收旅大之先聲，雙方尊重中蘇友好條約精神至如何程度，於此可得一槪念。我方將向蘇指揮官表明我堅决立塲，並請蘇方明示旅大區非法武裝部隊之驅逐出境辦法，否則國軍將以行動恢復旅大政權。我與蘇晤談人員六日夜北返，宿瓦房店。廖耀湘定六日夜車由鞍山來瀋，報吿普蘭店中蘇第一綫將領會談情形。又普蘭店至石河間之電話桿綫，經中蘇雙方會同修架，業已通話，此長約十五公里之綫路，將來對於溝通中蘇軍事聯繫及情感上關係頗大。1947年04月07日  第2版  第24834期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月10日</div>
+      <div class="chronology-content">
+        <p>据刚由普兰店来沈阳之廖耀湘軍民語記者稱：此次會晤係普通聯絡性质，聞旅大區內共軍正進行有計劃之地下组织。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月15日</div>
+      <div class="chronology-content">
+        <p>［本報瀋陽十五日電］據悉，龔學遂定廿日來瀋，關於接收大連事，與有關方面有所商談。然關於接收大連問題，仍有不少枝節。如旅順軍港區劃界問題，即為最麻煩之問題。他如中長路問題，蘇方亦有異議。</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>［本報瀋陽十五日電］新六軍軍長廖耀湘將軍今日上午自鞍山來瀋謁杜長官。渠今午語本報記者稱：關於接收大連問題，我方所交蘇方之書面六項提議，蘇方尚無任何答覆。1947年04月16日  第1版  第24843期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月22日</div>
+      <div class="chronology-content">
+        <p>为沈阳新报创刊周年纪念题词：“猗欤新报，革命先鞭，墨张正义，笔扫顽奸，启迪后进，斯民景瞻，日新月进，时代前端”。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月15日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報瀋陽十六日電〕第六綏靖區司令官廖耀湘，十五日午三時由撫順抵淸源坐鎮，瀋海，中長兩路軍運忙，國軍可重佔優勢。1947年05月17日  第1版  第24874期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月18日</div>
+      <div class="chronology-content">
+        <p>廖耀湘自清源来沈阳，与杜长官商讨防务，于21日返回防区。  (東南日報), 1947.05.22</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月20日</div>
+      <div class="chronology-content">
+        <p>下午5时，长官部召开军事会议，赵家骧主持，郑洞国参与。（未提及廖耀湘，但应该也有参与。）  (東南日報), 1947.05.22</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月21日</div>
+      <div class="chronology-content">
+        <p>廖耀湘自沈阳返回防区。  (東南日報), 1947.05.22 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/dnrb19470522-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/dnrb19470522-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月27日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報瀋陽廿七日電〕遼北重鎮鄭家屯，日前被共軍攻陷。又法庫共軍廿七日起，向鐵嶺方面移動，有進犯鐵嶺企圖。平梅路之東豐，廿六日被共軍攻陷，西安情况不明，國軍反擊中。1947年05月28日  第2版  第24885期</p>
+<p>〔又電〕王叔銘，鄭洞國，廖耀湘廿七日晨聯袂謁熊式輝，商討當前軍事問題，並同進午餐，〔中央社瀋陽廿七日電〕吉林外圍形勢益穩固，日來戰事中心之市區東北主黃山咀子附近兩高地，為國軍收復，共軍東潰。小豐滿外圍，經國軍予來犯共軍以嚴重打擊，形勢已緩，最近三日無戰事。1947年05月28日  第2版  第24885期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月29日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報瀋陽廿九日電〕昌圖一帶戰事，廿九日在陰雨中進行，異常激烈，廖耀湘廿九日親赴前方指揮，國軍援軍亦開到。據軍事機關表示，東北戰事極有把握。又，空軍廿九日飛西安偵察，據報吿：犯西安共軍曾與國軍展開砲戰，另一部共軍則由東郊繞至白水，企圖與犯四平街之共軍會合。瀋陽永吉間永吉鐵路綫上之梅河口在巷戰中。據軍事機關表示嚴重險期已渡過，日內可有轉機。1947年05月30日  第2版  第24887期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月31日</div>
+      <div class="chronology-content">
+        <p>蒋召见廖耀湘（来源：蒋介石日记）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月2日</div>
+      <div class="chronology-content">
+        <p>晚，共产党军队不战而占领开原新城区。6月3日凌晨5点，经过激战后占领老城区。高级国民党军官及其家属在激战开始前就已撤离该城。消息来源：目击者翁家麟，前执行总部库利上校的线人。前国民党新六军军长、现负责沈阳防务的廖耀湘将军及其参谋长已于几天前撤离家属。廖耀湘下令其麾下所有军官撤离家属。共产党军队正从东、北、西三个方向向沈阳推进。北部已抵达开原。铁岭是共产党军队和沈阳之间北部唯一的国民党据点。东部共产党军队已推进至清原。驻守梅河口（电报139，6月3日）的国民党师被共产党军队歼灭。消息来源：廖耀湘将军的前机要秘书。</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>New section Kaiyuan occupied by Communists without fight night June 2. Old section city taken after heavy fighting at 5:00 a.m., [Page 164] June 3. High ranking National officers and families evacuated city even before heavy fighting began. Source: Eye witness Ung Chialing, former informant of Col. Cully, Executive Headquarters. General Liao Yueh-hsiang, former Commander, National New Sixth Army, now responsible for defense Mukden, and his Chief of Staff evacuated families several days ago. Liao issued order to all officers in his Command advising them to evacuate families. Communists advancing Mukden from east, north and west. Have reached Kaiyuan on north. Tiehling only one National strong point between Communists and Mukden on north. Communists as far as Chingyuan on east. National Division at Meihoukou (mytel 139, June 3) annihilated by Communists. Source: Former confidential secretary of General Liao.]</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月3日</div>
+      <div class="chronology-content">
+        <p>廖耀湘下令家属离开沈阳</p>
+        <div class="chronology-source">来源：history.state.gov/historicaldocuments/frus1947v07/d134<br>FOREIGN RELATIONS OF THE UNITED STATES, 1947, THE FAR EAST: CHINA, VOLUME VII<br>893.00/6–547: Telegram<br>The Consul General at Mukden (Ward) to the Secretary of State<br>Mukden, June 5, 1947—10 a.m.<br>[Received June 5—4 a.m.]</div>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>86. Following is military situation based on information from source as indicated:</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月4日</div>
+      <div class="chronology-content">
+        <p>廖耀湘在铁岭指挥  (鎮海報), 1947.06.06 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/zhhb19470606-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/zhhb19470606-01.1.2</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月9日</div>
+      <div class="chronology-content">
+        <p>廖耀湘由铁岭至沈阳见杜聿明，并当日返回铁岭（source：廖耀湘談-新民报-南京1947年06月10第1版.pdf）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月9日</div>
+      <div class="chronology-content">
+        <p>晨3时自铁岭至沈阳，10时谒杜长官，报告军情，日内即返回。记者询问军情，他说，共军此次向南深窥，纯系侥幸。目前情况可以具体告者：1）共军侥幸之机已经过去。2）国军战略连接，业已稳固。3）现在战事不在小据点得失，而在摧毁野战军之主力，共军主力约六个师在开原以北，我将给予歼灭之打击，惟此时机不愿预计，不久将有惊人之发展奉告。彼提到哈尔滨未来情势，促记者注意。(中央日報), 1947.06.10 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/zyrb19470610-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/zyrb19470610-01.1.2</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月13日</div>
+      <div class="chronology-content">
+        <p>〔中央社瀋陽十四日電〕廖耀湘十三日晚由鐵嶺來瀋，據語記者，鐵嶺防務已按原定計劃全部完成，共車迄未敢進窺。廖氏分析戰局稱：共軍日來圍攻四平，可能為佯攻性質，僅以多數砲兵圍攻，其眞正野心，可能仍為瀋陽，惟吾人可斷言，其必不能飛越鐵嶺進犯。 1947年06月15日  第1版  第24903</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月27日</div>
+      <div class="chronology-content">
+        <p>〔中央社瀋陽廿七日電〕四平下午四時電話，國軍北上援軍，廿七日午已攻克距四平三十公里之泉頭，當晚或廿八日最可抵達四平近郊。又開原下午一時電話，鄭副長官偕廖軍長耀湘，舒副軍長適存，廿七日午乘專車抵此，稍事休息，即赴前進防地視察。據鄭副長官語記者，泉頭為共軍據點，國軍一𦦙攻克，可謂甚大勝利。蓋泉頭，四平間當無何阻力，四平之圍不但迎刃而解，而頑攻之共軍，將必就地殲滅，開原慘遭浩刦，極為荒凉。1947年06月28日  第1版  第24916期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月9日</div>
+      <div class="chronology-content">
+        <p>〔本報瀋陽九日電〕堅守四平之陳明仁將軍與劉翰東主席，九日下午五時廿分隨鄭洞國副長官，廖耀湘軍長乘專機凱旋來瀋。熊主席着戎裝親迎，各省市首長均在機塲歡迎，彩車過處，呼聲四起，為近來罕見盛况。又董彥平孫立人即飛京。《申报》1947年07月10日  第1版  第24928期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月12日</div>
+      <div class="chronology-content">
+        <p>开原 廖耀湘接待慰劳团，介绍战斗英雄及军医院等。廖耀湘表示铁岭之役，敌知难而退，旋攻四平，以为不堪一击，实估计错误。盖不打四平而先攻开原，继而进犯铁岭不逞，回师四平，在时间上已迟了两个星期，卒至溃败。（廖耀湘-当代晚报1947年07月13第1版-检讨四平）  (武漢日報), 1947.07.14 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/wrbo19470714-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/wrbo19470714-01.1.2</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月15日</div>
+      <div class="chronology-content">
+        <p>廖耀湘15日晨率随员赴德惠视察，当晚返长春。(華北日報), 1946.07.17 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/hbrb19460717-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/hbrb19460717-01.1.2</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7/15</div>
+      <div class="chronology-content">
+        <p>陈诚到任沈阳（但是咋没看见廖耀湘的身影呢？完全没有。只看见赵家骧和郑洞国）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">7月24日</div>
+      <div class="chronology-content">
+        <p>〔中央社瀋陽廿三日電〕四平會戰有功人員授勛典禮，定廿四日晨舉行，計頒發勛章七十八座，獎章八百餘座，陳軍長明仁及七十一軍八十八師廖排長鈞，各授靑天白日勛章，劉主席翰東授一等雲麾勛章，熊師長新民，宋副師長邦緯，龍師長澤匯，各授三等寳鼎勛章，廖軍長耀湘，周軍長福成，盧軍長濬泉，潘軍長裕昆，各授三等雲麾勛章。1947年07月24日  第1版  第24942期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月</div>
+      <div class="chronology-content">
+        <p>捐资国币一亿元（查当时兑换标准约可兑换3400美元，按当时市价可购大米7万斤）成立“耀湘储金奖学会”，具体事宜委托其启蒙恩师石达成（时任邵阳县参议）代为办理。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月6日</div>
+      <div class="chronology-content">
+        <p>魏德迈抵达沈阳 会晤廖耀湘（工商晚報, 1947-08-07 <a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=12" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=12</a>&amp;searchId=c56e00adc51549839dcc00f56fb7934d&amp;catalogueId=2e1478989cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP=）</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>魏德迈8时去抚顺（廖耀湘随行），14时回沈阳（廖耀湘随行），15:00-15:30魏德迈于沈阳铁路宾馆休息，晚在美领事馆会晤郑洞国等。（Wu shan ri bao (五山日報) 1947.08.07: Page 1 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/wusr19470807-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/wusr19470807-01.1.1</a></p>
+<p>〔本報瀋陽六日電〕魏德邁及專家十餘人，由寥耀湘，張劍非，資委會謝樹英等陪同，於六日晨八時乘潛海專車至撫順視察，九時四十五分抵烟汽瀰漫之炭都，檢閱羅又倫部隊，曾屢面詢士兵有肉吃否？此外，對衣·食·住·運動亦詢及，最後登台講話，表示故友重逢，無任欣慰，對官長贈言為“官兵打成一片，生活在一起”。繼往西郊參觀露天採煤區，傾聽講解欣賞藏煤及工作偉大塲面，再至煉油廠，該廠部份開工，日出汽油五百加侖，此外，產柏油等五六種。魏特便對工人招手，並稱“頂好”，後至發電廠參觀，對員工在破敗中努力恢復精神頗為稱許，午離撫順，下午二時返瀋。《申报》1947年08月07日  第1版  第24956期</p>
+<p>〔中央社撫順六日電〕魏德邁特使今日上午九時三十分抵撫視察，特使團工程顧問屈克賽爾海軍少將，經濟顧問華爾克，財政顧問詹金斯，新聞顧問華生，助理總務兼副秘書鮑埃士上尉，譯員伍漢民上尉等同來，一行由美國副領事胡伯特，撫順礦務局長謝樹英，東北電力局長郭克悌，新六軍長廖耀湘，外交特派員張劍非第陪同前往。身着米色二級上將制服之魏特使，下車後即運赴礦務同參觀。今日全城懸旗，沿途民衆均手持中美國旗夾道歡呼。魏使嗣赴露天礦塲煉油廠及發電廠參觀，各部門負責人曾分就原來設備蘇軍拆毁情形及現况簡要說明。魏特使及顧問之詢問，多着重生產情形，十二時十分離撫返瀋。在撫傳敎二十二年之美籍天主敎堂司鐸葛□仁，被邀同車去瀋。《申报》1947年08月07日  第1版  第24956期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月8日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔中央社瀋陽八日電〕陳總長誠八日晨專車赴鐵嶺，慰勞當地駐軍，鄭洞國·廖耀湘偕行，當日下午四時返瀋。1947年08月09日  第1版  第24958期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月9日</div>
+      <div class="chronology-content">
+        <p>陈诚偕郑洞国廖耀湘等前往铁岭视察 Qian feng bao (前鋒報), 1947.08.10 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/qifb19470810-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/qifb19470810-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月</div>
+      <div class="chronology-content">
+        <p>东北第6绥靖区改编为东北第4兵团。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月1日</div>
+      <div class="chronology-content">
+        <p>升任东北第4兵团（辖新编第3军、新编第6军、青年军207师及骑兵第2军）中将司令官，驻沈阳。为《新六军三周年纪念册》题字题词并著《新六军三周年纪念日告官兵书》代序，写文《缅战与教训——军长讲述》。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9/2</div>
+      <div class="chronology-content">
+        <p>熊式辉离任也没看见廖耀湘送别（又看见郑洞国了，陈诚也去了）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月3日</div>
+      <div class="chronology-content">
+        <p>〔本報瀋陽二日電〕第四兵團司令廖耀湘，副司令舒適存及新八軍軍長李滿，昨在□嶺宣誓就職。《申报》1947年09月03日  第1版  第24983期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10/8</div>
+      <div class="chronology-content">
+        <p>蔣介石離開瀋陽 難道廖也沒去送別？</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月13日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報瀋陽十三日電〕廖耀湘將軍督戰南北，來去匆匆。十三日記者遇之某處，據談：目前戰局雖不容過份樂觀，但確已趨穩定。匪六次攻勢來勢甚兇，其計劃為澈底破壞北寗路，切斷關內外重要補給路綫，然後奪新民，取鐵嶺，下營口，攫大虎山，完成整個包圍東北心臟之瀋陽，現已𦦙東北野戰匪衆傾巢而出，迄今已臨“六次攻勢”開端戰結束階段。開端戰階段國軍已打破匪之計劃，匪所獲不但無多，而在鐵嶺新民並遭受莫大打擊，現正在考量賭本，徘徊於開原鐵嶺及其他戰綫間。匪一·三·四·六·縱隊打開原鐵嶺，二縱隊打四平，七縱隊打新民，大虎山，八縱隊打營口，十一縱隊打撫順，五，九，十縱隊亦均出動，“六次攻勢”初期使用如此龐大兵力，其一·三·四·六等縱隊，匪目之為勁旅，結局如此，匪不能不考慮賭本也。此後艱難雖多，但國軍實力增强，終能獲得最後勝利。 1947年10月14日  第1版  第25023期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月24日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報瀋陽廿四日電〕遼北開原周福成部，與鐵嶺廖耀湘部雙方出擊，克中固後，廿四日午巳會師於北高台子。西綫瀋陽西北國軍再度向新立屯及彰武一帶作主動之攻擊。北票連日激戰，空軍投擲大批軍實接濟守軍。1947年10月25日  第1版  第25034期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月30日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報瀋陽卅日電〕廖耀湘卅日再赴鐵嶺開原間指揮鐵開國軍公路出擊，聲勢頗大，首先克昌圖車站，二十九日午再克昌圖縣城（車站西北十餘公里）。昌圖四平間共匪聞風他竄，現鐵（嶺）四（平）間已無匪踪。西綫由錦州馳援義縣國軍，二十九日會師義縣。錦古綫搶修隊越薛家站抵上齊台。遼西國軍二十八日掃蕩老邊（錦西西北十公里）一帶殘匪，當將匪興城支隊包圍殲滅過半。1947年10月31日  第1版  第20540期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月31日</div>
+      <div class="chronology-content">
+        <p>〔本報瀋陽卅一日電〕孫連仲卅一日下午一時由平飛抵瀋，綏署副參長鄭長海第九人偕來，孫來東北係奉陳誠電召，將有二三日勾留。陳誠卅一日夜召各省市首長及東北元老與孫連仲共進晚餐後，各軍事首長開會檢討軍事，除陳孫外，鄭洞國，孫渡及行轅兩參長。廖耀湘，周福成，由鐵嶺開原趕回，趙家驤由錦飛返，午夜始散。《申报》1947年11月01日  第1版  第25041期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月</div>
+      <div class="chronology-content">
+        <p>所部改称第9兵团（辖新编第3军、新编第6军），仍任中将司令官。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月8日</div>
+      <div class="chronology-content">
+        <p>晋颁二等云麾勋章。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月17日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報濬陽十六日電〕行轅召開之軍事檢討會議，今日下午閉幕，廖耀湘·周福成·潘裕昆等高級將領數十人，均怱怱返防。1947年12月17日  第1版  第25087期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>10月间，指派新6军暂62师（师长刘梓皋）担任法库防务。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>11月间，为支援彰武方面新3军及第105师，暂62师第2团奉令向康平佯攻，因有营长临阵脱逃致使团长阵亡（部队无损失），亲至法库集合全师军官将该营长枪毙。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1948">
+  <summary class="chronology-year-summary">【1948】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月</div>
+      <div class="chronology-content">
+        <p>东北各兵团与管内兵团统一番号，东北第4兵团改为第9兵团（辖新编第3军、新编第6军、骑兵第2军）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">1月20日</div>
+      <div class="chronology-content">
+        <p>兼任第7（沈阳）陆军训练处（兼处长卫立煌）副处长。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月18日</div>
+      <div class="chronology-content">
+        <p>自拟急电给暂62师刘梓皋，命其当晚立即由法库经通江口向开原方向撤退。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月11日</div>
+      <div class="chronology-content">
+        <p>写《廖耀湘呈国民政府蒋主席中正为东北现阶段作战计划意见》。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月18日</div>
+      <div class="chronology-content">
+        <p>〔本報瀋陽十八日電〕中央軍校校長關麟徵，十八日晨九時在潘檢閱廖耀湘兵團，下午二時赴撫順視察第三軍官訓練班，定十九日返瀋。《申报》1948年04月19日  第2版  第25205期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月</div>
+      <div class="chronology-content">
+        <p>第9兵团扩大为机动攻击兵团（也称西进兵团或辽西兵团），改辖新编第1军、新编第3军、新编第6军，第49军、第52军、第71军。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月4日</div>
+      <div class="chronology-content">
+        <p>［本報北平四日電］廖耀湘四日由浙過平飛京，在平西苑機塲曾停留一小時餘，與平軍事當局接觸。《申报》1948年05月05日  第1版  第25221期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月6日</div>
+      <div class="chronology-content">
+        <p>蒋介石召见赵家骧廖耀湘 中央日報), 1948.05.07<a href="https://gpa.eastview.com/crl/lqrcn/newspapers/zyrb19480507-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/zyrb19480507-01.1.2</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月7日</div>
+      <div class="chronology-content">
+        <p>赵家骧、廖耀湘再谒蒋主席 (中央日報), 1948.05.08<a href="https://gpa.eastview.com/crl/lqrcn/newspapers/zyrb19480508-01.1.2" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/zyrb19480508-01.1.2</a></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報南京七日電〕東北某兵團司令廖耀湘，勦總參謀長趙家驤，七日上午九時再度晋謁蔣主席，對軍事問題有所請示。1948年05月08日  第1版  第25224期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月8日</div>
+      <div class="chronology-content">
+        <p>廖耀湘赵家骧来京述职结束，将飞沪并转东北（華僑日報, 1948-05-09 = Wah Kiu Yat Po東北情勢轉緊張廖耀湘趙家驤張作相等返瀋范漢傑自秦皇島返錦州坐鎮 <a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=19" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=19</a>&amp;searchId=c56e00adc51549839dcc00f56fb7934d&amp;catalogueId=280eee2a9cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP= ）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月9日</div>
+      <div class="chronology-content">
+        <p>〔本報北平九日電〕張作相·馬占山·趙家驤等，定十一日離平飛潘·九日午傅作義在西郊宴張·馬·趙及廖耀湘·王鐵漢等，席間對東北·華北加緊連繫，遏止東北共匪七次攻勢及阻其進入關內檢計甚久，聞已有所決定。趙家驤·廖耀湘·王鐵漢·董英斌·董彥平·羅又倫等東北將領，九日晚在楚漢春寓聯名宴請張作相·馬占山·藉表歡迎二老出關之意。《申报》1948年05月10日  第1版  第25226期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月10日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報北平十日電〕東北華北高級將領，十日晨九時在西郊華北剿總𦦙行聯席會議，由傅作義親自主持。張作相·馬占山·趙家驤·廖耀湘·董英斌·董彥平等均出席，對東北·華北聯□及剿匪戰術再加研討，下午繼續開會，東北諸將星定十一日午後飛瀋。《申报》1948年05月11日  第1版  第25227期</p>
+<p>〔本報北平十日電〕半官方面透露政府對東北作戰方案，確有全盤新決定，今後將加强空運，並打通陸路交通綫，盡量發揮人力，物力，戰略上將澄淸遼西走廊，以華北力量支持遼西，以遼西支持瀋陽，至共匪次一攻勢，可能以錦州及葫蘆島為目標·《申报》1948年05月11日  第1版  第25227期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月11日</div>
+      <div class="chronology-content">
+        <p>〔本報瀋陽十一日電〕張作相·馬占山·趙家驤·廖耀湘·王鐵漢·米春霖·羅又倫等，十一日下午五時同機抵瀋，據有關方面透露，挽救東北大計，已臻具體。《申报》1948年05月12日  第1版  第25228期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月27日</div>
+      <div class="chronology-content">
+        <p>〔本報潘陽廿七日電〕據悉：廖耀湘將繼渠華盛任□防守司令官，梁有出任京滬警備司令說。《申报》1948年05月28日  第1版  第25244期</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">5月30日</div>
+      <div class="chronology-content">
+        <p>传闻廖耀湘将出任沈阳防守司令 Da gong wan bao (大公晚報), 1948.05.30 <a href="https://gpa.eastview.com/crl/lqrcn/newspapers/dgwb19480530-01.1.1" target="_blank" rel="noopener">https://gpa.eastview.com/crl/lqrcn/newspapers/dgwb19480530-01.1.1</a></p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月22日</div>
+      <div class="chronology-content">
+        <p>晋任陆军少将。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月26日</div>
+      <div class="chronology-content">
+        <p>至卫立煌家吃晚饭（另有顾祝同），并将研究意见电报蒋介石。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月27日</div>
+      <div class="chronology-content">
+        <p>接蒋介石回电，仍要执行原来行动。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月28日</div>
+      <div class="chronology-content">
+        <p>见顾祝同，个别谈话并遭斥责。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月29日</div>
+      <div class="chronology-content">
+        <p>顾祝同飞回南京。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月19-20日</div>
+      <div class="chronology-content">
+        <p>蒋介石在北平召集卫立煌、杜聿明商讨行动方针。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月2日</div>
+      <div class="chronology-content">
+        <p>蒋介石飞到沈阳，在励志社单独会见蒋介石。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10/02</div>
+      <div class="chronology-content">
+        <p>蒋介石到沈阳视察（国史馆：总统蒋中正茶会招待东北军政首长）接见廖耀湘等</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報北平三日電〕此間獲悉：總統係於二日午十二時十分由平飛批瀋陽。周至柔·郭懺·兪濟時隨行，衛立煌亦陪同飛濟，趙家驤先機返瀋布置。至機塲恭迎者有王鐵漢·董文琦·廖耀湘·高惜冰等，總統着戎裝，外披戴五星章之黃色斗篷，下機後向歡迎者頻頻點首，說好好，旋卽乘車赴勵志社行邸休息，並接見萬福麟·馬占山·董英斌·王鐵漢·董文琦·徐梁·廖耀湘等，略事詢問，各首長卽行辭出，總統午餐後小憇一小時，至午後三時親主持剿總軍事會議，在瀋各軍事首長均參加，歷二小時始畢，總統於五時離剿總返行邸休息，六時再蒞剿總，召集政委會委員，各省高級官員，聽取政情報吿，晚七時假剿總會餐，各軍政首長均被邀參加，餐後，總統復個別接見各首長，垂詢甚詳，至深夜始散。總統此次蒞瀋係第四次，街頭略有戒備，市民皆知總統蒞瀋。《申报》1948年10月04日  第1版  第25372期</p>
+<p>〔中央社瀋陽三日電〕總統二日晚六時對政委會委員，各省市首長，各部隊長訓話，盼望黨政軍同心同德，配合軍事，完成戡亂大事，叮囑武裝同志，要有殺身成仁精神，努力剿匪，訓話後聚餐，席間總統再三叮嚀軍政須切實合作，擊潰土匪，而軍政尤須服從衛總司令命令，展開總體戰工作。總統對衛總司令半年米，使東北轉危為安之成就，備致嘉許，晚八時再召集各部隊長訓話。三日晨八時半在行邸召見廖耀湘，周福成，九時召見王鐵漢，董文琦等指示一切，十時召見瀋陽報界負責人，聆取瀋陽新聞事業實况，並訊示努力配合戡亂建國大業，加强報導工作，十時一刻召見衛立煌，周至柔，郭懺，陳良，董彥平，對軍糧供應再作指示，十一時總統偕周至柔，郭懺，兪濟時等乘專機離瀋。《申报》1948年10月04日  第1版  第25372期</p>
+<p>〔本報北平三日電〕蔣總統三日上午十一時十五分離瀋南飛，下午一時安抵北平，總統下午曾遊頤和園。《申报》1948年10月04日  第1版  第25372期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月8日</div>
+      <div class="chronology-content">
+        <p>辽西兵团主力开始向巨流河、新民地区集中（未能在11日以前集中完竣）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月11日</div>
+      <div class="chronology-content">
+        <p>黄昏，占领彰武。与剿总参谋长联络询问锦州当天战况并将情况告诉卫立煌。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月11日</div>
+      <div class="chronology-content">
+        <p></p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p>〔本報瀋陽十一日電〕瀋陽西進大軍廖耀湘兵團，十一日下午四時收復瀋西北軍事交通及糧源要地彰武城，戰果輝煌，為東北國軍轉捩戰局進軍一大勝利，匪趕往彰武應援之第五縱隊先國軍收復法庫彰武間之彰武台門，及秀水河子重要據點復乘勝進軍。 1948年10月12日  第1版  第25379期</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月12日</div>
+      <div class="chronology-content">
+        <p>令71军（原在新民担任防务）北向彰武、西向新立屯、黑山、大虎山方向搜索扫荡。上午陪卫立煌、罗泽闿在彰武前线视察。12时回新民。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月13日</div>
+      <div class="chronology-content">
+        <p>下半夜接蒋介石手电切责，要求亲率主力向锦州前进。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月14日</div>
+      <div class="chronology-content">
+        <p>早晨下令兵团渡新开河西进（留49军一个师守备彰武、71军一个师暂留新民地区）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月15日</div>
+      <div class="chronology-content">
+        <p>占领新立屯并到达黑山外围。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月16日</div>
+      <div class="chronology-content">
+        <p>拂晓前接刘梓皋（暂62师师长，在葫芦岛整训，塔山预备队）电报称锦州已解放。之后打电话给赵家骧、卫立煌、蒋介石。通知向凤武（71军军长）暂停对黑山的攻击，通知李涛（新6军军长）将部队集结。上午11时左右，杜聿明乘车到新民，与杜商议如何行动问题。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月17日</div>
+      <div class="chronology-content">
+        <p>早上，见卫立煌。下午回新民。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月18日</div>
+      <div class="chronology-content">
+        <p>晚上，电告卫立煌已做好准备于次日攻击黑山，被卫要求等待。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月19日</div>
+      <div class="chronology-content">
+        <p>全天联系沈阳希望知道决策。晚上直电蒋介石，坚决要求退营口。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月20日</div>
+      <div class="chronology-content">
+        <p>晚上，接卫立煌电话，同意退营口。电告向凤武（71军军长）于次日拂晓攻击黑山。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月21日</div>
+      <div class="chronology-content">
+        <p>71军攻击黑山。令潘裕昆22日亲至前线视察，下午至兵团部报告并接受任务。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月22日</div>
+      <div class="chronology-content">
+        <p>潘裕昆报告前线情况，改命潘裕昆卫攻击指挥官。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月23日</div>
+      <div class="chronology-content">
+        <p>拂晓，新1军参加对黑山的攻击。晚9点，下达向营口撤退命令。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月24日</div>
+      <div class="chronology-content">
+        <p>下午，新6军军部及军属169师到达胡家窝棚。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月24日</div>
+      <div class="chronology-content">
+        <p>到达胡家窝棚，率前进指挥所拟随新6军军部行动。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月26日</div>
+      <div class="chronology-content">
+        <p>胡家窝棚的兵团前进指挥所发生战斗。上午抵达新30师（师长文小山）师部，约11时，李涛（新6军军长）及杨焜（兵团参谋长）到达，12时左右潘裕昆（新1军军长）到达，之后向凤武（71军军长）到达。16时与新22师取得联系，17时左右离开新30师，黄昏左右到达新22师师部，与郑庭笈（49军军长）通电。下半夜率新22师64团到达49军军部陈家窝棚，黎明前到达军部。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月27日</div>
+      <div class="chronology-content">
+        <p>8时左右出门，至新6军军部。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月28日</div>
+      <div class="chronology-content">
+        <p>在黑山被俘，先后关押于东北军区解放军官教导团（哈尔滨、佳木斯等地）、黑龙江绥化监狱、抚顺战犯管理所。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>5月初，乘专机到南京，受蒋介石召见。翌日在蒋私邸开会，会间与罗泽闿有发生争吵。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">按：《辽西战役纪实》中此处关于占领彰武的时间似有误。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">按：参考资料《国民革命军第五军将官录》、《抗日名将廖耀湘》关于兵团改组及下辖部队问题各说法不一。依《新六军成立三周年纪念册》看，则9月1日晋升时司令时兵团似已称为9兵团。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1951">
+  <summary class="chronology-year-summary">【1951】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>至南京解放军军事学校授课。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1956">
+  <summary class="chronology-year-summary">【1956】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月</div>
+      <div class="chronology-content">
+        <p>被押至北京功德林战犯管理所学习改造。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>公安部在北京德胜门外功德林建设战犯管理所。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1957">
+  <summary class="chronology-year-summary">【1957】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">秋</div>
+      <div class="chronology-content">
+        <p>到天津、鞍山、长春、沈阳等地参观。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1958">
+  <summary class="chronology-year-summary">【1958】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">10月1日</div>
+      <div class="chronology-content">
+        <p>参加国庆观礼。后主动报名到京郊秦城公安部农场从事劳动锻炼，深入改造。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p>国庆观礼</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">春</div>
+      <div class="chronology-content">
+        <p>参观武汉长江大桥。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1961">
+  <summary class="chronology-year-summary">【1961】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">12月25日</div>
+      <div class="chronology-content">
+        <p>作为第三批特赦人员被特赦。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月25日</div>
+      <div class="chronology-content">
+        <p>戰犯六十八人獲特赦內有廖耀湘等六十一人偽滿戰犯七人蔣集團重要特務頭子康澤准監外就醫（<a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=4" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=4</a>&amp;searchId=caecc4e1c3014ef1a3c30dbeb9080e8f&amp;catalogueId=25d5e6229cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP= ）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月25日</div>
+      <div class="chronology-content">
+        <p>廖耀湘說出心中話 （大公報, 1962-01-09 = Ta Kung Pao <a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=17" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=17</a>&amp;searchId=c56e00adc51549839dcc00f56fb7934d&amp;catalogueId=25d228c79cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP= ）</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1962">
+  <summary class="chronology-year-summary">【1962】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">元月上旬</div>
+      <div class="chronology-content">
+        <p>见记者方英，谈获释感想（大公报, 1962-01-27 = Ta Kung Pao <a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=1" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=1</a>&amp;searchId=568fd99ce1af4698b6d114bc47ddca6e&amp;catalogueId=25d287e29cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP= ）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月17日</div>
+      <div class="chronology-content">
+        <p>四川饭店 特赦战犯座谈（特赦戰犯座談近況廖耀湘杜建時到處參觀溥儀婚事已經解決一半郭旭談到曾跟蹤翁文灝<a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=10" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=10</a>&amp;searchId=caecc4e1c3014ef1a3c30dbeb9080e8f&amp;catalogueId=25d69f589cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP= ）</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">10月23日</div>
+      <div class="chronology-content">
+        <p>作《半年思想总结》</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">按：《抗日名将廖耀湘》年谱中关于此事记录时间为1963年，似有误。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">春节后</div>
+      <div class="chronology-content">
+        <p>到北京京郊中朝友好红星人民公社插队。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1963">
+  <summary class="chronology-year-summary">【1963】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月18日</div>
+      <div class="chronology-content">
+        <p>作《一年来思想总结》。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">2月</div>
+      <div class="chronology-content">
+        <p>被任命为全国政协文史资料委员会专员。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">6月22日</div>
+      <div class="chronology-content">
+        <p>回信一封。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">9月14日</div>
+      <div class="chronology-content">
+        <p>民革在四川饭店举行招待会 康澤廖耀湘等參加工作 （大公報, 1963-09-22 = Ta Kung Pao</p>
+        <details class="chronology-detail-toggle">
+          <summary>展开原文</summary>
+          <div class="chronology-detail-text"><p><a href="https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=18" target="_blank" rel="noopener">https://sls.hkpl.gov.hk/digital-collection/tc/contentcoverpage.html?currentPosition=18</a>&amp;searchId=c56e00adc51549839dcc00f56fb7934d&amp;catalogueId=25de3e099cb711ef9c2&amp;mainKeyword=%E5%BB%96%E8%80%80%E6%B9%98&amp;isHKMP=）</p></div>
+        </details>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月10日</div>
+      <div class="chronology-content">
+        <p>周恩来及陈毅在人民大会堂福建厅接见在京的前四批特赦人员及其家属，并合影留念。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1964">
+  <summary class="chronology-year-summary">【1964】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">3月9日</div>
+      <div class="chronology-content">
+        <p>与其他文史专员一行抵达南京谒中山陵。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">3月27日</div>
+      <div class="chronology-content">
+        <p>一行抵达杭州，游览西湖，拜谒岳飞庙，参观新安江发电站。后赴安徽游览黄山，赴江西参观南昌、吉安、井冈山等革命圣地。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月14日</div>
+      <div class="chronology-content">
+        <p>一行抵达长沙，游览岳麓山，拜谒黄兴、蔡锷墓。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月15日</div>
+      <div class="chronology-content">
+        <p>参观韶山。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月22日</div>
+      <div class="chronology-content">
+        <p>一行抵达武汉，参观武汉长江大桥。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">4月26日</div>
+      <div class="chronology-content">
+        <p>一行44人至湖北黄陂县横店区参观。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">8月</div>
+      <div class="chronology-content">
+        <p>一行再次从北京出发，赴西北参观，先后抵达延安、西安、洛阳、郑州等地。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">11月5日</div>
+      <div class="chronology-content">
+        <p>被特邀为中国人民政治协商会议第四届全国委员（随后写信要求加入中国共产党）。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date"></div>
+      <div class="chronology-content">
+        <p class="chronology-note">按：同年，经康心如介绍，与中学教师张赢毓结婚。据张怡如《溥仪等人在黄陂横店参观情况回忆》（刊载于《湖北文史资料》2001-01期）所记，4月26日时已经结婚。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1965">
+  <summary class="chronology-year-summary">【1965】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">1月5日</div>
+      <div class="chronology-content">
+        <p>在中国人民政治协商会议第四届全国委员第一次会议上作为特邀人士当选为全国政协（兼主席周恩来）委员。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1966">
+  <summary class="chronology-year-summary">【1966】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">9月30日</div>
+      <div class="chronology-content">
+        <p>向周恩来写信（为文史专员申伯纯同志受造反派迫害而请求保护和援助）。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<details class="chronology-year-section" id="year-1968">
+  <summary class="chronology-year-summary">【1968】</summary>
+  <div class="chronology-entries">
+    <div class="chronology-entry">
+      <div class="chronology-date">10月8日</div>
+      <div class="chronology-content">
+        <p>写《有关李时雍政治及历史问题证实材料》。</p>
+      </div>
+    </div>
+    <div class="chronology-entry">
+      <div class="chronology-date">12月2日</div>
+      <div class="chronology-content">
+        <p>因心脏病发卒于北京。</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+
+<script>
+function toggleAllChronology() {
+  const sections = document.querySelectorAll('.chronology-year-section');
+  if (sections.length === 0) return;
+  const hasAClosedElement = Array.from(sections).some(s => !s.open);
+  sections.forEach(s => { s.open = hasAClosedElement; });
+}
+
+function jumpToYear(yearId) {
+  const el = document.getElementById(yearId);
+  if (!el) return;
+  el.open = true;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  el.classList.add('highlight');
+  setTimeout(function() { el.classList.remove('highlight'); }, 1500);
+}
+</script>
