@@ -116,7 +116,7 @@ comments:
     repo: "lyxmemo/lyxmemo.github.io"
     repo_id: "R_kgDOPFIzdw"
     category: "Comments"  # Create this category in GitHub Discussions
-    category_id: ""       # Get from https://giscus.app after creating the category
+    category_id: "DIC_kwDOPFIzd84C3j4r"
     mapping: "pathname"
     reactions_enabled: "1"
     theme: "preferred_color_scheme"
