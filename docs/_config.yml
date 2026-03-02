@@ -105,6 +105,28 @@ paginate_path: /page:num/
 #   - vendor/gems/
 #   - vendor/ruby/
 
+# Comments (Giscus - powered by GitHub Discussions)
+# To enable: 1) Enable Discussions on your GitHub repo
+#            2) Install the Giscus app: https://github.com/apps/giscus
+#            3) Configure at https://giscus.app and update repo_id & category_id below
+comments:
+  enabled: true
+  provider: giscus
+  giscus:
+    repo: "lyxmemo/lyxmemo.github.io"
+    repo_id: ""           # Get from https://giscus.app after enabling Discussions
+    category: "Comments"  # Create this category in GitHub Discussions
+    category_id: ""       # Get from https://giscus.app after creating the category
+    mapping: "pathname"
+    reactions_enabled: "1"
+    theme: "light"
+    lang: "zh-CN"
+
+# Line-level annotations (Hypothes.is)
+# Free, open-source text annotation service
+hypothesis:
+  enabled: true
+
 exclude:
   - assets/404.html
   - assets/feed.xml
