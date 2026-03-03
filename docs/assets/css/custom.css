@@ -117,3 +117,24 @@ summary h2 {
   padding: 1px 2px;
   border-radius: 3px;
 }
+
+/* ===== Comments Section ===== */
+.comments-section {
+  margin-top: 3rem;
+}
+
+.comments-section h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.comments-hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0.25rem 0;
+  line-height: 1.5;
+}
+
+.giscus {
+  margin-top: 1.5rem;
+}

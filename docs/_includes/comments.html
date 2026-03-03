@@ -1,0 +1,26 @@
+{% if site.comments.enabled %}
+<div class="comments-section">
+  <hr>
+  <h2 id="comments">评论 / Comments</h2>
+  <p class="comments-hint">💡 选中文章中的文字可以使用右侧的 Hypothes.is 工具栏添加批注。下方可以留下对整篇文章的评论。</p>
+  <p class="comments-hint">💡 Highlight any text in the article to annotate it. Use the section below for general comments.</p>
+
+  {% if site.comments.provider == "giscus" %}
+  <script src="https://giscus.app/client.js"
+    data-repo="{{ site.comments.giscus.repo }}"
+    data-repo-id="{{ site.comments.giscus.repo_id }}"
+    data-category="{{ site.comments.giscus.category }}"
+    data-category-id="{{ site.comments.giscus.category_id }}"
+    data-mapping="{{ site.comments.giscus.mapping }}"
+    data-strict="0"
+    data-reactions-enabled="{{ site.comments.giscus.reactions_enabled }}"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="{{ site.comments.giscus.theme }}"
+    data-lang="{{ site.comments.giscus.lang }}"
+    crossorigin="anonymous"
+    async>
+  </script>
+  {% endif %}
+</div>
+{% endif %}
