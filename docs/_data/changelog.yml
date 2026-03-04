@@ -1,4 +1,11 @@
 - date: 2026-03-03
+  commit_message: "年谱改版；新增图片站；新增名册树状图与籍贯分布图"
+  changes:
+    - title: "年谱（改版）"
+      url: "/chronology.html"
+    - title: "图片站（施工中）"
+      url: "/photos/"
+- date: 2026-03-03
   commit_message: "新增名册树状图与籍贯分布图"
   changes:
     - title: "陸軍新編第六軍人員名冊（树状图）"

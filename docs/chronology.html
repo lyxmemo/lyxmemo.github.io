@@ -4,12 +4,14 @@ title: 年谱
 ---
 
 <style>
+/* ===== Header ===== */
 .chronology-header {
   margin-bottom: 1.5rem;
 }
 .chronology-header h1 {
   font-size: 1.8rem;
   margin-bottom: 0.3rem;
+  color: #1a1a1a;
 }
 .chronology-header p {
   color: #666;
@@ -17,6 +19,7 @@ title: 年谱
   margin: 0.2rem 0;
 }
 
+/* ===== Year Navigation ===== */
 .chronology-year-nav {
   background: #f9f9f9;
   border: 1px solid #e0e0e0;
@@ -51,12 +54,13 @@ title: 年谱
   text-decoration: none;
 }
 
+/* ===== Year Sections ===== */
 .chronology-year-section {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e5e7eb;
   transition: background-color 1.5s;
 }
 .chronology-year-section:first-of-type {
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid #e5e7eb;
 }
 .chronology-year-section.highlight {
   background-color: #fffde7;
@@ -65,13 +69,17 @@ title: 年谱
 .chronology-year-summary {
   font-size: 1.1rem;
   font-weight: 700;
-  padding: 0.6rem 0;
+  padding: 0.7rem 0;
   cursor: pointer;
   list-style: none;
   outline: none;
   margin-bottom: 0 !important;
   transition: background-color 0.2s;
-  color: #504949;
+  color: #1a1a1a;
+  border-bottom: 2px solid transparent;
+}
+details.chronology-year-section[open] > .chronology-year-summary {
+  border-bottom-color: #3b82f6;
 }
 .chronology-year-summary:hover {
   background-color: #f7f7f7;
@@ -83,7 +91,7 @@ title: 年谱
   font-weight: bold;
   font-size: 1rem;
   margin-right: 12px;
-  color: #888;
+  color: #3b82f6;
   display: inline-block;
   width: 20px;
   text-align: center;
@@ -92,79 +100,108 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
   content: '+';
 }
 
+/* ===== Entries ===== */
 .chronology-entries {
   padding: 0 0 1rem 0;
   margin: 0;
 }
-
 .chronology-entry {
   display: flex;
   gap: 1rem;
-  padding: 0.35rem 0;
+  padding: 0.6rem 0;
   align-items: flex-start;
+  border-bottom: 1px solid #f0f0f0;
 }
+.chronology-entry:last-child {
+  border-bottom: none;
+}
+
+/* Date badge */
 .chronology-date {
   flex-shrink: 0;
   min-width: 85px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: #555;
-  padding-top: 2px;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 1.6;
+  align-self: flex-start;
 }
 
+/* Content area */
 .chronology-content {
   flex: 1;
   min-width: 0;
 }
-
 .chronology-content p {
   margin: 0 0 0.3rem 0;
-  line-height: 1.7;
+  font-size: 14.5px;
+  line-height: 1.8;
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
+/* Source tag */
 .chronology-source {
-  font-size: 0.8rem;
-  color: #888;
-  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  color: #6b7280;
   line-height: 1.5;
+  margin-top: 0.4rem;
   word-break: break-all;
 }
+.chronology-source .source-label {
+  display: inline-block;
+  background: #e8f4fd;
+  padding: 1px 8px;
+  border-radius: 10px;
+  margin-right: 2px;
+}
 .chronology-source a {
-  color: #6b8eb5;
+  color: #2563eb;
   text-decoration: none;
 }
 .chronology-source a:hover {
   text-decoration: underline;
 }
 
+/* Notes */
 .chronology-note {
-  font-size: 0.85rem;
-  color: #777;
+  font-size: 0.84rem;
+  color: #6b7280;
   font-style: italic;
-  margin-top: 0.2rem;
-  line-height: 1.6;
+  border-left: 3px solid #3b82f6;
+  padding: 0.4rem 0.8rem;
+  background-color: #f0f7ff;
+  margin-top: 0.4rem;
+  line-height: 1.7;
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
+/* Original text toggle */
 .chronology-detail-toggle {
-  margin-top: 0.4rem;
-  border: 1px solid #e8e8e8;
-  border-radius: 4px;
-  background-color: #fafafa;
+  margin-top: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background-color: #f9fafb;
+  overflow: hidden;
 }
 .chronology-detail-toggle summary {
   font-size: 0.8rem;
-  color: #888;
+  color: #9ca3af;
   cursor: pointer;
-  padding: 4px 10px;
+  padding: 5px 12px;
   margin-bottom: 0 !important;
   font-weight: normal;
+  user-select: none;
 }
 .chronology-detail-toggle summary:hover {
   background-color: #f0f0f0;
+  color: #6b7280;
 }
 .chronology-detail-toggle summary::before {
   content: '' !important;
@@ -172,11 +209,12 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
   width: 0 !important;
 }
 .chronology-detail-text {
-  padding: 8px 12px;
+  padding: 12px 16px;
   font-size: 0.82rem;
-  color: #555;
-  line-height: 1.7;
-  border-top: 1px solid #e8e8e8;
+  color: #4b5563;
+  line-height: 1.8;
+  border-top: 1px solid #e5e7eb;
+  background: #fafbfc;
   max-height: 400px;
   overflow-y: auto;
   overflow-wrap: break-word;
@@ -186,24 +224,7 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
   margin: 0.4rem 0;
 }
 
-@media (max-width: 600px) {
-  .chronology-entry {
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-  .chronology-date {
-    min-width: auto;
-    font-size: 0.8rem;
-    color: #888;
-  }
-  .chronology-year-nav-row {
-    gap: 0.3rem;
-  }
-  .chronology-decade-label {
-    min-width: 40px;
-  }
-}
-
+/* ===== Floating toggle button ===== */
 .chronology-toggle-wrapper {
   position: fixed;
   bottom: 170px;
@@ -211,7 +232,7 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
   z-index: 1000;
 }
 .chronology-toggle-btn {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   border: 1px solid #ccc;
   color: #333;
   padding: 8px 15px;
@@ -225,6 +246,29 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
 .chronology-toggle-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+  .chronology-entry {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .chronology-date {
+    min-width: auto;
+    font-size: 0.8rem;
+    align-self: flex-start;
+  }
+  .chronology-year-nav-row {
+    gap: 0.3rem;
+  }
+  .chronology-decade-label {
+    min-width: 40px;
+  }
+  .chronology-toggle-wrapper {
+    bottom: 120px;
+    right: 16px;
+  }
 }
 </style>
 
@@ -267,7 +311,7 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
         {% if entry.content != "" %}<p>{{ entry.content }}</p>{% endif %}
         {% if entry.notes != "" %}<p class="chronology-note">{{ entry.notes }}</p>{% endif %}
         {% if entry.source != "" or entry.source_url != "" %}
-        <div class="chronology-source">来源：{% if entry.source_url != "" %}<a href="{{ entry.source_url }}" target="_blank" rel="noopener">{% if entry.source != "" %}{{ entry.source }}{% else %}{{ entry.source_url }}{% endif %}</a>{% else %}{{ entry.source }}{% endif %}</div>
+        <div class="chronology-source"><span class="source-label">{% if entry.source_url != "" %}<a href="{{ entry.source_url }}" target="_blank" rel="noopener">{% if entry.source != "" %}{{ entry.source }}{% else %}链接{% endif %}</a>{% else %}{{ entry.source }}{% endif %}</span></div>
         {% endif %}
         {% if entry.original_text != "" %}
         <details class="chronology-detail-toggle">
@@ -284,14 +328,14 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
 
 <script>
 function toggleAllChronology() {
-  const sections = document.querySelectorAll('.chronology-year-section');
+  var sections = document.querySelectorAll('.chronology-year-section');
   if (sections.length === 0) return;
-  const hasAClosedElement = Array.from(sections).some(s => !s.open);
-  sections.forEach(s => { s.open = hasAClosedElement; });
+  var hasAClosedElement = Array.from(sections).some(function(s) { return !s.open; });
+  sections.forEach(function(s) { s.open = hasAClosedElement; });
 }
 
 function jumpToYear(yearId) {
-  const el = document.getElementById(yearId);
+  var el = document.getElementById(yearId);
   if (!el) return;
   el.open = true;
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
