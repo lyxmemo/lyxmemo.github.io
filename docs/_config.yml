@@ -113,7 +113,7 @@ comments:
   enabled: true
   provider: waline
   waline:
-    server_url: ""  # TODO: Set your Waline server URL after deploying to Vercel
+    server_url: "https://waline-psi-azure.vercel.app"
     lang: "zh-CN"
     placeholder: "欢迎留言（无需登录）"
     page_size: 10
