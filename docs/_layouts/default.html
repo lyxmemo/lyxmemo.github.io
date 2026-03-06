@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: " en-US" }}">
+<html lang="{{ site.lang | default: "zh-CN" }}">
 
 <head>
   <meta charset="UTF-8">
   <title>{{ page.title | default: site.title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="/assets/images/favicon5.png" type="image/png">
-  <link rel="stylesheet" type="text/css"
-    href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{{ '/assets/css/custom.css' | relative_url }}">
   {% seo %}
   <script type="text/javascript">
@@ -18,7 +19,6 @@
     })(window, document, "clarity", "script", "skq2q0385g");
   </script>
   <script src="{{ '/assets/js/fuse.min.js' | relative_url }}"></script>
-  {% include hypothesis.html %}
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -30,7 +30,6 @@
       indices.sort((a, b) => a[0] - b[0]);
       let result = '';
       let lastIndex = 0;
-
       indices.forEach(index => {
         const [start, end] = index;
         result += text.substring(lastIndex, start);
@@ -56,7 +55,7 @@
             { name: 'content', weight: 1 }
           ],
           includeScore: true,
-          includeMatches: true, 
+          includeMatches: true,
           threshold: 0.5,
           ignoreLocation: true,
           minMatchCharLength: 1,
@@ -65,50 +64,37 @@
       })
       .catch(error => console.error('Error fetching or parsing search data:', error));
 
+    let searchTimer = null;
     searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimer);
       const query = searchInput.value;
-      
-      if (query.length > 0) {
+      if (query.length === 0) {
+        resultsContainer.innerHTML = '';
+        return;
+      }
+      searchTimer = setTimeout(() => {
         if (!fuse) { return; }
-
         const results = fuse.search(query);
         const queryLower = query.toLowerCase();
-
-        // --- NEW: Create a custom composite score for perfect sorting ---
         const scoredResults = results.map(result => {
-          let customScore = result.score; // Start with Fuse's score
+          let customScore = result.score;
           const title = result.item.title;
           const content = result.item.content;
-
-          // Check for a perfect, complete match
           const isPerfectMatch = title.toLowerCase().includes(queryLower) || content.toLowerCase().includes(queryLower);
-
-          // If it's NOT a perfect match (fuzzy only), apply a large penalty
-          if (!isPerfectMatch) {
-            customScore += 100; 
-          }
-
-          // If it IS a "[待录入]" item, apply an even bigger penalty
-          if (title.includes('[待录入]')) {
-            customScore += 1000;
-          }
-          
+          if (!isPerfectMatch) { customScore += 100; }
+          if (title.includes('[待录入]')) { customScore += 1000; }
           return { ...result, customScore };
         });
-
-        // Now sort by the new, unambiguous customScore
         scoredResults.sort((a, b) => a.customScore - b.customScore);
-
         resultsContainer.innerHTML = '';
-
         if (scoredResults.length === 0) {
           const noResultsLi = document.createElement('li');
           noResultsLi.className = 'no-results';
           noResultsLi.textContent = '未找到结果 (No results found)';
           resultsContainer.appendChild(noResultsLi);
         } else {
-          scoredResults.slice(0, 1000).forEach(result => {
-            // Display logic remains the same
+          const fragment = document.createDocumentFragment();
+          scoredResults.slice(0, 50).forEach(result => {
             const li = document.createElement('li');
             let highlightedTitle = result.item.title;
             const titleMatches = result.matches.find(match => match.key === 'title');
@@ -130,122 +116,118 @@
                 .map(index => [index[0] - snippetStart, index[1] - snippetStart])
                 .filter(index => index[0] >= 0 && index[1] < snippetLength);
               let highlightedSnippet = applyHighlights(rawSnippet, adjustedIndices);
-              if (snippetStart > 0) {
-                highlightedSnippet = "..." + highlightedSnippet;
-              }
-              if (snippetEnd < fullContent.length) {
-                highlightedSnippet += "...";
-              }
+              if (snippetStart > 0) { highlightedSnippet = "..." + highlightedSnippet; }
+              if (snippetEnd < fullContent.length) { highlightedSnippet += "..."; }
               resultHTML += `<p class="search-result-snippet">${highlightedSnippet}</p>`;
             }
             li.innerHTML = resultHTML;
-            resultsContainer.appendChild(li);
+            fragment.appendChild(li);
           });
+          resultsContainer.appendChild(fragment);
         }
-      } else {
-        resultsContainer.innerHTML = '';
-      }
+      }, 250);
     });
   });
 </script>
 </head>
 
 <body>
-  <div class="wrapper">
-    <header>
-      <h1>{{ site.title | default: site.github.repository_name }}</h1>
-      <p>{{ site.description | default: site.github.project_tagline }}</p>
-      <!-- {% include navigation.html %} -->
-
-    </header>
-    <section>
-      <div class="search-container">
-        <label for="search-input" class="visually-hidden">搜索</label> <svg class="search-icon"
-          xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="text" id="search-input" placeholder="全站搜索">
-        <ul id="search-results"></ul>
+  <div class="site-wrapper">
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="{{ site.baseurl }}/" class="site-title-link">
+          <h1 class="site-title-main">{{ site.title | default: site.github.repository_name }}</h1>
+        </a>
+        <p class="site-subtitle">{{ site.description | default: site.github.project_tagline }}</p>
       </div>
-      {{ content }}
+    </header>
 
-    </section>
-    <footer>
+    <!-- Search Bar -->
+    <nav class="secondary-nav">
+      <div class="nav-inner">
+        <div class="search-container">
+          <label for="search-input" class="visually-hidden">搜索</label>
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" placeholder="全站搜索 / Search All">
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </nav>
 
-      <!-- {% include contact_links.html %} -->
-      <p>
-        <a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/assets/%E4%B8%8E%E5%BB%96%E8%80%80%E6%B9%98%E6%9C%89%E5%85%B3%E7%9A%84%E6%96%87%E5%AD%97%E8%B5%84%E6%96%99%E5%90%88%E9%9B%86.pdf"
-          class="button">下载：PDF版《与廖耀湘相关的文字资料合集》</a>
-        <!-- <a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/assets/%E4%B8%8E%E5%BB%96%E8%80%80%E6%B9%98%E6%9C%89%E5%85%B3%E7%9A%84%E6%96%87%E5%AD%97%E8%B5%84%E6%96%99%E5%90%88%E9%9B%86.epub"
-          class="button">下载：EPUB版《与廖耀湘相关的文字资料合集》</a> -->
-      </p>
-      <p><small>欢迎贡献： <a href="https://github.com/lyxmemo">Github:lyxmemo</a></small></p>
-      <p><small>贡献者：寒庭暮晚、第N个日常、长亭怨慢、杜致童、睦月、__不要着急、观棋不语、刘兴汉、sage yan、鱼珠前航道舵手、Crystal</small></p>
-      <p><small>小红书：建楚bot</small></p>
-      <p><small>邮箱：lyxmemo@gmail.com</small></p>
-      <p><small>如果有您发现有其他适合添加的文章、书籍，或者在本站文章中发现错别字，请随时邮件我～</small></p>
-      <p><small><a href="/data-analysis.html">网站及小红书数据看板（2025年8月10日）</a></small></p>
-      <p><small><a href="/photos/">图片站（施工中……上传功能未做好。）</a></small></p>
+    <!-- Main Content -->
+    <main class="site-main">
+      <div class="main-inner">
+        {{ content }}
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <h2 class="footer-title">{{ site.title }}</h2>
+            <p class="footer-desc">{{ site.description }}</p>
+          </div>
+          <div class="footer-links">
+            <h5 class="footer-heading">下载 / Downloads</h5>
+            <ul>
+              <li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/assets/%E4%B8%8E%E5%BB%96%E8%80%80%E6%B9%98%E6%9C%89%E5%85%B3%E7%9A%84%E6%96%87%E5%AD%97%E8%B5%84%E6%96%99%E5%90%88%E9%9B%86.pdf">PDF版 文字资料合集</a></li>
+            </ul>
+          </div>
+          <div class="footer-links">
+            <h5 class="footer-heading">联系 / Contact</h5>
+            <ul>
+              <li><a href="https://github.com/lyxmemo">GitHub: lyxmemo</a></li>
+              <li><a href="mailto:lyxmemo@gmail.com">lyxmemo@gmail.com</a></li>
+              <li>小红书：建楚bot</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-credits">贡献者：寒庭暮晚、第N个日常、长亭怨慢、杜致童、睦月、__不要着急、观棋不语、刘兴汉、sage yan、鱼珠前航道舵手、Crystal</p>
+          <p class="footer-note">如果您发现有其他适合添加的文章、书籍，或在本站文章中发现错别字，请随时邮件联系。</p>
+          <div class="footer-meta">
+            <a href="/data-analysis.html">数据看板</a>
+            <span class="footer-sep">&middot;</span>
+            <a href="/photos/">图片站</a>
+          </div>
+        </div>
+      </div>
     </footer>
   </div>
-  <style>
-  .floating-lang-wrapper {
-    position: fixed;
-    bottom: 120px; /* 30px(Toggle) + 45px + 45px = Stacked above Quiz */
-    right: 30px;
-    z-index: 1000;
-  }
-  /* Reusing your existing .floating-toggle-btn styles for consistency */
-  .lang-btn {
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 1px solid #ccc;
-    color: #333;
-    padding: 8px 15px;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 20px;
-    outline: none;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    transition: all 0.2s ease-in-out;
-    font-weight: 600;
-  }
-  .lang-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    color: #007bff;
-  }
-</style>
 
-<div class="floating-lang-wrapper">
-  <button class="lang-btn" id="zh_lang_btn" onclick="toggleLang()">繁/简</button>
-</div>
+  <!-- Language Toggle -->
+  <div class="floating-lang-wrapper">
+    <button class="lang-btn" id="zh_lang_btn" onclick="toggleLang()">繁/简</button>
+  </div>
 
-<script src="{{ '/assets/js/zh_tran.js' | relative_url }}"></script>
-
-<script>
-  function toggleLang() {
-    var current = localStorage.getItem('zh_choose');
-    if (current !== 't') {
-        zh_tran('t');
-        document.getElementById('zh_lang_btn').innerText = "繁体中";
-    } else {
-        zh_tran('s');
-        document.getElementById('zh_lang_btn').innerText = "简体中";
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", function() {
-      if (typeof zh_tran === 'function') {
-          var stored = localStorage.getItem('zh_choose');
-          if (stored === 't') {
-              zh_tran('t');
-              document.getElementById('zh_lang_btn').innerText = "繁体中";
-          }
+  <script src="{{ '/assets/js/zh_tran.js' | relative_url }}"></script>
+  <script>
+    function toggleLang() {
+      var current = localStorage.getItem('zh_choose');
+      if (current !== 't') {
+          zh_tran('t');
+          document.getElementById('zh_lang_btn').innerText = "繁体中";
+      } else {
+          zh_tran('s');
+          document.getElementById('zh_lang_btn').innerText = "简体中";
       }
-  });
-</script>
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof zh_tran === 'function') {
+            var stored = localStorage.getItem('zh_choose');
+            if (stored === 't') {
+                zh_tran('t');
+                document.getElementById('zh_lang_btn').innerText = "繁体中";
+            }
+        }
+    });
+  </script>
 </body>
 
 </html>

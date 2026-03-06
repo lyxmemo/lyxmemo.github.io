@@ -119,6 +119,11 @@ comments:
     page_size: 10
     avatar: "mp"  # Default anonymous avatar style
 
+# Line-level annotations (Hypothes.is)
+# Free, open-source text annotation service
+hypothesis:
+  enabled: false
+
 exclude:
   - assets/404.html
   - assets/feed.xml

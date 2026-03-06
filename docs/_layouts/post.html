@@ -1,19 +1,29 @@
 ---
 layout: default
 ---
-<article>
-  <h1>{{ page.title }}</h1>
-  {%- case page.category -%}
-    {%- when "Liao's Tele" -%}
-      {%- assign back_tab = "telegrams" -%}
-    {%- when "报刊杂志" -%}
-      {%- assign back_tab = "magazines" -%}
-    {%- else -%}
-      {%- assign back_tab = "byBook" -%}
-  {%- endcase -%}
-  <a href="{{ site.baseurl }}/#{{ back_tab }}">回到目录页</a>
-  <hr>
-  {{ content }}
-
-  {% include comments.html %}
+<article class="post-article">
+  <div class="post-meta-bar">
+    {%- case page.category -%}
+      {%- when "Liao's Tele" -%}
+        {%- assign back_tab = "telegrams" -%}
+      {%- when "报刊杂志" -%}
+        {%- assign back_tab = "magazines" -%}
+      {%- else -%}
+        {%- assign back_tab = "byBook" -%}
+    {%- endcase -%}
+    <a href="{{ site.baseurl }}/#{{ back_tab }}" class="back-link">
+      <span class="back-arrow">&larr;</span> 回到目录页 / Back to Index
+    </a>
+    {%- if page.date -%}
+    <span class="post-date">{{ page.date | date: "%Y-%m-%d" }}</span>
+    {%- endif -%}
+  </div>
+  <h1 class="post-title">{{ page.title }}</h1>
+  {%- if page.author -%}
+  <div class="post-author">{{ page.author }}</div>
+  {%- endif -%}
+  <div class="post-divider"></div>
+  <div class="post-content">
+    {{ content }}
+  </div>
 </article>

@@ -3,253 +3,90 @@ layout: default
 title: 主页
 ---
 
-<style>
-  /* === “全部展开/收起”浮动按钮样式 (已恢复) === */
-  .floating-toggle-wrapper {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 1000;
-    display: none; /* 默认隐藏，只在“分类视图”下显示 */
-  }
-  .floating-toggle-btn {
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 1px solid #ccc;
-    color: #333;
-    padding: 8px 15px;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 20px;
-    outline: none;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    transition: all 0.2s ease-in-out;
-  }
-  .floating-toggle-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
+<!-- Styles are now in custom.css -->
 
-/* === “知识挑战”浮动按钮样式 (Resized to match) === */
-  .floating-quiz-wrapper {
-    position: fixed;
-    bottom: 75px; /* Adjusted from 85px so the gap between buttons looks natural */
-    right: 30px;
-    z-index: 1000;
-  }
-  .floating-quiz-btn {
-    /* Modern Gradient Background */
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
-    
-    /* --- Size Adjustments Start --- */
-    padding: 8px 15px;       /* Changed from 12px 24px to match Toggle button */
-    font-size: 14px;         /* Changed from 16px to match Toggle button */
-    border-radius: 20px;     /* Changed from 50px to match Toggle button */
-    /* --- Size Adjustments End --- */
+{%- assign memorial_posts_raw = "" | split: "" -%}
+{%- assign telegrams_raw = "" | split: "" -%}
+{%- assign magazines_raw = "" | split: "" -%}
+{%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," -%}
+{%- for collection_name in collections_to_search -%}
+  {%- for post in site[collection_name] -%}
+    {%- if post.category == "Liao's Tele" -%}{%- assign telegrams_raw = telegrams_raw | push: post -%}{%- elsif post.category == "报刊杂志" -%}{%- assign magazines_raw = magazines_raw | push: post -%}{%- else -%}{%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}{%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
 
-    border: none;
-    font-weight: 600; 
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    display: flex;
-    align-items: center;
-    gap: 6px; 
-  }
-  .floating-quiz-btn:hover {
-    background: linear-gradient(135deg, #5b0eb0 0%, #1a60d6 100%);
-    transform: translateY(-2px); /* Slight reduction in hover movement to match smaller size */
-    box-shadow: 0 6px 20px rgba(37, 117, 252, 0.5);
-  }
-  .floating-quiz-btn:active {
-    transform: translateY(-1px);
-  }
-
-  /* === 页脚的视图切换按钮样式 (低调) === */
-  .footer-view-switcher {
-    text-align: center;
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-  }
-  .footer-view-switcher .switch-btn {
-    background: none;
-    border: none;
-    color: #888;
-    cursor: pointer;
-    font-size: 0.9rem;
-    text-decoration: underline;
-    padding: 5px;
-    margin: 0 10px;
-  }
-  .footer-view-switcher .switch-btn:hover {
-    color: #007bff;
-  }
-  .footer-view-switcher .switch-btn.active {
-    color: #333;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: default;
-  }
-
-  /* === 更新日志面板样式 === */
-  .changelog-container {
-    margin-bottom: 25px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  }
-  .changelog-summary {
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 5px 20px;
-    cursor: pointer;
-    outline: none;
-  }
-  .changelog-summary::-webkit-details-marker { display: none; }
-  .changelog-summary::before { content: '+'; font-family: monospace; font-weight: bold; font-size: 1rem; margin-right: 12px; color: #888; display: inline-block; width: 20px; text-align: center; }
-  details[open] > .changelog-summary::before { content: '−'; }
-
-  .changelog-panel {
-    padding: 0 20px 15px 20px;
-    border-top: 1px solid #e0e0e0;
-    max-height: 30vh;
-    overflow-y: auto;
-  }
-  .changelog-panel ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin: 10px 0 0 0;
-  }
-  .changelog-panel li {
-    padding: 4px 0;
-    font-size: 0.9rem;
-  }
-  .changelog-panel .commit-date {
-    font-weight: bold;
-    color: #555;
-  }
-  .changelog-panel .commit-message {
-    font-style: italic;
-    color: #777;
-    margin-left: 10px;
-  }
-  .changelog-panel .change-list {
-    padding-left: 20px;
-    list-style-type: disc;
-    margin-top: 5px;
-  }
-
-  /* --- 分类视图内部的样式 --- */
-  /* Tab 样式 */
-  .tab { overflow: hidden; border-bottom: 1px solid #ddd; }
-  .tab button { background-color: transparent; float: left; border: none; outline: none; cursor: pointer; padding: 0.7rem 1rem; transition: background-color 0.3s; font-size: 1rem; color: #555; border-radius: 6px 6px 0 0; }
-  .tab button:hover:not(.active) { background-color: #f1f1f1; }
-  .tab button.active { background-color: #e9e9e9; font-weight: bold; color: #333; }
-  .tabcontent { display: none; padding: 0px 0; animation: fadeEffect 0.5s; }
-  @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
-
-  /* 可折叠列表样式 */
-  .collapsible-book { border-bottom: 1px solid #e0e0e0; }
-  .collapsible-book:first-of-type { border-top: 1px solid #e0e0e0; }
-  summary { font-size: 1rem; font-weight: 600; padding: 0.5rem 0px; cursor: pointer; list-style: none; outline: none; margin-bottom:0!important; transition: background-color 0.2s; color: #504949ff; }
-  summary:hover { background-color: #f7f7f7; }
-  summary::-webkit-details-marker { display: none; }
-  summary::before { content: '−'; font-family: monospace; font-weight: bold; font-size: 1rem; margin-right: 12px; color: #888; display: inline-block; width: 20px; text-align: center; }
-  details:not([open]) > summary::before { content: '+'; }
-  .collapsible-book ul { list-style-type: none; padding: 10px 0 15px 42px; margin: 0; }
-  .collapsible-book li { padding: 0.1rem 0; border: none; }
-
-  /* 时间线视图的样式 */
-  .timeline-list { list-style-type: none; padding-left: 0; }
-  .timeline-list li, .timeline-list-no-date li { display: flex; align-items: baseline; padding: 0.2rem 0; }
-  /* .timeline-list li { border-bottom: 1px solid #eee; } 电报Tab带下划线 */
-  /* .timeline-list-no-date li { border-bottom: none; } 时间线Tab不带下划线 */
-  .timeline-date { margin: 0 1rem; flex-shrink: 0; font-size: 0.8rem; }
-  .unknown-date-header { margin-top: 40px; padding-top: 20px; border-top: 2px solid #ccc; font-size: 1rem; font-weight: bold; color: #555; }
-</style>
+<div class="tab" id="tab-bar">
+    <button class="tablinks" onclick="openTab(event, 'news')" id="news-tab">News / 动态</button>
+    <button class="tablinks" onclick="openTab(event, 'byBook')" id="byBook-tab">Books / 书籍</button>
+    <button class="tablinks" onclick="openTab(event, 'telegrams')" id="telegrams-tab">Telegram / 电报</button>
+    <button class="tablinks" onclick="openTab(event, 'magazines')" id="magazines-tab">Newspaper / 报刊</button>
+    <button class="tablinks" onclick="openTab(event, 'chronology')" id="chronology-tab">年谱 / Chronology</button>
+    <div class="subscribe-icon-wrapper">
+      <button class="subscribe-icon-btn" onclick="toggleSubscribe(this)" title="订阅 / Subscribe">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span>订阅</span>
+      </button>
+      <div class="subscribe-dropdown" id="subscribe-dropdown">
+        <form action="https://formspree.io/f/xzdjpnva" method="POST" class="subscribe-dropdown-form">
+          <p class="subscribe-dropdown-title">订阅更新 / Subscribe</p>
+          <input type="email" name="email" placeholder="your@email.com" required>
+          <button type="submit">订阅</button>
+        </form>
+      </div>
+    </div>
+</div>
 
 <div class="floating-toggle-wrapper">
-  <button class="floating-toggle-btn" onclick="toggleAllMaster('#new-view .collapsible-book')">全部展开/收起</button>
+  <button class="floating-toggle-btn" onclick="toggleAllSmart()">全部展开/收起</button>
 </div>
 
 <div class="floating-quiz-wrapper">
-  <button class="floating-quiz-btn" onclick="window.location.href='{{ '/quiz/index.html' | relative_url }}'">💡 知识挑战</button>
+  <button class="floating-quiz-btn" onclick="window.location.href='{{ '/quiz/index.html' | relative_url }}'">知识挑战 / Quiz</button>
 </div>
 
 <div id="new-view" class="view-panel">
-  {%- assign memorial_posts_raw = "" | split: "" -%}
-  {%- assign telegrams_raw = "" | split: "" -%}
-  {%- assign magazines_raw = "" | split: "" -%}
-  {%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," -%}
-  {%- for collection_name in collections_to_search -%}
-    {%- for post in site[collection_name] -%}
-      {%- if post.category == "Liao's Tele" -%}{%- assign telegrams_raw = telegrams_raw | push: post -%}{%- elsif post.category == "报刊杂志" -%}{%- assign magazines_raw = magazines_raw | push: post -%}{%- else -%}{%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}{%- endif -%}
-    {%- endfor -%}
-  {%- endfor -%}
-
-  <details class="changelog-container">
-    <summary class="changelog-summary">更新日志</summary>
-    <div class="changelog-panel">
-      <ul>
-        {%- for item in site.data.changelog -%}
-          <li>
-            <span class="commit-date">{{ item.date }}</span> - <span class="commit-message">"{{ item.commit_message }}"</span>
-            <ul class="change-list">
-              {%- for change in item.changes -%}
-                <li><a href="{{ change.url | relative_url }}">{{ change.title }}</a></li>
-              {%- endfor -%}
-            </ul>
-          </li>
-        {%- endfor -%}
-      </ul>
+  <div id="news" class="tabcontent">
+    <div class="news-chiclet-list">
+      {%- for item in site.data.changelog -%}
+      <div class="news-chiclet">
+        <span class="news-chiclet-tag">UPDATE / 更新</span>
+        <h3 class="news-chiclet-title">{{ item.commit_message }}</h3>
+        <span class="news-chiclet-date">{{ item.date }}</span>
+        <ul class="news-chiclet-changes">
+          {%- for change in item.changes -%}
+            <li><a href="{{ change.url | relative_url }}">{{ change.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      {%- endfor -%}
     </div>
-  </details>
-
-  <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'byBook')" id="byBook-tab">按书籍</button>
-    <button class="tablinks" onclick="openTab(event, 'byTime')" id="byTime-tab">按时间</button>
-    <button class="tablinks" onclick="openTab(event, 'telegrams')" id="telegrams-tab">电报</button>
-    <button class="tablinks" onclick="openTab(event, 'magazines')" id="magazines-tab">报刊杂志</button>
   </div>
-  
+
   <div id="byBook" class="tabcontent">
     {%- if memorial_posts_raw and memorial_posts_raw.size > 0 -%}
       {%- assign posts_by_book = memorial_posts_raw | group_by: "category" -%}
       {%- for book in posts_by_book -%}
         <details class="collapsible-book" open>
           <summary>《{{ book.name }}》</summary>
-          <ul>
+          <div class="chiclet-grid">
             {%- assign items_sorted_by_title = book.items | sort: 'title' -%}
-            {%- for post in items_sorted_by_title -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}
-          </ul>
+            {%- for post in items_sorted_by_title -%}
+            <a href="{{ post.url | relative_url }}" class="article-chiclet">
+              <span class="article-chiclet-tag">{{ post.category }}</span>
+              <h4 class="article-chiclet-title">{{ post.title }}</h4>
+              {%- if post.author -%}<span class="article-chiclet-author">{{ post.author }}</span>{%- endif -%}
+              {%- assign fmt_year = post.date | date: "%Y" -%}{%- if fmt_year != "1900" and fmt_year != "1899" and post.date -%}
+              <span class="article-chiclet-date">{{ fmt_date }}</span>
+              {%- endif -%}
+              {%- if post.excerpt -%}<p class="article-chiclet-body">{{ post.excerpt | strip_html | truncate: 120 }}</p>{%- endif -%}
+            </a>
+            {%- endfor -%}
+          </div>
         </details>
       {%- endfor -%}
     {%- else -%}<p>未能生成列表。</p>{%- endif -%}
   </div>
 
-  <div id="byTime" class="tabcontent">
-    {%- assign timeline_posts = memorial_posts_raw | concat: magazines_raw -%}
-    {%- if timeline_posts and timeline_posts.size > 0 -%}
-      {%- assign dated_posts = "" | split: "" -%}{%- assign undated_posts = "" | split: "" -%}
-      {%- for post in timeline_posts -%}{%- assign formatted_date = post.date | date: "%Y-%m-%d" -%}{%- if formatted_date == "1900-01-01" or post.date == nil -%}{%- assign undated_posts = undated_posts | push: post -%}{%- else -%}{%- assign dated_posts = dated_posts | push: post -%}{%- endif -%}{%- endfor -%}
-      {%- if dated_posts.size > 0 -%}
-        {%- assign posts_by_year = dated_posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse -%}
-        {%- for year_group in posts_by_year -%}
-          <details class="collapsible-book" open>
-            <summary>{{ year_group.name }} 年</summary>
-            <ul class="timeline-list-no-date">
-              {%- assign posts_in_year = year_group.items | sort: 'date' | reverse -%}
-              {%- for post in posts_in_year -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}
-            </ul>
-          </details>
-        {%- endfor -%}
-      {%- endif -%}
-      {%- if undated_posts.size > 0 -%}<h3 class="unknown-date-header">暂无时间</h3><ul>{%- assign undated_posts_sorted = undated_posts | sort: 'title' -%}{%- for post in undated_posts_sorted -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}</ul>{%- endif -%}
-    {%- else -%}<p>未能生成列表。</p>{%- endif -%}
-  </div>
-  
   <div id="telegrams" class="tabcontent">
     {%- assign telegrams = telegrams_raw | sort: 'date' -%}
     {%- if telegrams.size > 0 -%}
@@ -314,8 +151,8 @@ title: 主页
       {%- assign dated_magazines = "" | split: "" -%}
       {%- assign undated_magazines = "" | split: "" -%}
       {%- for post in magazines_raw -%}
-        {%- assign formatted_date = post.date | date: "%Y-%m-%d" -%}
-        {%- if formatted_date == "1900-01-01" or post.date == nil -%}
+        {%- assign post_year = post.date | date: "%Y" -%}
+        {%- if post_year == "1900" or post_year == "1899" or post.date == nil -%}
           {%- assign undated_magazines = undated_magazines | push: post -%}
         {%- else -%}
           {%- assign dated_magazines = dated_magazines | push: post -%}
@@ -396,6 +233,52 @@ title: 主页
       <p>未能生成列表。</p>
     {%- endif -%}
   </div>
+
+  <div id="chronology" class="tabcontent">
+    {%- comment -%}Build decade navigation from YAML data{%- endcomment -%}
+    <div class="chronology-year-nav">
+    {%- assign prev_decade = "" -%}
+    {%- for year_data in site.data.chronology -%}
+      {%- assign decade = year_data.year | divided_by: 10 | times: 10 -%}
+      {%- assign decade_label = decade | append: "s" -%}
+      {%- if decade_label != prev_decade -%}
+        {%- if prev_decade != "" -%}</div>{%- endif -%}
+      <div class="chronology-year-nav-row">
+        <span class="chronology-decade-label">{{ decade_label }}</span>
+        {%- assign prev_decade = decade_label -%}
+      {%- endif -%}
+        <a class="chronology-year-link" onclick="jumpToYear('year-{{ year_data.year }}')">{{ year_data.year }}</a>
+    {%- endfor -%}
+      </div>
+    </div>
+
+    {%- for year_data in site.data.chronology -%}
+    <details class="chronology-year-section" id="year-{{ year_data.year }}">
+      <summary class="chronology-year-summary">【{{ year_data.year }}】</summary>
+      <div class="chronology-entries">
+        {%- for entry in year_data.entries -%}
+        <div class="chronology-entry">
+          <div class="chronology-date">{%- if entry.date_display != "" -%}{{ entry.date_display }}{%- elsif entry.date != "" -%}{%- assign parts = entry.date | split: "-" -%}{%- if parts.size == 3 -%}{{ parts[1] | plus: 0 }}月{{ parts[2] | plus: 0 }}日{%- elsif parts.size == 2 -%}{{ parts[1] | plus: 0 }}月{%- endif -%}{%- endif -%}</div>
+          <div class="chronology-content">
+            {%- if entry.content != "" -%}<p>{{ entry.content }}</p>{%- endif -%}
+            {%- if entry.notes != "" -%}<p class="chronology-note">{{ entry.notes }}</p>{%- endif -%}
+            {%- if entry.source != "" or entry.source_url != "" -%}
+            <div class="chronology-source"><span class="source-label">{%- if entry.source_url != "" -%}<a href="{{ entry.source_url }}" target="_blank" rel="noopener">{%- if entry.source != "" -%}{{ entry.source }}{%- else -%}链接{%- endif -%}</a>{%- else -%}{{ entry.source }}{%- endif -%}</span></div>
+            {%- endif -%}
+            {%- if entry.original_text != "" -%}
+            <details class="chronology-detail-toggle">
+              <summary>展开原文</summary>
+              <div class="chronology-detail-text"><p>{{ entry.original_text | newline_to_br }}</p></div>
+            </details>
+            {%- endif -%}
+          </div>
+        </div>
+        {%- endfor -%}
+      </div>
+    </details>
+    {%- endfor -%}
+  </div>
+
 </div>
 
 <div id="original-view" class="view-panel">
@@ -405,15 +288,15 @@ title: 主页
   </div>
 </div>
 
-<br/>
-
-<h2>相关工具</h2>
+<h2>相关工具 / Tools</h2>
 <ul>
   <li><a href="{{ '/quiz/n6a_name_list_.html' | relative_url }}">陸軍新編第六軍人員名冊</a></li>
+  <li><a href="{{ '/quiz/name_list_tree.html' | relative_url }}">陸軍新編第六軍人員名冊（树状图）</a></li>
+  <li><a href="{{ '/quiz/map_viz.html' | relative_url }}">新編第六軍 · 籍貫分布圖</a></li>
   <li><a href="{{ '/chronology.html' | relative_url }}">年谱</a>（施工中）</li>
 </ul>
 
-<h2>资料下载区</h2>
+<h2>资料下载区 / Downloads</h2>
 <ul>{% for file in site.static_files %}{% if file.path contains 'resources' %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>{% endif %}{% endfor %}</ul>
 
 
@@ -427,34 +310,75 @@ title: 主页
   // --- 视图切换功能 ---
   function switchView(viewId, clickedButton) {
     var toggleButton = document.querySelector('.floating-toggle-wrapper');
+    var tabBar = document.getElementById('tab-bar');
     document.querySelectorAll('.view-panel').forEach(panel => { panel.style.display = 'none'; });
     document.querySelectorAll('.footer-view-switcher .switch-btn').forEach(btn => { btn.classList.remove('active'); });
     document.getElementById(viewId).style.display = 'block';
     clickedButton.classList.add('active');
-    if (viewId === 'new-view') { toggleButton.style.display = 'block'; } else { toggleButton.style.display = 'none'; }
+    if (viewId === 'new-view') {
+      toggleButton.style.display = 'block';
+      tabBar.style.display = '';
+    } else {
+      toggleButton.style.display = 'none';
+      tabBar.style.display = 'none';
+    }
   }
 
   // --- Tab 切换功能 ---
   function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
-    var tabContainer = document.getElementById('new-view');
-    tabcontent = tabContainer.getElementsByClassName("tabcontent");
+    tabcontent = document.getElementById('new-view').getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
-    tablinks = tabContainer.getElementsByClassName("tablinks");
+    tablinks = document.getElementById('tab-bar').getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
     document.getElementById(tabName).style.display = "block";
     if (evt) { evt.currentTarget.className += " active"; }
     localStorage.setItem('lastTab', tabName);
   };
 
+  // --- 订阅下拉框 ---
+  function toggleSubscribe(btn) {
+    var dd = document.getElementById('subscribe-dropdown');
+    dd.classList.toggle('open');
+    if (dd.classList.contains('open')) {
+      var rect = btn.getBoundingClientRect();
+      dd.style.top = (rect.bottom + 4) + 'px';
+      dd.style.right = (window.innerWidth - rect.right) + 'px';
+    }
+  }
+
   // --- 全部展开/收起功能 ---
   function toggleAllMaster(selector) {
     const detailsElements = document.querySelectorAll(selector);
     if (detailsElements.length === 0) { return; }
     const hasAClosedElement = Array.from(detailsElements).some(detail => !detail.open);
-    const newState = hasAClosedElement;
-    detailsElements.forEach((detail) => { detail.open = newState; });
+    detailsElements.forEach((detail) => { detail.open = hasAClosedElement; });
   };
+
+  function toggleAllChronology() {
+    var sections = document.querySelectorAll('.chronology-year-section');
+    if (sections.length === 0) return;
+    var hasAClosedElement = Array.from(sections).some(function(s) { return !s.open; });
+    sections.forEach(function(s) { s.open = hasAClosedElement; });
+  }
+
+  function jumpToYear(yearId) {
+    var el = document.getElementById(yearId);
+    if (!el) return;
+    el.open = true;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.classList.add('highlight');
+    setTimeout(function() { el.classList.remove('highlight'); }, 1500);
+  }
+
+  function toggleAllSmart() {
+    var chronologyTab = document.getElementById('chronology');
+    if (chronologyTab && chronologyTab.style.display !== 'none') {
+      toggleAllChronology();
+    } else {
+      toggleAllMaster('#new-view .collapsible-book');
+    }
+  }
 
   // --- 页面加载时执行的默认操作 ---
   document.addEventListener('DOMContentLoaded', () => {
@@ -463,7 +387,7 @@ title: 主页
 
     const openTabFromHash = () => {
       const hash = window.location.hash.substring(1);
-      const validTabs = ['byBook', 'byTime', 'telegrams', 'magazines'];
+      const validTabs = ['news', 'byBook', 'telegrams', 'magazines', 'chronology'];
       let tabToOpen = '';
 
       if (hash && validTabs.includes(hash)) {
@@ -473,19 +397,27 @@ title: 主页
         if (lastTab && validTabs.includes(lastTab)) {
           tabToOpen = lastTab;
         } else {
-          tabToOpen = 'byBook';
+          tabToOpen = 'news';
         }
       }
-      
+
       const tabButton = document.getElementById(tabToOpen + '-tab');
       if (tabButton) {
         tabButton.click();
       } else {
-        document.getElementById('byBook-tab').click(); // Fallback
+        document.getElementById('news-tab').click(); // Fallback
       }
     };
 
     openTabFromHash();
     window.addEventListener('hashchange', openTabFromHash, false);
+
+    // 点击外部关闭订阅下拉框
+    document.addEventListener('click', function(e) {
+      var dd = document.getElementById('subscribe-dropdown');
+      if (dd.classList.contains('open') && !e.target.closest('.subscribe-icon-wrapper')) {
+        dd.classList.remove('open');
+      }
+    });
   });
 </script>

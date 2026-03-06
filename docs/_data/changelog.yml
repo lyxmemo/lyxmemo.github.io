@@ -1,3 +1,26 @@
+- date: 2026-03-06
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "驻印军三年工作漫忆（李则夷）"
+      url: "/ten_year_memorial/驻印军三年工作漫忆（李则夷）.html"
+    - title: "蒋军四平街解围战役中的八棵树争夺战（郑庭笈）"
+      url: "/battles_history/liaoshen/1947/蒋军四平街解围战役中的八棵树争夺战（郑庭笈）.html"
+    - title: "难忘的回忆：怀念刘建章先生（杜坚）"
+      url: "/ten_year_memorial/难忘的回忆：怀念刘建章先生（杜坚）.html"
+- date: 2026-03-03
+  commit_message: "年谱改版；新增图片站；新增名册树状图与籍贯分布图"
+  changes:
+    - title: "年谱（改版）"
+      url: "/chronology.html"
+    - title: "图片站（施工中）"
+      url: "/photos/"
+- date: 2026-03-03
+  commit_message: "新增名册树状图与籍贯分布图"
+  changes:
+    - title: "陸軍新編第六軍人員名冊（树状图）"
+      url: "/quiz/name_list_tree.html"
+    - title: "新編第六軍 · 籍貫分布圖"
+      url: "/quiz/map_viz.html"
 - date: 2026-02-26
   commit_message: "新增年谱页面"
   changes:
