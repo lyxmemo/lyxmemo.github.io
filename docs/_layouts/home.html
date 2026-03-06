@@ -20,8 +20,9 @@ title: 主页
     <button class="tablinks" onclick="openTab(event, 'byBook')" id="byBook-tab">Books / 书籍</button>
     <button class="tablinks" onclick="openTab(event, 'telegrams')" id="telegrams-tab">Telegram / 电报</button>
     <button class="tablinks" onclick="openTab(event, 'magazines')" id="magazines-tab">Newspaper / 报刊</button>
+    <button class="tablinks" onclick="openTab(event, 'chronology')" id="chronology-tab">年谱 / Chronology</button>
     <div class="subscribe-icon-wrapper">
-      <button class="subscribe-icon-btn" onclick="document.getElementById('subscribe-dropdown').classList.toggle('open')" title="订阅 / Subscribe">
+      <button class="subscribe-icon-btn" onclick="toggleSubscribe(this)" title="订阅 / Subscribe">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
         <span>订阅</span>
       </button>
@@ -36,7 +37,7 @@ title: 主页
 </div>
 
 <div class="floating-toggle-wrapper">
-  <button class="floating-toggle-btn" onclick="toggleAllMaster('#new-view .collapsible-book')">全部展开/收起</button>
+  <button class="floating-toggle-btn" onclick="toggleAllSmart()">全部展开/收起</button>
 </div>
 
 <div class="floating-quiz-wrapper">
@@ -74,7 +75,7 @@ title: 主页
               <span class="article-chiclet-tag">{{ post.category }}</span>
               <h4 class="article-chiclet-title">{{ post.title }}</h4>
               {%- if post.author -%}<span class="article-chiclet-author">{{ post.author }}</span>{%- endif -%}
-              {%- assign fmt_date = post.date | date: "%Y-%m-%d" -%}{%- if fmt_date != "1900-01-01" and post.date -%}
+              {%- assign fmt_year = post.date | date: "%Y" -%}{%- if fmt_year != "1900" and fmt_year != "1899" and post.date -%}
               <span class="article-chiclet-date">{{ fmt_date }}</span>
               {%- endif -%}
               {%- if post.excerpt -%}<p class="article-chiclet-body">{{ post.excerpt | strip_html | truncate: 120 }}</p>{%- endif -%}
@@ -150,8 +151,8 @@ title: 主页
       {%- assign dated_magazines = "" | split: "" -%}
       {%- assign undated_magazines = "" | split: "" -%}
       {%- for post in magazines_raw -%}
-        {%- assign formatted_date = post.date | date: "%Y-%m-%d" -%}
-        {%- if formatted_date == "1900-01-01" or post.date == nil -%}
+        {%- assign post_year = post.date | date: "%Y" -%}
+        {%- if post_year == "1900" or post_year == "1899" or post.date == nil -%}
           {%- assign undated_magazines = undated_magazines | push: post -%}
         {%- else -%}
           {%- assign dated_magazines = dated_magazines | push: post -%}
@@ -233,6 +234,51 @@ title: 主页
     {%- endif -%}
   </div>
 
+  <div id="chronology" class="tabcontent">
+    {%- comment -%}Build decade navigation from YAML data{%- endcomment -%}
+    <div class="chronology-year-nav">
+    {%- assign prev_decade = "" -%}
+    {%- for year_data in site.data.chronology -%}
+      {%- assign decade = year_data.year | divided_by: 10 | times: 10 -%}
+      {%- assign decade_label = decade | append: "s" -%}
+      {%- if decade_label != prev_decade -%}
+        {%- if prev_decade != "" -%}</div>{%- endif -%}
+      <div class="chronology-year-nav-row">
+        <span class="chronology-decade-label">{{ decade_label }}</span>
+        {%- assign prev_decade = decade_label -%}
+      {%- endif -%}
+        <a class="chronology-year-link" onclick="jumpToYear('year-{{ year_data.year }}')">{{ year_data.year }}</a>
+    {%- endfor -%}
+      </div>
+    </div>
+
+    {%- for year_data in site.data.chronology -%}
+    <details class="chronology-year-section" id="year-{{ year_data.year }}">
+      <summary class="chronology-year-summary">【{{ year_data.year }}】</summary>
+      <div class="chronology-entries">
+        {%- for entry in year_data.entries -%}
+        <div class="chronology-entry">
+          <div class="chronology-date">{%- if entry.date_display != "" -%}{{ entry.date_display }}{%- elsif entry.date != "" -%}{%- assign parts = entry.date | split: "-" -%}{%- if parts.size == 3 -%}{{ parts[1] | plus: 0 }}月{{ parts[2] | plus: 0 }}日{%- elsif parts.size == 2 -%}{{ parts[1] | plus: 0 }}月{%- endif -%}{%- endif -%}</div>
+          <div class="chronology-content">
+            {%- if entry.content != "" -%}<p>{{ entry.content }}</p>{%- endif -%}
+            {%- if entry.notes != "" -%}<p class="chronology-note">{{ entry.notes }}</p>{%- endif -%}
+            {%- if entry.source != "" or entry.source_url != "" -%}
+            <div class="chronology-source"><span class="source-label">{%- if entry.source_url != "" -%}<a href="{{ entry.source_url }}" target="_blank" rel="noopener">{%- if entry.source != "" -%}{{ entry.source }}{%- else -%}链接{%- endif -%}</a>{%- else -%}{{ entry.source }}{%- endif -%}</span></div>
+            {%- endif -%}
+            {%- if entry.original_text != "" -%}
+            <details class="chronology-detail-toggle">
+              <summary>展开原文</summary>
+              <div class="chronology-detail-text"><p>{{ entry.original_text | newline_to_br }}</p></div>
+            </details>
+            {%- endif -%}
+          </div>
+        </div>
+        {%- endfor -%}
+      </div>
+    </details>
+    {%- endfor -%}
+  </div>
+
 </div>
 
 <div id="original-view" class="view-panel">
@@ -290,14 +336,49 @@ title: 主页
     localStorage.setItem('lastTab', tabName);
   };
 
+  // --- 订阅下拉框 ---
+  function toggleSubscribe(btn) {
+    var dd = document.getElementById('subscribe-dropdown');
+    dd.classList.toggle('open');
+    if (dd.classList.contains('open')) {
+      var rect = btn.getBoundingClientRect();
+      dd.style.top = (rect.bottom + 4) + 'px';
+      dd.style.right = (window.innerWidth - rect.right) + 'px';
+    }
+  }
+
   // --- 全部展开/收起功能 ---
   function toggleAllMaster(selector) {
     const detailsElements = document.querySelectorAll(selector);
     if (detailsElements.length === 0) { return; }
     const hasAClosedElement = Array.from(detailsElements).some(detail => !detail.open);
-    const newState = hasAClosedElement;
-    detailsElements.forEach((detail) => { detail.open = newState; });
+    detailsElements.forEach((detail) => { detail.open = hasAClosedElement; });
   };
+
+  function toggleAllChronology() {
+    var sections = document.querySelectorAll('.chronology-year-section');
+    if (sections.length === 0) return;
+    var hasAClosedElement = Array.from(sections).some(function(s) { return !s.open; });
+    sections.forEach(function(s) { s.open = hasAClosedElement; });
+  }
+
+  function jumpToYear(yearId) {
+    var el = document.getElementById(yearId);
+    if (!el) return;
+    el.open = true;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.classList.add('highlight');
+    setTimeout(function() { el.classList.remove('highlight'); }, 1500);
+  }
+
+  function toggleAllSmart() {
+    var chronologyTab = document.getElementById('chronology');
+    if (chronologyTab && chronologyTab.style.display !== 'none') {
+      toggleAllChronology();
+    } else {
+      toggleAllMaster('#new-view .collapsible-book');
+    }
+  }
 
   // --- 页面加载时执行的默认操作 ---
   document.addEventListener('DOMContentLoaded', () => {
@@ -306,7 +387,7 @@ title: 主页
 
     const openTabFromHash = () => {
       const hash = window.location.hash.substring(1);
-      const validTabs = ['news', 'byBook', 'telegrams', 'magazines'];
+      const validTabs = ['news', 'byBook', 'telegrams', 'magazines', 'chronology'];
       let tabToOpen = '';
 
       if (hash && validTabs.includes(hash)) {
