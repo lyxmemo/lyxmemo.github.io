@@ -1,3 +1,8 @@
+- date: 2026-03-06
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "蒋军四平街解围战役中的八棵树争夺战（郑庭笈）"
+      url: "/battles_history/liaoshen/1947/蒋军四平街解围战役中的八棵树争夺战（郑庭笈）.html"
 - date: 2026-03-03
   commit_message: "年谱改版；新增图片站；新增名册树状图与籍贯分布图"
   changes:
