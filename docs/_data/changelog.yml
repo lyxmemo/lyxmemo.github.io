@@ -1,3 +1,8 @@
+- date: 2026-03-06
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "新一军的成立及其抗战概述（王大中）"
+      url: "/ten_year_memorial/新一军的成立及其抗战概述（王大中）.html"
 - date: 2026-03-03
   commit_message: "年谱改版；新增图片站；新增名册树状图与籍贯分布图"
   changes:
