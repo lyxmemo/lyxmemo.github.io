@@ -1,25 +1,26 @@
 {% if site.comments.enabled %}
 <div class="comments-section">
   <hr>
-  <h2 id="comments">评论 / Comments</h2>
-  <p class="comments-hint">💡 选中文章中的文字可以使用右侧的 Hypothes.is 工具栏添加批注。下方可以留下对整篇文章的评论。</p>
-  <p class="comments-hint">💡 Highlight any text in the article to annotate it. Use the section below for general comments.</p>
+  <h2 id="comments">评论</h2>
+  <p class="comments-hint">欢迎留言，无需登录即可评论。</p>
 
-  {% if site.comments.provider == "giscus" %}
-  <script src="https://giscus.app/client.js"
-    data-repo="{{ site.comments.giscus.repo }}"
-    data-repo-id="{{ site.comments.giscus.repo_id }}"
-    data-category="{{ site.comments.giscus.category }}"
-    data-category-id="{{ site.comments.giscus.category_id }}"
-    data-mapping="{{ site.comments.giscus.mapping }}"
-    data-strict="0"
-    data-reactions-enabled="{{ site.comments.giscus.reactions_enabled }}"
-    data-emit-metadata="0"
-    data-input-position="bottom"
-    data-theme="{{ site.comments.giscus.theme }}"
-    data-lang="{{ site.comments.giscus.lang }}"
-    crossorigin="anonymous"
-    async>
+  {% if site.comments.provider == "waline" %}
+  <div id="waline"></div>
+  <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+  <script type="module">
+    import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    init({
+      el: '#waline',
+      serverURL: '{{ site.comments.waline.server_url }}',
+      lang: '{{ site.comments.waline.lang | default: "zh-CN" }}',
+      placeholder: '{{ site.comments.waline.placeholder | default: "欢迎留言" }}',
+      pageSize: {{ site.comments.waline.page_size | default: 10 }},
+      avatar: '{{ site.comments.waline.avatar | default: "mp" }}',
+      meta: ['nick', 'mail'],
+      requiredMeta: [],
+      pageview: true,
+      comment: true,
+    });
   </script>
   {% endif %}
 </div>

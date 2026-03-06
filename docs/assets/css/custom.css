@@ -285,6 +285,10 @@ img { max-width: 100%; }
   color: #999;
 }
 
+#waline {
+  margin-top: 1.5rem;
+}
+
 .footer-links a {
   color: #999;
   transition: color 0.2s;
