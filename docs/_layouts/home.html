@@ -5,6 +5,23 @@ title: 主页
 
 <!-- Styles are now in custom.css -->
 
+{%- assign memorial_posts_raw = "" | split: "" -%}
+{%- assign telegrams_raw = "" | split: "" -%}
+{%- assign magazines_raw = "" | split: "" -%}
+{%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," -%}
+{%- for collection_name in collections_to_search -%}
+  {%- for post in site[collection_name] -%}
+    {%- if post.category == "Liao's Tele" -%}{%- assign telegrams_raw = telegrams_raw | push: post -%}{%- elsif post.category == "报刊杂志" -%}{%- assign magazines_raw = magazines_raw | push: post -%}{%- else -%}{%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}{%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+<div class="tab" id="tab-bar">
+    <button class="tablinks" onclick="openTab(event, 'news')" id="news-tab">News / 动态</button>
+    <button class="tablinks" onclick="openTab(event, 'byBook')" id="byBook-tab">Books / 书籍</button>
+    <button class="tablinks" onclick="openTab(event, 'telegrams')" id="telegrams-tab">Telegram / 电报</button>
+    <button class="tablinks" onclick="openTab(event, 'magazines')" id="magazines-tab">Newspaper / 报刊</button>
+</div>
+
 <div class="floating-toggle-wrapper">
   <button class="floating-toggle-btn" onclick="toggleAllMaster('#new-view .collapsible-book')">全部展开/收起</button>
 </div>
@@ -14,77 +31,48 @@ title: 主页
 </div>
 
 <div id="new-view" class="view-panel">
-  {%- assign memorial_posts_raw = "" | split: "" -%}
-  {%- assign telegrams_raw = "" | split: "" -%}
-  {%- assign magazines_raw = "" | split: "" -%}
-  {%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," -%}
-  {%- for collection_name in collections_to_search -%}
-    {%- for post in site[collection_name] -%}
-      {%- if post.category == "Liao's Tele" -%}{%- assign telegrams_raw = telegrams_raw | push: post -%}{%- elsif post.category == "报刊杂志" -%}{%- assign magazines_raw = magazines_raw | push: post -%}{%- else -%}{%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}{%- endif -%}
-    {%- endfor -%}
-  {%- endfor -%}
-
-  <details class="changelog-container">
-    <summary class="changelog-summary">更新日志 / Changelog</summary>
-    <div class="changelog-panel">
-      <ul>
-        {%- for item in site.data.changelog -%}
-          <li>
-            <span class="commit-date">{{ item.date }}</span> - <span class="commit-message">"{{ item.commit_message }}"</span>
-            <ul class="change-list">
-              {%- for change in item.changes -%}
-                <li><a href="{{ change.url | relative_url }}">{{ change.title }}</a></li>
-              {%- endfor -%}
-            </ul>
-          </li>
-        {%- endfor -%}
-      </ul>
+  <div id="news" class="tabcontent">
+    <div class="news-chiclet-list">
+      {%- for item in site.data.changelog -%}
+      <div class="news-chiclet">
+        <span class="news-chiclet-tag">UPDATE / 更新</span>
+        <h3 class="news-chiclet-title">{{ item.commit_message }}</h3>
+        <span class="news-chiclet-date">{{ item.date }}</span>
+        <ul class="news-chiclet-changes">
+          {%- for change in item.changes -%}
+            <li><a href="{{ change.url | relative_url }}">{{ change.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      {%- endfor -%}
     </div>
-  </details>
-
-  <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'byBook')" id="byBook-tab">按书籍</button>
-    <button class="tablinks" onclick="openTab(event, 'byTime')" id="byTime-tab">按时间</button>
-    <button class="tablinks" onclick="openTab(event, 'telegrams')" id="telegrams-tab">电报</button>
-    <button class="tablinks" onclick="openTab(event, 'magazines')" id="magazines-tab">报刊杂志</button>
   </div>
-  
+
   <div id="byBook" class="tabcontent">
     {%- if memorial_posts_raw and memorial_posts_raw.size > 0 -%}
       {%- assign posts_by_book = memorial_posts_raw | group_by: "category" -%}
       {%- for book in posts_by_book -%}
         <details class="collapsible-book" open>
           <summary>《{{ book.name }}》</summary>
-          <ul>
+          <div class="chiclet-grid">
             {%- assign items_sorted_by_title = book.items | sort: 'title' -%}
-            {%- for post in items_sorted_by_title -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}
-          </ul>
+            {%- for post in items_sorted_by_title -%}
+            <a href="{{ post.url | relative_url }}" class="article-chiclet">
+              <span class="article-chiclet-tag">{{ post.category }}</span>
+              <h4 class="article-chiclet-title">{{ post.title }}</h4>
+              {%- if post.author -%}<span class="article-chiclet-author">{{ post.author }}</span>{%- endif -%}
+              {%- assign fmt_date = post.date | date: "%Y-%m-%d" -%}{%- if fmt_date != "1900-01-01" and post.date -%}
+              <span class="article-chiclet-date">{{ fmt_date }}</span>
+              {%- endif -%}
+              {%- if post.excerpt -%}<p class="article-chiclet-body">{{ post.excerpt | strip_html | truncate: 120 }}</p>{%- endif -%}
+            </a>
+            {%- endfor -%}
+          </div>
         </details>
       {%- endfor -%}
     {%- else -%}<p>未能生成列表。</p>{%- endif -%}
   </div>
 
-  <div id="byTime" class="tabcontent">
-    {%- assign timeline_posts = memorial_posts_raw | concat: magazines_raw -%}
-    {%- if timeline_posts and timeline_posts.size > 0 -%}
-      {%- assign dated_posts = "" | split: "" -%}{%- assign undated_posts = "" | split: "" -%}
-      {%- for post in timeline_posts -%}{%- assign formatted_date = post.date | date: "%Y-%m-%d" -%}{%- if formatted_date == "1900-01-01" or post.date == nil -%}{%- assign undated_posts = undated_posts | push: post -%}{%- else -%}{%- assign dated_posts = dated_posts | push: post -%}{%- endif -%}{%- endfor -%}
-      {%- if dated_posts.size > 0 -%}
-        {%- assign posts_by_year = dated_posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" | reverse -%}
-        {%- for year_group in posts_by_year -%}
-          <details class="collapsible-book" open>
-            <summary>{{ year_group.name }} 年</summary>
-            <ul class="timeline-list-no-date">
-              {%- assign posts_in_year = year_group.items | sort: 'date' | reverse -%}
-              {%- for post in posts_in_year -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}
-            </ul>
-          </details>
-        {%- endfor -%}
-      {%- endif -%}
-      {%- if undated_posts.size > 0 -%}<h3 class="unknown-date-header">暂无时间</h3><ul>{%- assign undated_posts_sorted = undated_posts | sort: 'title' -%}{%- for post in undated_posts_sorted -%}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{%- if post.author -%}（{{ post.author }}）{%- endif -%}</li>{%- endfor -%}</ul>{%- endif -%}
-    {%- else -%}<p>未能生成列表。</p>{%- endif -%}
-  </div>
-  
   <div id="telegrams" class="tabcontent">
     {%- assign telegrams = telegrams_raw | sort: 'date' -%}
     {%- if telegrams.size > 0 -%}
@@ -240,6 +228,16 @@ title: 主页
   </div>
 </div>
 
+<div class="subscribe-section">
+  <h2 class="subscribe-heading">Subscribe / 订阅更新</h2>
+  <p class="subscribe-desc">新文章上线时收到邮件通知。</p>
+  <form class="subscribe-form" action="https://formspree.io/f/xzdjpnva" method="POST">
+    <input type="email" name="email" class="subscribe-input" placeholder="your@email.com" required>
+    <button type="submit" class="subscribe-btn">订阅 / Subscribe</button>
+  </form>
+  <p class="subscribe-note">我们不会分享您的邮箱。</p>
+</div>
+
 <h2>相关工具 / Tools</h2>
 <ul>
   <li><a href="{{ '/quiz/n6a_name_list_.html' | relative_url }}">陸軍新編第六軍人員名冊</a></li>
@@ -262,20 +260,26 @@ title: 主页
   // --- 视图切换功能 ---
   function switchView(viewId, clickedButton) {
     var toggleButton = document.querySelector('.floating-toggle-wrapper');
+    var tabBar = document.getElementById('tab-bar');
     document.querySelectorAll('.view-panel').forEach(panel => { panel.style.display = 'none'; });
     document.querySelectorAll('.footer-view-switcher .switch-btn').forEach(btn => { btn.classList.remove('active'); });
     document.getElementById(viewId).style.display = 'block';
     clickedButton.classList.add('active');
-    if (viewId === 'new-view') { toggleButton.style.display = 'block'; } else { toggleButton.style.display = 'none'; }
+    if (viewId === 'new-view') {
+      toggleButton.style.display = 'block';
+      tabBar.style.display = '';
+    } else {
+      toggleButton.style.display = 'none';
+      tabBar.style.display = 'none';
+    }
   }
 
   // --- Tab 切换功能 ---
   function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
-    var tabContainer = document.getElementById('new-view');
-    tabcontent = tabContainer.getElementsByClassName("tabcontent");
+    tabcontent = document.getElementById('new-view').getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
-    tablinks = tabContainer.getElementsByClassName("tablinks");
+    tablinks = document.getElementById('tab-bar').getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
     document.getElementById(tabName).style.display = "block";
     if (evt) { evt.currentTarget.className += " active"; }
@@ -298,7 +302,7 @@ title: 主页
 
     const openTabFromHash = () => {
       const hash = window.location.hash.substring(1);
-      const validTabs = ['byBook', 'byTime', 'telegrams', 'magazines'];
+      const validTabs = ['news', 'byBook', 'telegrams', 'magazines'];
       let tabToOpen = '';
 
       if (hash && validTabs.includes(hash)) {
@@ -308,15 +312,15 @@ title: 主页
         if (lastTab && validTabs.includes(lastTab)) {
           tabToOpen = lastTab;
         } else {
-          tabToOpen = 'byBook';
+          tabToOpen = 'news';
         }
       }
-      
+
       const tabButton = document.getElementById(tabToOpen + '-tab');
       if (tabButton) {
         tabButton.click();
       } else {
-        document.getElementById('byBook-tab').click(); // Fallback
+        document.getElementById('news-tab').click(); // Fallback
       }
     };
 

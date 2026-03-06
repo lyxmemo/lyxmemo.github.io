@@ -64,9 +64,15 @@
       })
       .catch(error => console.error('Error fetching or parsing search data:', error));
 
+    let searchTimer = null;
     searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimer);
       const query = searchInput.value;
-      if (query.length > 0) {
+      if (query.length === 0) {
+        resultsContainer.innerHTML = '';
+        return;
+      }
+      searchTimer = setTimeout(() => {
         if (!fuse) { return; }
         const results = fuse.search(query);
         const queryLower = query.toLowerCase();
@@ -87,7 +93,8 @@
           noResultsLi.textContent = '未找到结果 (No results found)';
           resultsContainer.appendChild(noResultsLi);
         } else {
-          scoredResults.slice(0, 1000).forEach(result => {
+          const fragment = document.createDocumentFragment();
+          scoredResults.slice(0, 50).forEach(result => {
             const li = document.createElement('li');
             let highlightedTitle = result.item.title;
             const titleMatches = result.matches.find(match => match.key === 'title');
@@ -114,12 +121,11 @@
               resultHTML += `<p class="search-result-snippet">${highlightedSnippet}</p>`;
             }
             li.innerHTML = resultHTML;
-            resultsContainer.appendChild(li);
+            fragment.appendChild(li);
           });
+          resultsContainer.appendChild(fragment);
         }
-      } else {
-        resultsContainer.innerHTML = '';
-      }
+      }, 250);
     });
   });
 </script>
