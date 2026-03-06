@@ -110,7 +110,7 @@ paginate_path: /page:num/
 #            2) Install the Giscus app: https://github.com/apps/giscus
 #            3) Configure at https://giscus.app and update repo_id & category_id below
 comments:
-  enabled: true
+  enabled: false
   provider: giscus
   giscus:
     repo: "lyxmemo/lyxmemo.github.io"
@@ -125,7 +125,7 @@ comments:
 # Line-level annotations (Hypothes.is)
 # Free, open-source text annotation service
 hypothesis:
-  enabled: true
+  enabled: false
 
 exclude:
   - assets/404.html
