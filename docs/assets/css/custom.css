@@ -815,56 +815,73 @@ details:not([open]) > summary::before { content: '+'; }
   box-shadow: 0 4px 12px rgba(197, 160, 47, 0.4);
 }
 
-/* --- Subscribe Section --- */
-.subscribe-section {
-  text-align: center;
-  padding: 2.5rem 1.5rem;
-  margin: 2.5rem 0;
-  border-top: 3px solid var(--color-charcoal);
-  border-bottom: 1px solid var(--color-border-light);
+/* --- Subscribe Icon + Dropdown --- */
+.subscribe-icon-wrapper {
+  float: right;
+  position: relative;
 }
 
-.subscribe-heading {
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  border-bottom: none;
-  margin: 0 0 0.25rem;
-  padding: 0;
-}
-
-.subscribe-desc {
-  font-size: 0.85rem;
+.subscribe-icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.6rem 0.75rem;
   color: var(--color-gray-500);
-  margin: 0 0 1.25rem;
-}
-
-.subscribe-form {
+  transition: color 0.2s ease;
   display: flex;
-  justify-content: center;
-  gap: 0;
-  max-width: 480px;
-  margin: 0 auto;
+  align-items: center;
 }
 
-.subscribe-input {
-  flex: 1;
-  padding: 0.6rem 1rem;
-  font-size: 0.85rem;
-  font-family: var(--font-sans);
-  border: 1px solid var(--color-charcoal);
-  border-right: none;
+.subscribe-icon-btn:hover {
+  color: var(--color-accent-gold);
+}
+
+.subscribe-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
   background: #fff;
+  border: 1px solid var(--color-border-light);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  z-index: 200;
+  width: 260px;
+}
+
+.subscribe-dropdown.open {
+  display: block;
+}
+
+.subscribe-dropdown-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-charcoal);
+  margin: 0 0 0.5rem;
+}
+
+.subscribe-dropdown-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.subscribe-dropdown-form input {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  font-family: var(--font-sans);
+  border: 1px solid var(--color-border-light);
   outline: none;
-  transition: border-color 0.2s ease;
 }
 
-.subscribe-input:focus {
+.subscribe-dropdown-form input:focus {
   border-color: var(--color-accent-gold);
-  box-shadow: 0 0 0 2px rgba(197, 160, 47, 0.15);
 }
 
-.subscribe-btn {
-  padding: 0.6rem 1.5rem;
+.subscribe-dropdown-form button {
+  padding: 0.5rem;
   font-size: 0.7rem;
   font-weight: 700;
   font-family: var(--font-sans);
@@ -872,31 +889,13 @@ details:not([open]) > summary::before { content: '+'; }
   letter-spacing: 0.1em;
   background: var(--color-charcoal);
   color: #fff;
-  border: 1px solid var(--color-charcoal);
+  border: none;
   cursor: pointer;
-  white-space: nowrap;
   transition: background 0.2s ease;
 }
 
-.subscribe-btn:hover {
+.subscribe-dropdown-form button:hover {
   background: var(--color-accent-gold);
-  border-color: var(--color-accent-gold);
-}
-
-.subscribe-note {
-  font-size: 0.7rem;
-  color: var(--color-gray-400);
-  margin: 0.75rem 0 0;
-}
-
-@media (max-width: 640px) {
-  .subscribe-form {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .subscribe-input {
-    border-right: 1px solid var(--color-charcoal);
-  }
 }
 
 /* --- Footer View Switcher --- */

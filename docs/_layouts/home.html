@@ -20,6 +20,18 @@ title: 主页
     <button class="tablinks" onclick="openTab(event, 'byBook')" id="byBook-tab">Books / 书籍</button>
     <button class="tablinks" onclick="openTab(event, 'telegrams')" id="telegrams-tab">Telegram / 电报</button>
     <button class="tablinks" onclick="openTab(event, 'magazines')" id="magazines-tab">Newspaper / 报刊</button>
+    <div class="subscribe-icon-wrapper">
+      <button class="subscribe-icon-btn" onclick="document.getElementById('subscribe-dropdown').classList.toggle('open')" title="订阅 / Subscribe">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </button>
+      <div class="subscribe-dropdown" id="subscribe-dropdown">
+        <form action="https://formspree.io/f/xzdjpnva" method="POST" class="subscribe-dropdown-form">
+          <p class="subscribe-dropdown-title">订阅更新 / Subscribe</p>
+          <input type="email" name="email" placeholder="your@email.com" required>
+          <button type="submit">订阅</button>
+        </form>
+      </div>
+    </div>
 </div>
 
 <div class="floating-toggle-wrapper">
@@ -220,15 +232,6 @@ title: 主页
     {%- endif -%}
   </div>
 
-  <div class="subscribe-section">
-    <h2 class="subscribe-heading">Subscribe / 订阅更新</h2>
-    <p class="subscribe-desc">新文章上线时收到邮件通知。</p>
-    <form class="subscribe-form" action="https://formspree.io/f/xzdjpnva" method="POST">
-      <input type="email" name="email" class="subscribe-input" placeholder="your@email.com" required>
-      <button type="submit" class="subscribe-btn">订阅 / Subscribe</button>
-    </form>
-    <p class="subscribe-note">我们不会分享您的邮箱。</p>
-  </div>
 </div>
 
 <div id="original-view" class="view-panel">
@@ -326,5 +329,13 @@ title: 主页
 
     openTabFromHash();
     window.addEventListener('hashchange', openTabFromHash, false);
+
+    // 点击外部关闭订阅下拉框
+    document.addEventListener('click', function(e) {
+      var dd = document.getElementById('subscribe-dropdown');
+      if (dd.classList.contains('open') && !e.target.closest('.subscribe-icon-wrapper')) {
+        dd.classList.remove('open');
+      }
+    });
   });
 </script>
