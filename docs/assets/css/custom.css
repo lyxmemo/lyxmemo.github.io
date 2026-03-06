@@ -474,7 +474,8 @@ img { max-width: 100%; }
 
 /* --- Tab Navigation --- */
 .tab {
-  overflow: hidden;
+  display: flex;
+  align-items: center;
   border-bottom: 2px solid var(--color-charcoal);
   margin-bottom: 0;
   position: sticky;
@@ -483,9 +484,8 @@ img { max-width: 100%; }
   background-color: var(--color-paper);
 }
 
-.tab button {
+.tab button.tablinks {
   background: transparent;
-  float: left;
   border: none;
   outline: none;
   cursor: pointer;
@@ -817,7 +817,7 @@ details:not([open]) > summary::before { content: '+'; }
 
 /* --- Subscribe Icon + Dropdown --- */
 .subscribe-icon-wrapper {
-  float: right;
+  margin-left: auto;
   position: relative;
 }
 
@@ -830,6 +830,11 @@ details:not([open]) > summary::before { content: '+'; }
   transition: color 0.2s ease;
   display: flex;
   align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
 }
 
 .subscribe-icon-btn:hover {
