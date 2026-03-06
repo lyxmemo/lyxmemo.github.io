@@ -219,6 +219,16 @@ title: 主页
       <p>未能生成列表。</p>
     {%- endif -%}
   </div>
+
+  <div class="subscribe-section">
+    <h2 class="subscribe-heading">Subscribe / 订阅更新</h2>
+    <p class="subscribe-desc">新文章上线时收到邮件通知。</p>
+    <form class="subscribe-form" action="https://formspree.io/f/xzdjpnva" method="POST">
+      <input type="email" name="email" class="subscribe-input" placeholder="your@email.com" required>
+      <button type="submit" class="subscribe-btn">订阅 / Subscribe</button>
+    </form>
+    <p class="subscribe-note">我们不会分享您的邮箱。</p>
+  </div>
 </div>
 
 <div id="original-view" class="view-panel">
@@ -226,16 +236,6 @@ title: 主页
     {% assign custom_order = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," %}
     {% for category_name in custom_order %}{% assign collection_data = site.collections | where: "label", category_name | first %}{% if category_name == "liaos_tele" %}<details><summary><h2>{{ collection_data.display_name }}</h2></summary><ul>{% else %}{% if collection_data.display_name %}<h2>{{ collection_data.display_name }}</h2>{% else %}<h2>{{ category_name | replace: "_", " " | capitalize }}</h2>{% endif %}<ul>{% endif %}{% if category_name == "battles_history" %}{% assign year_folders = "1942,1943,1944,1945,1946,1947,1948" | split: "," %}{% for year in year_folders %}{% assign posts_in_year = site[category_name] | where_exp: "post", "post.path contains year" %}{% if posts_in_year.size > 0 %}<li><h3 class="sub-heading">{{ year }}</h3><ul>{% for post in posts_in_year %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}</ul></li>{% endif %}{% endfor %}{% else %}{% assign posts_in_category = site[category_name] | sort: "title" %}{% for post in posts_in_category %}<li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>{% endfor %}{% endif %}</ul>{% if category_name == "liaos_tele" %}</details>{% endif %}{% endfor %}
   </div>
-</div>
-
-<div class="subscribe-section">
-  <h2 class="subscribe-heading">Subscribe / 订阅更新</h2>
-  <p class="subscribe-desc">新文章上线时收到邮件通知。</p>
-  <form class="subscribe-form" action="https://formspree.io/f/xzdjpnva" method="POST">
-    <input type="email" name="email" class="subscribe-input" placeholder="your@email.com" required>
-    <button type="submit" class="subscribe-btn">订阅 / Subscribe</button>
-  </form>
-  <p class="subscribe-note">我们不会分享您的邮箱。</p>
 </div>
 
 <h2>相关工具 / Tools</h2>
