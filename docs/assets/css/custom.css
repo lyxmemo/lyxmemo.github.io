@@ -523,6 +523,19 @@ img { max-width: 100%; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* --- Photos iframe --- */
+.photos-iframe-wrapper {
+  width: 100%;
+  height: calc(100vh - 120px);
+  min-height: 500px;
+}
+.photos-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 6px;
+}
+
 /* --- Chronology (年谱) --- */
 .chronology-year-nav {
   background: #f9f9f9;

@@ -21,6 +21,7 @@ title: 主页
     <button class="tablinks" onclick="openTab(event, 'telegrams')" id="telegrams-tab">Telegram / 电报</button>
     <button class="tablinks" onclick="openTab(event, 'magazines')" id="magazines-tab">Newspaper / 报刊</button>
     <button class="tablinks" onclick="openTab(event, 'chronology')" id="chronology-tab">年谱 / Chronology</button>
+    <button class="tablinks" onclick="openTab(event, 'photos')" id="photos-tab">图片 / Photos</button>
     <div class="subscribe-icon-wrapper">
       <button class="subscribe-icon-btn" onclick="toggleSubscribe(this)" title="订阅 / Subscribe">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -279,6 +280,12 @@ title: 主页
     {%- endfor -%}
   </div>
 
+  <div id="photos" class="tabcontent">
+    <div class="photos-iframe-wrapper">
+      <iframe id="photos-iframe" class="photos-iframe" allowfullscreen></iframe>
+    </div>
+  </div>
+
 </div>
 
 <div id="original-view" class="view-panel">
@@ -333,6 +340,13 @@ title: 主页
     for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
     document.getElementById(tabName).style.display = "block";
     if (evt) { evt.currentTarget.className += " active"; }
+    // Lazy-load photos iframe on first visit
+    if (tabName === 'photos') {
+      var iframe = document.getElementById('photos-iframe');
+      if (!iframe.src || iframe.src === 'about:blank') {
+        iframe.src = 'https://lyxmemo.github.io/photos/';
+      }
+    }
     localStorage.setItem('lastTab', tabName);
   };
 
@@ -387,7 +401,7 @@ title: 主页
 
     const openTabFromHash = () => {
       const hash = window.location.hash.substring(1);
-      const validTabs = ['news', 'byBook', 'telegrams', 'magazines', 'chronology'];
+      const validTabs = ['news', 'byBook', 'telegrams', 'magazines', 'chronology', 'photos'];
       let tabToOpen = '';
 
       if (hash && validTabs.includes(hash)) {
