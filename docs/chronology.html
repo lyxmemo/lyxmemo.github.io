@@ -26,6 +26,31 @@ title: 年谱
   border-radius: 8px;
   padding: 0.8rem 1rem;
   margin-bottom: 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.chronology-year-nav-toggle {
+  display: none;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  padding: 0.2rem 0;
+  text-align: left;
+}
+.chronology-year-nav-toggle::after {
+  content: ' ▼';
+  font-size: 0.7rem;
+}
+.chronology-year-nav.is-collapsed .chronology-year-nav-toggle::after {
+  content: ' ▶';
+}
+.chronology-year-nav.is-collapsed .chronology-year-nav-row {
+  display: none;
 }
 .chronology-year-nav-row {
   display: flex;
@@ -77,10 +102,6 @@ title: 年谱
   transition: background-color 0.2s;
   color: #1a1a1a;
   border-bottom: 2px solid transparent;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background-color: var(--color-paper, #f9f9f9);
 }
 details.chronology-year-section[open] > .chronology-year-summary {
   border-bottom-color: #3b82f6;
@@ -254,6 +275,12 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
 
 /* ===== Mobile ===== */
 @media (max-width: 600px) {
+  .chronology-year-nav-toggle {
+    display: block;
+  }
+  .chronology-year-nav.is-collapsed {
+    padding: 0.5rem 1rem;
+  }
   .chronology-entry {
     flex-direction: column;
     gap: 0.2rem;
@@ -284,7 +311,8 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
 </div>
 
 {% comment %}Build decade navigation from YAML data{% endcomment %}
-<div class="chronology-year-nav">
+<div class="chronology-year-nav is-collapsed" id="chronology-year-nav">
+<button class="chronology-year-nav-toggle" onclick="this.parentElement.classList.toggle('is-collapsed')">年份导航</button>
 {% assign prev_decade = "" %}
 {% for year_data in site.data.chronology %}
   {% assign decade = year_data.year | divided_by: 10 | times: 10 %}
@@ -341,6 +369,11 @@ function toggleAllChronology() {
 function jumpToYear(yearId) {
   var el = document.getElementById(yearId);
   if (!el) return;
+  // On mobile, collapse the nav after selecting a year
+  if (window.innerWidth <= 600) {
+    var nav = document.getElementById('chronology-year-nav');
+    if (nav) nav.classList.add('is-collapsed');
+  }
   el.open = true;
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   el.classList.add('highlight');
