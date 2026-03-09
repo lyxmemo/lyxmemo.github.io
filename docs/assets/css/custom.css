@@ -543,6 +543,44 @@ img { max-width: 100%; }
   border-radius: 8px;
   padding: 0.8rem 1rem;
   margin-bottom: 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+/* When inside home page tabs, offset for the sticky tab bar */
+.tabcontent .chronology-year-nav {
+  top: 42px;
+}
+/* Mobile: collapse year nav behind a toggle */
+.chronology-year-nav-toggle {
+  display: none;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  padding: 0.2rem 0;
+  text-align: left;
+}
+.chronology-year-nav-toggle::after {
+  content: ' ▼';
+  font-size: 0.7rem;
+}
+.chronology-year-nav.is-collapsed .chronology-year-nav-toggle::after {
+  content: ' ▶';
+}
+.chronology-year-nav.is-collapsed .chronology-year-nav-row {
+  display: none;
+}
+@media (max-width: 600px) {
+  .chronology-year-nav-toggle {
+    display: block;
+  }
+  .chronology-year-nav.is-collapsed {
+    padding: 0.5rem 1rem;
+  }
 }
 .chronology-year-nav-row {
   display: flex;

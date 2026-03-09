@@ -247,7 +247,8 @@ title: 主页
 
   <div id="chronology" class="tabcontent">
     {%- comment -%}Build decade navigation from YAML data{%- endcomment -%}
-    <div class="chronology-year-nav">
+    <div class="chronology-year-nav is-collapsed" id="chronology-year-nav">
+    <button class="chronology-year-nav-toggle" onclick="this.parentElement.classList.toggle('is-collapsed')">年份导航</button>
     {%- assign prev_decade = "" -%}
     {%- for year_data in site.data.chronology -%}
       {%- assign decade = year_data.year | divided_by: 10 | times: 10 -%}
@@ -389,6 +390,11 @@ title: 主页
   function jumpToYear(yearId) {
     var el = document.getElementById(yearId);
     if (!el) return;
+    // On mobile, collapse the nav after selecting a year
+    if (window.innerWidth <= 600) {
+      var nav = document.getElementById('chronology-year-nav');
+      if (nav) nav.classList.add('is-collapsed');
+    }
     el.open = true;
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     el.classList.add('highlight');
