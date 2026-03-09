@@ -58,6 +58,16 @@ title: 主页
             <li><a href="{{ change.url | relative_url }}">{{ change.title }}</a></li>
           {%- endfor -%}
         </ul>
+        {%- if item.details -%}
+        <details class="news-chiclet-details">
+          <summary>{{ item.details_summary }}</summary>
+          <ul>
+            {%- for detail in item.details -%}
+              <li><a href="{{ detail.url | relative_url }}">{{ detail.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </details>
+        {%- endif -%}
       </div>
       {%- endfor -%}
     </div>
@@ -264,7 +274,7 @@ title: 主页
             {%- if entry.content != "" -%}<p>{{ entry.content }}</p>{%- endif -%}
             {%- if entry.notes != "" -%}<p class="chronology-note">{{ entry.notes }}</p>{%- endif -%}
             {%- if entry.source != "" or entry.source_url != "" -%}
-            <div class="chronology-source"><span class="source-label">{%- if entry.source_url != "" -%}<a href="{{ entry.source_url }}" target="_blank" rel="noopener">{%- if entry.source != "" -%}{{ entry.source }}{%- else -%}链接{%- endif -%}</a>{%- else -%}{{ entry.source }}{%- endif -%}</span></div>
+            <div class="chronology-source"><span class="source-label">{%- if entry.source_url contains "; " -%}{%- assign source_urls = entry.source_url | split: "; " -%}{%- assign sources = entry.source | split: "; " -%}{%- for url in source_urls %}{%- if forloop.index0 > 0 %} | {% endif -%}<a href="{{ url }}" target="_blank" rel="noopener">{%- if sources[forloop.index0] -%}{{ sources[forloop.index0] }}{%- else -%}链接{%- endif -%}</a>{%- endfor -%}{%- assign url_count = source_urls | size -%}{%- for src in sources -%}{%- if forloop.index0 >= url_count %} | {{ src }}{%- endif -%}{%- endfor -%}{%- elsif entry.source_url != "" -%}<a href="{{ entry.source_url }}" target="_blank" rel="noopener">{%- if entry.source != "" -%}{{ entry.source }}{%- else -%}链接{%- endif -%}</a>{%- else -%}{{ entry.source }}{%- endif -%}</span></div>
             {%- endif -%}
             {%- if entry.original_text != "" -%}
             <details class="chronology-detail-toggle">
