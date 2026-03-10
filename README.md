@@ -1,20 +1,49 @@
-# Site Address
+# 廖耀湘相关文字资料合集 / Liao Yaoxiang Archive
+
 https://lyxmemo.github.io
 
-# What's this all about?
-This site is a digital space to remember and learn about General Liao Yaoxiang (廖耀湘). It’s a place where I'm gathering his own writings, articles from people who knew him, and other interesting historical notes. The photos are kept on a separate site where they can be tagged with names, years, and locations to make them easy to find.
+## What is this?
 
-# 这网站是做什么的？
-这个网站是用来纪念和了解廖耀湘将军（Liao Yaoxiang）的数字空间。在这里收集了他本人的文章、亲友的纪念文以及其他一些相关的历史资料。
+A digital archive dedicated to General Liao Yaoxiang (廖耀湘), collecting primary sources, historical documents, and research materials in one place. The site brings together over 750 articles spanning his own writings, wartime telegrams, newspaper coverage, battle histories, and memorial essays — most of which were previously scattered, hard to find, or only available in vertical traditional Chinese text.
 
-# Why did I make this?
-Honestly, finding all this information was a real challenge. I decided to put everything in one place to help with my own research and thought it would be great to share it with anyone else who's interested in General Liao Yaoxiang's story.
+## 这是什么？
 
-# 为什么建这个网站？
-许多史料首先不容易找到，其次是竖版繁体，客观上为许多爱好者创造了困难。为了方便我自己，也为了更多的人能够认识和了解廖耀湘将军，降低传播门槛，故此把资料都放在这里。
+这是一个关于廖耀湘将军的数字资料库，汇集了一手史料、历史文献和研究材料。网站收录了超过 750 篇文章，涵盖廖耀湘本人著述、战时电报、报刊报道、战史记录和纪念文集。这些资料过去大多分散各处、不易获取，或仅有竖排繁体版本。
 
-# How you can help
-I'd love for you to contribute! Feel free to open a pull request, report an issue, or just leave a comment. I'll check it out as soon as I can. If I don't get back to you quickly or you want to chat directly, just shoot me an email at lyxmemo@gmail.com.
+## Content / 内容
 
-# 如何参与？
-非常欢迎你来添砖加瓦！你可以随时提交一个合并请求 (pull request)、报告一个问题 (issue)。如果我有没及时回复，或者你想直接聊聊，请随时邮件我：lyxmemo@gmail.com。
+- **Liao's writings / 廖耀湘著述** — personal essays, military studies, and documents written by General Liao
+- **Telegrams / 电报** — 351 wartime telegrams and communications
+- **Newspapers / 报刊** — contemporary newspaper and magazine coverage
+- **Battle histories / 战史** — accounts from the Burma campaigns (1942–1945) and the Liaoshen Campaign (1946–1948)
+- **Memorial collections / 纪念文集** — essays from the 10-year memorial, New 6th Army memorial, and New 22nd Division memorial
+- **Chronology / 年谱** — an interactive timeline with source attribution and year-based filtering
+- **Photos / 图片** — hosted separately with name, year, and location tagging
+- **Resources / 资料下载** — 80+ downloadable PDFs of memoirs, war histories, and official documents
+- **Quizzes / 知识问答** — interactive quizzes on the Burma campaign, Liaoshen campaign, and more
+
+## Features / 功能
+
+- Bilingual Chinese–English interface / 中英双语界面
+- Full-text search powered by Fuse.js / 基于 Fuse.js 的全文搜索
+- Waline comment system / Waline 评论系统
+- Automated article submission via GitHub Issues / 通过 GitHub Issue 自动提交文章
+- Claude-powered article processing and PR review / Claude 驱动的文章处理和 PR 审阅
+
+## How to contribute / 如何参与
+
+Contributions are welcome. You can:
+
+- **Submit an article** — open a [new article issue](../../issues/new?template=new-article.yml) or run `./add-article.sh` locally
+- **Fix an error** — open a pull request with the correction
+- **Report a problem** — file an issue
+
+For direct contact: lyxmemo@gmail.com
+
+欢迎参与贡献：
+
+- **提交文章** — 创建一个[新文章 Issue](../../issues/new?template=new-article.yml)，或在本地运行 `./add-article.sh`
+- **纠正错误** — 提交 Pull Request
+- **反馈问题** — 提交 Issue
+
+直接联系：lyxmemo@gmail.com
