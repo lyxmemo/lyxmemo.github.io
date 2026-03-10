@@ -27,6 +27,7 @@ async function generatePDF() {
     await page.pdf({
       path: outputFile,
       format: 'A4',
+      printBackground: true,
       margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' }
     });
     
