@@ -320,8 +320,8 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
 </div>
 
 {% comment %}Build decade navigation from YAML data{% endcomment %}
-<div class="chronology-year-nav is-collapsed" id="chronology-year-nav">
-<button class="chronology-year-nav-toggle" onclick="this.parentElement.classList.toggle('is-collapsed')">年份导航</button>
+<div class="chronology-year-nav" id="chronology-year-nav">
+<button class="chronology-year-nav-toggle" id="chronology-nav-toggle" onclick="this.parentElement.classList.toggle('is-collapsed')">年份导航</button>
 <div class="chronology-year-nav-row">
   <span class="chronology-decade-label">全部</span>
   <a class="chronology-year-link" onclick="filterByYear('all', this)">显示全部</a>
@@ -368,13 +368,21 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
 {% endfor %}
 
 <script>
+function updateToggleLabel(year) {
+  var toggle = document.getElementById('chronology-nav-toggle');
+  if (toggle) {
+    toggle.textContent = year === 'all' ? '年份导航>全部' : '年份导航>' + year;
+  }
+}
+
 function filterByYear(year, clickedLink) {
   var sections = document.querySelectorAll('.chronology-year-section');
   var links = document.querySelectorAll('#chronology-year-nav .chronology-year-link');
 
-  // Update active tag
+  // Update active tag and toggle label
   links.forEach(function(l) { l.classList.remove('active'); });
   if (clickedLink) clickedLink.classList.add('active');
+  updateToggleLabel(year);
 
   if (year === 'all') {
     sections.forEach(function(s) {
@@ -403,9 +411,16 @@ function filterByYear(year, clickedLink) {
   if (nav) nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Select the first year by default on page load
+// On mobile, start with nav collapsed
 document.addEventListener('DOMContentLoaded', function() {
-  var firstLink = document.querySelector('#chronology-year-nav .chronology-year-link[data-year]');
-  if (firstLink) filterByYear(firstLink.getAttribute('data-year'), firstLink);
+  if (window.innerWidth <= 600) {
+    var nav = document.getElementById('chronology-year-nav');
+    if (nav) nav.classList.add('is-collapsed');
+  }
+
+  // Default to 1947
+  var defaultLink = document.querySelector('#chronology-year-nav .chronology-year-link[data-year="1947"]');
+  if (!defaultLink) defaultLink = document.querySelector('#chronology-year-nav .chronology-year-link[data-year]');
+  if (defaultLink) filterByYear(defaultLink.getAttribute('data-year'), defaultLink);
 });
 </script>
