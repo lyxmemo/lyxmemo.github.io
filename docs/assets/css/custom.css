@@ -581,6 +581,66 @@ img { max-width: 100%; }
 .tabcontent .chronology-year-nav {
   top: 42px;
 }
+/* Home page: decade tabs + year grid picker */
+.chrono-picker {
+  background: var(--color-paper, #fff);
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.4rem 0 0.5rem;
+  position: sticky;
+  top: 42px;
+  z-index: 50;
+}
+.chrono-picker-decades {
+  display: flex;
+  gap: 0.1rem;
+  margin-bottom: 0.4rem;
+}
+.chrono-picker-decade {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #888;
+  padding: 4px 7px;
+  border-radius: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.chrono-picker-decade:hover {
+  background: #f0f0f0;
+  color: #555;
+  text-decoration: none;
+}
+.chrono-picker-decade.active {
+  background: #333;
+  color: #fff;
+}
+.chrono-picker-years {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+.chrono-picker-year {
+  font-size: 0.82rem;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+.chrono-picker-year:hover {
+  background-color: #e8f0fe;
+  text-decoration: none;
+}
+.chrono-picker-year.active {
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: 600;
+}
+.chrono-picker-year[style*="display: none"] {
+  /* hidden years don't take space */
+}
 /* Mobile: collapse year nav behind a toggle */
 .chronology-year-nav-toggle {
   display: none;

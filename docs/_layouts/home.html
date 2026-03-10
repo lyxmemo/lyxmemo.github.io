@@ -246,25 +246,24 @@ title: 主页
   </div>
 
   <div id="chronology" class="tabcontent">
-    {%- comment -%}Build decade navigation from YAML data{%- endcomment -%}
-    <div class="chronology-year-nav is-collapsed" id="chronology-year-nav-home">
-    <button class="chronology-year-nav-toggle" onclick="this.parentElement.classList.toggle('is-collapsed')">年份导航</button>
-    <div class="chronology-year-nav-row">
-      <span class="chronology-decade-label">全部</span>
-      <a class="chronology-year-link" onclick="filterByYear('all', this, 'home')">显示全部</a>
-    </div>
-    {%- assign prev_decade = "" -%}
-    {%- for year_data in site.data.chronology -%}
-      {%- assign decade = year_data.year | divided_by: 10 | times: 10 -%}
-      {%- assign decade_label = decade | append: "s" -%}
-      {%- if decade_label != prev_decade -%}
-        {%- if prev_decade != "" -%}</div>{%- endif -%}
-      <div class="chronology-year-nav-row">
-        <span class="chronology-decade-label">{{ decade_label }}</span>
-        {%- assign prev_decade = decade_label -%}
-      {%- endif -%}
-        <a class="chronology-year-link" data-year="{{ year_data.year }}" onclick="filterByYear('{{ year_data.year }}', this, 'home')">{{ year_data.year }}</a>
-    {%- endfor -%}
+    {%- comment -%}Build decade+year navigation from YAML data{%- endcomment -%}
+    <div class="chrono-picker" id="chrono-picker-home">
+      <div class="chrono-picker-decades">
+        {%- assign prev_decade = "" -%}
+        {%- for year_data in site.data.chronology -%}
+          {%- assign decade = year_data.year | divided_by: 10 | times: 10 -%}
+          {%- if decade != prev_decade -%}
+        <a class="chrono-picker-decade" data-decade="{{ decade }}" onclick="showDecade('{{ decade }}', this)">{{ decade }}s</a>
+            {%- assign prev_decade = decade -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <div class="chrono-picker-years" id="chrono-picker-years">
+        {%- assign prev_decade = "" -%}
+        {%- for year_data in site.data.chronology -%}
+          {%- assign decade = year_data.year | divided_by: 10 | times: 10 -%}
+        <a class="chrono-picker-year" data-decade="{{ decade }}" data-year="{{ year_data.year }}" onclick="pickYear('{{ year_data.year }}', this)">{{ year_data.year }}</a>
+        {%- endfor -%}
       </div>
     </div>
 
@@ -319,7 +318,10 @@ title: 主页
 </ul>
 
 <h2>资料下载区 / Downloads</h2>
-<ul>{% for file in site.static_files %}{% if file.path contains 'resources' %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>{% endif %}{% endfor %}</ul>
+<ul>
+  <li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/assets/%E4%B8%8E%E5%BB%96%E8%80%80%E6%B9%98%E6%9C%89%E5%85%B3%E7%9A%84%E6%96%87%E5%AD%97%E8%B5%84%E6%96%99%E5%90%88%E9%9B%86.txt">下载：与廖耀湘有关的文字资料合集（TXT）</a></li>
+  {% for file in site.static_files %}{% if file.path contains 'resources' %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>{% endif %}{% endfor %}
+</ul>
 
 
 <div class="footer-view-switcher">
@@ -384,56 +386,53 @@ title: 主页
     detailsElements.forEach((detail) => { detail.open = hasAClosedElement; });
   };
 
-  function filterByYear(year, clickedLink, context) {
-    var navId = context === 'home' ? 'chronology-year-nav-home' : 'chronology-year-nav';
-    var navEl = document.getElementById(navId);
-    var container = navEl ? navEl.parentElement : document;
-    var sections = container.querySelectorAll('.chronology-year-section');
-    var links = navEl ? navEl.querySelectorAll('.chronology-year-link') : [];
+  var decadeLastYear = {};
 
-    // Update active tag
-    links.forEach(function(l) { l.classList.remove('active'); });
-    if (clickedLink) clickedLink.classList.add('active');
+  function showDecade(decade, clickedTab) {
+    // Update decade tabs
+    document.querySelectorAll('#chrono-picker-home .chrono-picker-decade').forEach(function(t) { t.classList.remove('active'); });
+    if (clickedTab) clickedTab.classList.add('active');
+    // Show only years in this decade
+    document.querySelectorAll('#chrono-picker-years .chrono-picker-year').forEach(function(y) {
+      y.style.display = y.getAttribute('data-decade') === decade ? '' : 'none';
+    });
+    // Auto-select remembered year or first year in decade
+    var targetYear = decadeLastYear[decade];
+    var targetLink = targetYear
+      ? document.querySelector('#chrono-picker-years .chrono-picker-year[data-year="' + targetYear + '"]')
+      : document.querySelector('#chrono-picker-years .chrono-picker-year[data-decade="' + decade + '"]');
+    if (targetLink) pickYear(targetLink.getAttribute('data-year'), targetLink);
+  }
 
-    if (year === 'all') {
-      sections.forEach(function(s) {
+  function pickYear(year, clickedLink) {
+    var decade = clickedLink ? clickedLink.getAttribute('data-decade') : year.substring(0, 3) + '0';
+    decadeLastYear[decade] = year;
+    var sections = document.querySelectorAll('#chronology .chronology-year-section');
+    sections.forEach(function(s) {
+      if (s.getAttribute('data-year') === year) {
         s.style.display = '';
         s.open = true;
-      });
-    } else {
-      sections.forEach(function(s) {
-        if (s.getAttribute('data-year') === year) {
-          s.style.display = '';
-          s.open = true;
-        } else {
-          s.style.display = 'none';
-        }
-      });
-    }
-
-    // On mobile, collapse the nav after selecting
-    if (window.innerWidth <= 600 && navEl) {
-      navEl.classList.add('is-collapsed');
-    }
-
-    // Scroll to top of nav
-    if (navEl) navEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        s.style.display = 'none';
+      }
+    });
+    document.querySelectorAll('#chrono-picker-years .chrono-picker-year').forEach(function(l) { l.classList.remove('active'); });
+    if (clickedLink) clickedLink.classList.add('active');
   }
 
   function toggleAllSmart() {
     var chronologyTab = document.getElementById('chronology');
     if (chronologyTab && chronologyTab.style.display !== 'none') {
-      // For chronology, toggle between showing all and showing first year
-      var allLink = document.querySelector('#chronology-year-nav-home .chronology-year-link:not([data-year])');
-      var activeLink = document.querySelector('#chronology-year-nav-home .chronology-year-link.active');
-      if (activeLink && !activeLink.getAttribute('data-year')) {
-        // Currently showing all, switch to first year
-        var firstLink = document.querySelector('#chronology-year-nav-home .chronology-year-link[data-year]');
-        if (firstLink) filterByYear(firstLink.getAttribute('data-year'), firstLink, 'home');
-      } else {
-        // Currently showing a single year, show all
-        if (allLink) filterByYear('all', allLink, 'home');
-      }
+      // Show all years in current decade
+      var sections = document.querySelectorAll('#chronology .chronology-year-section');
+      var activeDecade = document.querySelector('#chrono-picker-home .chrono-picker-decade.active');
+      var decade = activeDecade ? activeDecade.getAttribute('data-decade') : '1940';
+      var d = parseInt(decade);
+      sections.forEach(function(s) {
+        var y = parseInt(s.getAttribute('data-year'));
+        if (y >= d && y < d + 10) { s.style.display = ''; s.open = true; } else { s.style.display = 'none'; }
+      });
+      document.querySelectorAll('#chrono-picker-years .chrono-picker-year').forEach(function(l) { l.classList.remove('active'); });
     } else {
       toggleAllMaster('#new-view .collapsible-book');
     }
@@ -471,9 +470,9 @@ title: 主页
     openTabFromHash();
     window.addEventListener('hashchange', openTabFromHash, false);
 
-    // Initialize chronology: select the first year by default
-    var firstChronoLink = document.querySelector('#chronology-year-nav-home .chronology-year-link[data-year]');
-    if (firstChronoLink) filterByYear(firstChronoLink.getAttribute('data-year'), firstChronoLink, 'home');
+    // Initialize chronology: default to 1940s decade, 1947 selected
+    decadeLastYear['1940'] = '1947';
+    showDecade('1940', document.querySelector('#chrono-picker-home .chrono-picker-decade[data-decade="1940"]'));
 
     // 点击外部关闭订阅下拉框
     document.addEventListener('click', function(e) {
