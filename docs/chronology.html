@@ -320,7 +320,7 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
 </div>
 
 {% comment %}Build decade navigation from YAML data{% endcomment %}
-<div class="chronology-year-nav is-collapsed" id="chronology-year-nav">
+<div class="chronology-year-nav" id="chronology-year-nav">
 <button class="chronology-year-nav-toggle" onclick="this.parentElement.classList.toggle('is-collapsed')">年份导航</button>
 <div class="chronology-year-nav-row">
   <span class="chronology-decade-label">全部</span>
@@ -403,8 +403,14 @@ function filterByYear(year, clickedLink) {
   if (nav) nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Select the first year by default on page load
+// On mobile, start with nav collapsed
 document.addEventListener('DOMContentLoaded', function() {
+  if (window.innerWidth <= 600) {
+    var nav = document.getElementById('chronology-year-nav');
+    if (nav) nav.classList.add('is-collapsed');
+  }
+
+  // Select the first year by default on page load
   var firstLink = document.querySelector('#chronology-year-nav .chronology-year-link[data-year]');
   if (firstLink) filterByYear(firstLink.getAttribute('data-year'), firstLink);
 });
