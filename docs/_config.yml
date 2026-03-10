@@ -24,7 +24,7 @@ description: >-
   廖耀湘将军相关历史文献数字档案馆，收录廖耀湘文集、来往电报、战史资料、报刊报道、回忆录等750余篇珍贵文献。
   Digital archive of historical documents related to General Liao Yaoxiang, featuring 750+ writings, telegrams, battle histories, and memoirs.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://liaoyaoxiang.com" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://lyxmemo.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: N/A
 github_username:  lyxmemo
 locale: zh_CN
