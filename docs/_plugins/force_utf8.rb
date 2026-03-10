@@ -5,17 +5,16 @@
 
 # Patch Jekyll::URL.unescape_path which calls String#encode('utf-8')
 # on paths that are already UTF-8 bytes but tagged as ASCII-8BIT.
-module Jekyll
-  module URL
-    class << self
-      alias_method :original_unescape_path, :unescape_path
+# Jekyll::URL is a class (not a module), so we reopen it as a class.
+class Jekyll::URL
+  class << self
+    alias_method :original_unescape_path, :unescape_path
 
-      def unescape_path(path)
-        if path.encoding == Encoding::ASCII_8BIT
-          path = path.force_encoding('UTF-8')
-        end
-        original_unescape_path(path)
+    def unescape_path(path)
+      if path.encoding == Encoding::ASCII_8BIT
+        path = path.force_encoding('UTF-8')
       end
+      original_unescape_path(path)
     end
   end
 end
