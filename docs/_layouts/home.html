@@ -321,7 +321,7 @@ title: 主页
 <ul>
   <li><a href="https://github.com/lyxmemo/lyxmemo.github.io/releases/download/v2026.03.10/lyxmemo-collection.pdf">下载：与廖耀湘有关的文字资料合集（PDF）</a></li>
   <li><a href="https://github.com/lyxmemo/lyxmemo.github.io/releases/download/v2026.03.10/lyxmemo-collection.txt">下载：与廖耀湘有关的文字资料合集（TXT）</a></li>
-  {% for file in site.static_files %}{% if file.path contains 'resources' %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}.pdf">下载：{{ file.basename }}</a></li>{% endif %}{% endfor %}
+  {% for name in site.data.resources %}<li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ name | uri_escape }}.pdf">下载：{{ name }}</a></li>{% endfor %}
 </ul>
 
 

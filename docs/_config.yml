@@ -175,3 +175,4 @@ defaults:
 exclude:
   - assets/404.html
   - assets/feed.xml
+  - resources/
