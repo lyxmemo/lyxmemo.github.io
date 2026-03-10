@@ -603,10 +603,19 @@ img { max-width: 100%; }
   padding: 2px 6px;
   border-radius: 3px;
   cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
 }
 .chronology-year-link:hover {
   background-color: #e8f0fe;
   text-decoration: none;
+}
+.chronology-year-link.active {
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: 600;
+}
+.chronology-year-link.active:hover {
+  background-color: #1d4ed8;
 }
 .chronology-year-section {
   border-bottom: 1px solid #e5e7eb;

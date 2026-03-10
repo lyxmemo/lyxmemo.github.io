@@ -73,10 +73,19 @@ title: 年谱
   padding: 2px 6px;
   border-radius: 3px;
   cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
 }
 .chronology-year-link:hover {
   background-color: #e8f0fe;
   text-decoration: none;
+}
+.chronology-year-link.active {
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: 600;
+}
+.chronology-year-link.active:hover {
+  background-color: #1d4ed8;
 }
 
 /* ===== Year Sections ===== */
@@ -313,6 +322,10 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
 {% comment %}Build decade navigation from YAML data{% endcomment %}
 <div class="chronology-year-nav is-collapsed" id="chronology-year-nav">
 <button class="chronology-year-nav-toggle" onclick="this.parentElement.classList.toggle('is-collapsed')">年份导航</button>
+<div class="chronology-year-nav-row">
+  <span class="chronology-decade-label">全部</span>
+  <a class="chronology-year-link" onclick="filterByYear('all', this)">显示全部</a>
+</div>
 {% assign prev_decade = "" %}
 {% for year_data in site.data.chronology %}
   {% assign decade = year_data.year | divided_by: 10 | times: 10 %}
@@ -323,17 +336,13 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
     <span class="chronology-decade-label">{{ decade_label }}</span>
     {% assign prev_decade = decade_label %}
   {% endif %}
-    <a class="chronology-year-link" onclick="jumpToYear('year-{{ year_data.year }}')">{{ year_data.year }}</a>
+    <a class="chronology-year-link" data-year="{{ year_data.year }}" onclick="filterByYear('{{ year_data.year }}', this)">{{ year_data.year }}</a>
 {% endfor %}
   </div>
 </div>
 
-<div class="chronology-toggle-wrapper">
-  <button class="chronology-toggle-btn" onclick="toggleAllChronology()">全部展开/收起</button>
-</div>
-
 {% for year_data in site.data.chronology %}
-<details class="chronology-year-section" id="year-{{ year_data.year }}">
+<details class="chronology-year-section" id="year-{{ year_data.year }}" data-year="{{ year_data.year }}" style="display:none;">
   <summary class="chronology-year-summary">【{{ year_data.year }}】</summary>
   <div class="chronology-entries">
     {% for entry in year_data.entries %}
@@ -359,24 +368,44 @@ details.chronology-year-section:not([open]) > .chronology-year-summary::before {
 {% endfor %}
 
 <script>
-function toggleAllChronology() {
+function filterByYear(year, clickedLink) {
   var sections = document.querySelectorAll('.chronology-year-section');
-  if (sections.length === 0) return;
-  var hasAClosedElement = Array.from(sections).some(function(s) { return !s.open; });
-  sections.forEach(function(s) { s.open = hasAClosedElement; });
-}
+  var links = document.querySelectorAll('#chronology-year-nav .chronology-year-link');
 
-function jumpToYear(yearId) {
-  var el = document.getElementById(yearId);
-  if (!el) return;
-  // On mobile, collapse the nav after selecting a year
+  // Update active tag
+  links.forEach(function(l) { l.classList.remove('active'); });
+  if (clickedLink) clickedLink.classList.add('active');
+
+  if (year === 'all') {
+    sections.forEach(function(s) {
+      s.style.display = '';
+      s.open = true;
+    });
+  } else {
+    sections.forEach(function(s) {
+      if (s.getAttribute('data-year') === year) {
+        s.style.display = '';
+        s.open = true;
+      } else {
+        s.style.display = 'none';
+      }
+    });
+  }
+
+  // On mobile, collapse the nav after selecting
   if (window.innerWidth <= 600) {
     var nav = document.getElementById('chronology-year-nav');
     if (nav) nav.classList.add('is-collapsed');
   }
-  el.open = true;
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  el.classList.add('highlight');
-  setTimeout(function() { el.classList.remove('highlight'); }, 1500);
+
+  // Scroll to top of content area
+  var nav = document.getElementById('chronology-year-nav');
+  if (nav) nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// Select the first year by default on page load
+document.addEventListener('DOMContentLoaded', function() {
+  var firstLink = document.querySelector('#chronology-year-nav .chronology-year-link[data-year]');
+  if (firstLink) filterByYear(firstLink.getAttribute('data-year'), firstLink);
+});
 </script>
