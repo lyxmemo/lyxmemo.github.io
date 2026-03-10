@@ -247,8 +247,12 @@ title: 主页
 
   <div id="chronology" class="tabcontent">
     {%- comment -%}Build decade navigation from YAML data{%- endcomment -%}
-    <div class="chronology-year-nav is-collapsed" id="chronology-year-nav">
+    <div class="chronology-year-nav is-collapsed" id="chronology-year-nav-home">
     <button class="chronology-year-nav-toggle" onclick="this.parentElement.classList.toggle('is-collapsed')">年份导航</button>
+    <div class="chronology-year-nav-row">
+      <span class="chronology-decade-label">全部</span>
+      <a class="chronology-year-link" onclick="filterByYear('all', this, 'home')">显示全部</a>
+    </div>
     {%- assign prev_decade = "" -%}
     {%- for year_data in site.data.chronology -%}
       {%- assign decade = year_data.year | divided_by: 10 | times: 10 -%}
@@ -259,13 +263,13 @@ title: 主页
         <span class="chronology-decade-label">{{ decade_label }}</span>
         {%- assign prev_decade = decade_label -%}
       {%- endif -%}
-        <a class="chronology-year-link" onclick="jumpToYear('year-{{ year_data.year }}')">{{ year_data.year }}</a>
+        <a class="chronology-year-link" data-year="{{ year_data.year }}" onclick="filterByYear('{{ year_data.year }}', this, 'home')">{{ year_data.year }}</a>
     {%- endfor -%}
       </div>
     </div>
 
     {%- for year_data in site.data.chronology -%}
-    <details class="chronology-year-section" id="year-{{ year_data.year }}">
+    <details class="chronology-year-section" id="year-{{ year_data.year }}" data-year="{{ year_data.year }}" style="display:none;">
       <summary class="chronology-year-summary">【{{ year_data.year }}】</summary>
       <div class="chronology-entries">
         {%- for entry in year_data.entries -%}
@@ -380,31 +384,56 @@ title: 主页
     detailsElements.forEach((detail) => { detail.open = hasAClosedElement; });
   };
 
-  function toggleAllChronology() {
-    var sections = document.querySelectorAll('.chronology-year-section');
-    if (sections.length === 0) return;
-    var hasAClosedElement = Array.from(sections).some(function(s) { return !s.open; });
-    sections.forEach(function(s) { s.open = hasAClosedElement; });
-  }
+  function filterByYear(year, clickedLink, context) {
+    var navId = context === 'home' ? 'chronology-year-nav-home' : 'chronology-year-nav';
+    var navEl = document.getElementById(navId);
+    var container = navEl ? navEl.parentElement : document;
+    var sections = container.querySelectorAll('.chronology-year-section');
+    var links = navEl ? navEl.querySelectorAll('.chronology-year-link') : [];
 
-  function jumpToYear(yearId) {
-    var el = document.getElementById(yearId);
-    if (!el) return;
-    // On mobile, collapse the nav after selecting a year
-    if (window.innerWidth <= 600) {
-      var nav = document.getElementById('chronology-year-nav');
-      if (nav) nav.classList.add('is-collapsed');
+    // Update active tag
+    links.forEach(function(l) { l.classList.remove('active'); });
+    if (clickedLink) clickedLink.classList.add('active');
+
+    if (year === 'all') {
+      sections.forEach(function(s) {
+        s.style.display = '';
+        s.open = true;
+      });
+    } else {
+      sections.forEach(function(s) {
+        if (s.getAttribute('data-year') === year) {
+          s.style.display = '';
+          s.open = true;
+        } else {
+          s.style.display = 'none';
+        }
+      });
     }
-    el.open = true;
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    el.classList.add('highlight');
-    setTimeout(function() { el.classList.remove('highlight'); }, 1500);
+
+    // On mobile, collapse the nav after selecting
+    if (window.innerWidth <= 600 && navEl) {
+      navEl.classList.add('is-collapsed');
+    }
+
+    // Scroll to top of nav
+    if (navEl) navEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function toggleAllSmart() {
     var chronologyTab = document.getElementById('chronology');
     if (chronologyTab && chronologyTab.style.display !== 'none') {
-      toggleAllChronology();
+      // For chronology, toggle between showing all and showing first year
+      var allLink = document.querySelector('#chronology-year-nav-home .chronology-year-link:not([data-year])');
+      var activeLink = document.querySelector('#chronology-year-nav-home .chronology-year-link.active');
+      if (activeLink && !activeLink.getAttribute('data-year')) {
+        // Currently showing all, switch to first year
+        var firstLink = document.querySelector('#chronology-year-nav-home .chronology-year-link[data-year]');
+        if (firstLink) filterByYear(firstLink.getAttribute('data-year'), firstLink, 'home');
+      } else {
+        // Currently showing a single year, show all
+        if (allLink) filterByYear('all', allLink, 'home');
+      }
     } else {
       toggleAllMaster('#new-view .collapsible-book');
     }
@@ -441,6 +470,10 @@ title: 主页
 
     openTabFromHash();
     window.addEventListener('hashchange', openTabFromHash, false);
+
+    // Initialize chronology: select the first year by default
+    var firstChronoLink = document.querySelector('#chronology-year-nav-home .chronology-year-link[data-year]');
+    if (firstChronoLink) filterByYear(firstChronoLink.getAttribute('data-year'), firstChronoLink, 'home');
 
     // 点击外部关闭订阅下拉框
     document.addEventListener('click', function(e) {
