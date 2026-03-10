@@ -6,3 +6,6 @@ vendor
 Gemfile.lock
 utils/node_modules
 node_modules
+package.json
+package-lock.json
+.DS_Store
