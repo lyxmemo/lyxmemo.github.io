@@ -20,11 +20,15 @@
 
 title: 与廖耀湘相关的文字资料合集
 email: lyxmemo@gmail.com
-description: Memorial for General Liao Yaoxiang
+description: >-
+  廖耀湘将军相关历史文献数字档案馆，收录廖耀湘文集、来往电报、战史资料、报刊报道、回忆录等750余篇珍贵文献。
+  Digital archive of historical documents related to General Liao Yaoxiang, featuring 750+ writings, telegrams, battle histories, and memoirs.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://lyxmemo.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: N/A
 github_username:  lyxmemo
+locale: zh_CN
+lang: zh-CN
 
 # Social media links - update or remove as needed
 social:
@@ -68,6 +72,7 @@ plugins:
   - jekyll-feed
   - jekyll-archives
   - jekyll-sitemap
+  - jekyll-seo-tag
 
 # Archives
 jekyll-archives:
@@ -123,6 +128,48 @@ comments:
 # Free, open-source text annotation service
 hypothesis:
   enabled: false
+
+# Default front matter for SEO
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/images/favicon5.png
+  - scope:
+      path: ""
+      type: "liaos_writings"
+    values:
+      description: "廖耀湘将军文集 - 历史文献原文"
+  - scope:
+      path: ""
+      type: "liaos_tele"
+    values:
+      description: "廖耀湘将军来往电报 - 抗战及内战时期军事通信档案"
+  - scope:
+      path: ""
+      type: "newspapers"
+    values:
+      description: "与廖耀湘相关的报刊杂志报道"
+  - scope:
+      path: ""
+      type: "battles_history"
+    values:
+      description: "廖耀湘将军相关战史资料 - 缅甸战役及辽沈战役"
+  - scope:
+      path: ""
+      type: "ten_year_memorial"
+    values:
+      description: "廖耀湘将军故人回忆录"
+  - scope:
+      path: ""
+      type: "n6a_memorial"
+    values:
+      description: "新编第六军纪念文集"
+  - scope:
+      path: ""
+      type: "n22d_memorial"
+    values:
+      description: "新编第二十二师纪念文集"
 
 exclude:
   - assets/404.html
