@@ -5,9 +5,7 @@ permalink: /resources/
 ---
 
 <ul>
-  {% for file in site.static_files %}
-    {% if file.path contains 'resources' %}
-      <li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ file.basename | uri_escape }}">{{ file.basename }}</a></li>
-    {% endif %}
+  {% for name in site.data.resources %}
+    <li><a href="https://github.com/lyxmemo/lyxmemo.github.io/raw/refs/heads/main/docs/resources/{{ name | uri_escape }}.pdf">{{ name }}</a></li>
   {% endfor %}
 </ul>
