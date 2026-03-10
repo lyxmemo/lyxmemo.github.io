@@ -29,6 +29,7 @@ url: "https://lyxmemo.github.io" # the base hostname & protocol for your site, e
 github_username:  lyxmemo
 locale: zh_CN
 lang: zh-CN
+encoding: utf-8
 
 # Social media links - update or remove as needed
 social:
