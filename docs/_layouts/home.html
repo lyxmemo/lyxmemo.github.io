@@ -408,16 +408,27 @@ title: 主页
     var decade = clickedLink ? clickedLink.getAttribute('data-decade') : year.substring(0, 3) + '0';
     decadeLastYear[decade] = year;
     var sections = document.querySelectorAll('#chronology .chronology-year-section');
+    var targetSection = null;
     sections.forEach(function(s) {
       if (s.getAttribute('data-year') === year) {
         s.style.display = '';
         s.open = true;
+        targetSection = s;
       } else {
         s.style.display = 'none';
       }
     });
     document.querySelectorAll('#chrono-picker-years .chrono-picker-year').forEach(function(l) { l.classList.remove('active'); });
     if (clickedLink) clickedLink.classList.add('active');
+    // Scroll to the year section if it's above the viewport
+    if (targetSection) {
+      var rect = targetSection.getBoundingClientRect();
+      if (rect.top < 0 || rect.bottom < 0) {
+        var picker = document.getElementById('chrono-picker-home');
+        var offset = picker ? picker.offsetHeight + 50 : 100;
+        window.scrollTo({ top: targetSection.offsetTop - offset, behavior: 'auto' });
+      }
+    }
   }
 
   function toggleAllSmart() {
