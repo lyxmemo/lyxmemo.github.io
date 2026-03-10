@@ -1,14 +1,26 @@
 ---
 layout: default
 ---
+<nav class="breadcrumb" aria-label="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+  <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+    <a itemprop="item" href="{{ site.baseurl }}/"><span itemprop="name">首页</span></a>
+    <meta itemprop="position" content="1">
+  </span>
+  <span aria-hidden="true"> / </span>
+  <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+    <span itemprop="name">{{ page.title }}</span>
+    <meta itemprop="position" content="2">
+  </span>
+</nav>
+
 <h1 class="page-title">{{ page.title }}</h1>
 
-<ul class="post-list">
+<ul class="post-list" itemscope itemtype="https://schema.org/ItemList">
   {% for post in page.posts %}
-    <li>
-      <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
-      <p class="post-meta">{{ post.date | date: "%B %d, %Y" }}</p>
-      <p>{{ post.excerpt | strip_html | truncatewords: 50 }}</p>
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/Article">
+      <h2><a href="{{ post.url | relative_url }}" itemprop="url"><span itemprop="headline">{{ post.title }}</span></a></h2>
+      <p class="post-meta"><time datetime="{{ post.date | date_to_xmlschema }}" itemprop="datePublished">{{ post.date | date: "%Y-%m-%d" }}</time></p>
+      <p itemprop="description">{{ post.excerpt | strip_html | truncatewords: 50 }}</p>
     </li>
   {% endfor %}
 </ul>

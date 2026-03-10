@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-<article class="post-article">
+<article class="post-article" itemscope itemtype="https://schema.org/Article">
   <div class="post-meta-bar">
     {%- case page.category -%}
       {%- when "Liao's Tele" -%}
@@ -15,16 +15,35 @@ layout: default
       <span class="back-arrow">&larr;</span> 回到目录页 / Back to Index
     </a>
     {%- if page.date -%}
-    <span class="post-date">{{ page.date | date: "%Y-%m-%d" }}</span>
+    <time class="post-date" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%Y-%m-%d" }}</time>
     {%- endif -%}
   </div>
-  <h1 class="post-title">{{ page.title }}</h1>
+  <h1 class="post-title" itemprop="headline">{{ page.title }}</h1>
   {%- if page.author -%}
-  <div class="post-author">{{ page.author }}</div>
+  <div class="post-author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">{{ page.author }}</span></div>
   {%- endif -%}
+  <meta itemprop="publisher" content="{{ site.title }}">
   <div class="post-divider"></div>
-  <div class="post-content">
+  <div class="post-content" itemprop="articleBody">
     {{ content }}
   </div>
+  <nav class="post-breadcrumb" aria-label="breadcrumb">
+    <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="{{ site.baseurl }}/"><span itemprop="name">首页</span></a>
+        <meta itemprop="position" content="1">
+      </li>
+      {%- if page.category -%}
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name">{{ page.category }}</span>
+        <meta itemprop="position" content="2">
+      </li>
+      {%- endif -%}
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name">{{ page.title }}</span>
+        <meta itemprop="position" content="3">
+      </li>
+    </ol>
+  </nav>
   {% include comments.html %}
 </article>

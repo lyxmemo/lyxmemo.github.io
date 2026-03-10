@@ -3,14 +3,17 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>{{ page.title | default: site.title }}</title>
+  <title>{% if page.title and page.title != site.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index, follow">
   <link rel="icon" href="/assets/images/favicon5.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/images/favicon5.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{{ '/assets/css/custom.css' | relative_url }}">
   {% seo %}
+  {% feed_meta %}
   <script type="text/javascript">
     (function (c, l, a, r, i, t, y) {
       c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
