@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
+Sitemap: https://liaoyaoxiang.com/sitemap.xml
 Sitemap: https://lyxmemo.github.io/sitemap.xml
