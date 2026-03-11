@@ -8,7 +8,7 @@ layout: default
   </span>
   <span aria-hidden="true"> / </span>
   <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-    <span itemprop="name">{{ page.title }}</span>
+    <a itemprop="item" href="{{ page.url | absolute_url }}"><span itemprop="name">{{ page.title }}</span></a>
     <meta itemprop="position" content="2">
   </span>
 </nav>
