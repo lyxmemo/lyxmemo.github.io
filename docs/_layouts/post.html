@@ -35,12 +35,12 @@ layout: default
       </li>
       {%- if page.category -%}
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <span itemprop="name">{{ page.category }}</span>
+        <a itemprop="item" href="{{ site.baseurl }}/categories/{{ page.category | slugify }}/"><span itemprop="name">{{ page.category }}</span></a>
         <meta itemprop="position" content="2">
       </li>
       {%- endif -%}
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <span itemprop="name">{{ page.title }}</span>
+        <a itemprop="item" href="{{ page.url | absolute_url }}"><span itemprop="name">{{ page.title }}</span></a>
         <meta itemprop="position" content="3">
       </li>
     </ol>
