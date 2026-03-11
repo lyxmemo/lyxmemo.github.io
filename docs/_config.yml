@@ -72,7 +72,6 @@ plugins:
   - jekyll-remote-theme
   - jekyll-feed
   - jekyll-archives
-  - jekyll-sitemap
   - jekyll-seo-tag
 
 # Archives
@@ -83,10 +82,6 @@ jekyll-archives:
   permalinks:
     category: '/categories/:name/'
 
-# Sitemap configuration
-jekyll-sitemap:
-  use_git: true
-    
 # Pagination
 paginate: 10
 paginate_path: /page:num/
