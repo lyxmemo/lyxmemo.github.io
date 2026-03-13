@@ -12,6 +12,7 @@
     init({
       el: '#waline',
       serverURL: '{{ site.comments.waline.server_url }}',
+      path: decodeURI(window.location.pathname),
       lang: '{{ site.comments.waline.lang | default: "zh-CN" }}',
       placeholder: '{{ site.comments.waline.placeholder | default: "欢迎留言" }}',
       pageSize: {{ site.comments.waline.page_size | default: 10 }},
