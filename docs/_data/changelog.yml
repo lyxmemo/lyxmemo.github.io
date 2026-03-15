@@ -1,6 +1,8 @@
 - date: 2026-03-15
   commit_message: "+ 1 新文章"
   changes:
+    - title: "我所了解的卫立煌（节选）（陈铁）"
+      url: "/ten_year_memorial/我所了解的卫立煌（节选）（陈铁）.html"
     - title: "陈明仁二三事（罗召南）"
       url: "/ten_year_memorial/陈明仁二三事（罗召南）.html"
 - date: 2026-03-09
