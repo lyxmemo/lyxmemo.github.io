@@ -1,5 +1,5 @@
 - date: 2026-03-17
-  commit_message: "+ 3 篇报纸录入，+ 3 篇电报录入"
+  commit_message: "+ 3 篇报纸录入，+ 3 篇电报录入，+ 1 篇回忆，+ 1 篇电报"
   changes:
     - title: "廖军长耀湘关怀儿童 向保育院捐款二万六千余元"
       url: "/newspapers/廖军长耀湘关怀儿童.html"
@@ -13,6 +13,10 @@
       url: "/liaos_tele/1942-06-07蒋中正电俞飞鹏罗卓英已电饬杜聿明取道新平洋前往列多并希设法与杜军直接通信联络.html"
     - title: "1942/06/10蒋中正电余韶希速探明杜聿明现在何地详报"
       url: "/liaos_tele/1942-06-10蒋中正电余韶希速探明杜聿明现在何地详报.html"
+    - title: "刘建章先生传略（季夫）"
+      url: "/ten_year_memorial/刘建章先生传略（季夫）.html"
+    - title: "1946/03/15杜聿明关于进犯沈阳南北地区的部署"
+      url: "/liaos_tele/1946-03-15杜聿明关于进犯沈阳南北地区的部署.html"
 - date: 2026-03-16
   commit_message: "+ 7 篇电报录入"
   changes:
