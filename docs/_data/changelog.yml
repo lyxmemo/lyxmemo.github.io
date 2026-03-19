@@ -1,3 +1,19 @@
+- date: 2026-03-19
+  commit_message: "+ 6 篇报纸录入"
+  changes:
+    - title: "廖耀湘谈目前东北局势"
+      url: "/newspapers/廖耀湘谈目前东北局势.html"
+    - title: "廖耀湘谈攻沈共军绝难获得进展（中央社）"
+      url: "/newspapers/廖耀湘谈攻沈共军绝难获得进展（中央社）.html"
+    - title: "廖耀湘分析东北战局（中央社）"
+      url: "/newspapers/廖耀湘分析东北战局（中央社）.html"
+    - title: "廖耀湘检讨四平之战"
+      url: "/newspapers/廖耀湘检讨四平之战.html"
+    - title: "新六军军长兼长春警备"
+      url: "/newspapers/新六军军长兼长春警备.html"
+    - title: "廖耀湘（国华报）"
+      url: "/newspapers/廖耀湘（国华报）.html"
+
 - date: 2026-03-18
   commit_message: "+ 2 篇报纸录入，+ 3 篇电报录入"
   changes:
