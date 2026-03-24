@@ -1,3 +1,15 @@
+- date: 2026-03-24
+  commit_message: "+ 4 篇战史文章录入（文史资料存稿选编）"
+  changes:
+    - title: "一九四六年四月至五月新一军在四平街作战经过（节选）（史说）"
+      url: "/battles_history/liaoshen/1946/一九四六年四月至五月新一军在四平街作战经过（节选）（史说）.html"
+    - title: "滇军第一八四师海城起义回忆（节选）（马逸飞）"
+      url: "/battles_history/liaoshen/1946/滇军第一八四师海城起义回忆（节选）（马逸飞）.html"
+    - title: "陈明仁在东北（节选）（应起鹤）"
+      url: "/battles_history/liaoshen/1946/陈明仁在东北（节选）（应起鹤）.html"
+    - title: "第五十三军增援四平街作战经过（节选）（谷振寰 李连仲）"
+      url: "/battles_history/liaoshen/1947/第五十三军增援四平街作战经过（节选）（谷振寰 李连仲）.html"
+
 - date: 2026-03-19
   commit_message: "+ 6 篇报纸录入"
   changes:
