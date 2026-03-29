@@ -1,33 +1,43 @@
 Process raw text and add it to the lyxmemo site. The user will provide raw text from a historical newspaper article or a historical article/memoir (e.g. from 文史资料).
 
-## CRITICAL: Use the commit-article.sh script
+## CRITICAL: Use the commit-article.sh script in batch mode
 
-For adding ANY article (newspaper or memoir), **always use the `commit-article.sh` script** at the repo root. This script creates the article file directly and commits it (no GitHub issue needed).
+For adding ANY article (newspaper or memoir), **always use the `commit-article.sh --batch` script** at the repo root. This creates the article file directly and commits it — no interactive prompts.
 
 ### How to use it:
 
-1. **Save the user's raw text to a temp file** (e.g. `/tmp/article.txt`)
-2. **Run the script interactively**: `bash commit-article.sh /tmp/article.txt`
-3. The script will prompt for collection, title, author, date, etc. — answer based on the parsed content.
+1. **Save the user's raw text** to a temp file (e.g. `/tmp/article.txt`)
+2. **Parse the text** to determine metadata (title, author, date, collection, etc.)
+3. **Run in batch mode** with env vars:
 
-### Determining answers for the prompts:
+```bash
+ARTICLE_FILE=/tmp/article.txt \
+COLLECTION=battles_history \
+SUBFOLDER=liaoshen/1948 \
+TITLE="文章标题" \
+AUTHOR="作者" \
+CATEGORY="文史资料" \
+DATE=1948-10-31 \
+SOURCE="来源出版物" \
+TRANSCRIBER="观棋不语" \
+TOC=n \
+COMMIT=y \
+PUSH=n \
+bash commit-article.sh --batch
+```
 
-- **Collection**: Pick based on content type:
-  - Newspaper clippings → `3` (newspapers/报刊杂志)
-  - Battle histories/memoirs → `7` (battles_history/战史)
-  - 廖耀湘's own writings → `1` (liaos_writings/廖耀湘文集)
-  - Telegrams → `2` (liaos_tele/来往电报)
-  - 新六军 memorial articles → `4` (n6a_memorial/新六军纪念)
-  - 新二十二师 memorial articles → `5` (n22d_memorial/新二十二师纪念)
-  - Retrospective memoirs by others → `6` (ten_year_memorial/故人回忆)
-- **Battles subfolder** (if battles_history): pick the year of the events described
-- **Title**: Extract from the text (first line or heading)
-- **Author**: For newspapers, use the newspaper name (e.g. 申报); for articles, use the author's name
-- **Date**: The event date in YYYY-MM-DD format
-- **Source**: Publication info (e.g. "申报 1945年09月06日 第1版")
-- **Transcriber**: Default is 观棋不语 unless user specifies otherwise
-- **TOC**: Y for long multi-section articles, N for short pieces
-- **Notes**: Any relevant notes
+### Determining metadata values:
+
+- **COLLECTION**: One of: `newspapers`, `battles_history`, `liaos_writings`, `liaos_tele`, `n6a_memorial`, `n22d_memorial`, `ten_year_memorial`
+- **SUBFOLDER** (battles_history only): `1939`, `1942`, `1943`, `1944`, `1945`, `liaoshen/1946`, `liaoshen/1947`, `liaoshen/1948`
+- **TITLE**: Extract from the text (first line or heading)
+- **AUTHOR**: For newspapers = newspaper name (e.g. 申报); for articles = author's name
+- **CATEGORY**: Auto-set for newspapers (报刊杂志), liaos_writings (廖耀湘文集), liaos_tele (Liao's Tele). For others, set manually (e.g. 文史资料)
+- **DATE**: Event date in YYYY-MM-DD format
+- **SOURCE**: Publication info
+- **TOC**: `y` for long multi-section articles, `n` for short pieces
+- **COMMIT**: `y` to auto-commit, `n` to skip
+- **PUSH**: `y` to auto-push, `n` to skip
 
 ## After the file is created
 
