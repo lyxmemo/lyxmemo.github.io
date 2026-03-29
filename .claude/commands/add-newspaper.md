@@ -1,14 +1,14 @@
 Process raw text and add it to the lyxmemo site. The user will provide raw text from a historical newspaper article or a historical article/memoir (e.g. from 文史资料).
 
-## CRITICAL: Use the commit-article.sh script in batch mode
+## Step 0: Parse the article first
 
-For adding ANY article (newspaper or memoir), **always use the `commit-article.sh --batch` script** at the repo root. This creates the article file directly and commits it — no interactive prompts.
+Run `/parse-article` with the user's text. This reads the article, extracts metadata (title, author, collection, date, source, etc.), and outputs the ready-to-run `commit-article.sh --batch` command. The user confirms or adjusts metadata before proceeding.
 
-### How to use it:
+## Step 1: Run commit-article.sh in batch mode
 
-1. **Save the user's raw text** to a temp file (e.g. `/tmp/article.txt`)
-2. **Parse the text** to determine metadata (title, author, date, collection, etc.)
-3. **Run in batch mode** with env vars:
+After Step 0 produces the command, run it. The script creates the file directly and commits — no interactive prompts.
+
+### Batch mode syntax:
 
 ```bash
 ARTICLE_FILE=/tmp/article.txt \

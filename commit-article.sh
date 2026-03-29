@@ -208,11 +208,19 @@ frontmatter="${frontmatter}
 ---"
 
 # ── Build file body based on collection type ──
+# Format reference (from existing files):
+#   newspapers:      content directly, optional "> source" at top+bottom
+#   liaos_tele:      content directly (unique per telegram, no standard wrapper)
+#   liaos_writings:  "> *作者 年份*" line, optional TOC, then content
+#   battles_history: optional 审稿意见 blocks (user provides in content), "> author", 录入校对, content, "> 来源"
+#   n6a_memorial:    "> author", 录入校对, content, "> 来源"
+#   n22d_memorial:   "> author", 录入校对, content, "> 来源"
+#   ten_year_memorial: "> author", 录入校对, content, "> 来源"
 body=""
 
 case "$ckey" in
   newspapers)
-    # Newspapers: source line at top and bottom
+    # Newspapers: optional source line at top and bottom, content in between
     if [[ -n "$source" ]]; then
       body="> ${source}
 
@@ -223,8 +231,23 @@ ${content}
       body="$content"
     fi
     ;;
-  *)
-    # Articles: author line, transcriber, then content, then source
+  liaos_tele)
+    # Telegrams: content directly, no wrapper
+    body="$content"
+    ;;
+  liaos_writings)
+    # 廖耀湘文集: author+date line, optional TOC block, then content
+    body="> *${author}*
+
+${content}"
+    if [[ -n "$source" ]]; then
+      body="${body}
+
+> 来源：${source}"
+    fi
+    ;;
+  battles_history|n6a_memorial|n22d_memorial|ten_year_memorial)
+    # Articles/memoirs: author line, transcriber, content, source
     body="> ${author}
 
 录入校对：${transcriber}
@@ -235,6 +258,12 @@ ${content}"
 
 > 来源：${source}"
     fi
+    ;;
+  *)
+    # Fallback: author + content
+    body="> ${author}
+
+${content}"
     ;;
 esac
 
