@@ -1,13 +1,13 @@
 Process raw text and add it to the lyxmemo site. The user will provide raw text from a historical newspaper article or a historical article/memoir (e.g. from 文史资料).
 
-## CRITICAL: Use the add-article.sh script
+## CRITICAL: Use the commit-article.sh script
 
-For adding ANY article (newspaper or memoir), **always use the `add-article.sh` script** at the repo root. This script creates a GitHub issue with proper metadata, which triggers automated PR generation.
+For adding ANY article (newspaper or memoir), **always use the `commit-article.sh` script** at the repo root. This script creates the article file directly and commits it (no GitHub issue needed).
 
 ### How to use it:
 
 1. **Save the user's raw text to a temp file** (e.g. `/tmp/article.txt`)
-2. **Run the script interactively**: `bash add-article.sh /tmp/article.txt`
+2. **Run the script interactively**: `bash commit-article.sh /tmp/article.txt`
 3. The script will prompt for collection, title, author, date, etc. — answer based on the parsed content.
 
 ### Determining answers for the prompts:
@@ -29,9 +29,9 @@ For adding ANY article (newspaper or memoir), **always use the `add-article.sh` 
 - **TOC**: Y for long multi-section articles, N for short pieces
 - **Notes**: Any relevant notes
 
-## After the issue is created
+## After the file is created
 
-Tell the user the issue URL and that a PR will be auto-generated.
+Tell the user the file path and commit hash. Ask if they want to push.
 
 ## Updating the chronology (if requested)
 
