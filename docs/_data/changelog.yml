@@ -1,3 +1,8 @@
+- date: 2026-03-29
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "第七十一军第八十八师在四平被歼侧记（郑殿起）"
+      url: "/battles_history/liaoshen/1948/第七十一军第八十八师在四平被歼侧记（郑殿起）.html"
 - date: 2026-03-25
   commit_message: "年谱大幅扩充：据多部回忆录/战史补充约70条目并增补出处"
   changes:
