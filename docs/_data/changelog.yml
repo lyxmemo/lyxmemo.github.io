@@ -1,3 +1,8 @@
+- date: 2026-03-30
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "第五十三军第一三○师沈阳起义经过（谷振寰）"
+      url: "/battles_history/liaoshen/1948/第五十三军第一三○师沈阳起义经过（谷振寰）.html"
 - date: 2026-03-29
   commit_message: "+ 1 新文章"
   changes:
