@@ -1,11 +1,10 @@
 - date: 2026-03-30
-  commit_message: "+ 1 新文章"
+  commit_message: "+ 5 新文章"
   changes:
+    - title: "新编第三军辽沈战役被歼记（黄福荫）"
+      url: "/battles_history/liaoshen/1948/新编第三军辽沈战役被歼记（黄福荫）.html"
     - title: "第五十三军第一三○师沈阳起义经过（谷振寰）"
       url: "/battles_history/liaoshen/1948/第五十三军第一三○师沈阳起义经过（谷振寰）.html"
-- date: 2026-03-29
-  commit_message: "+ 1 新文章"
-  changes:
     - title: "第七十一军第八十八师在四平被歼侧记（郑殿起）"
       url: "/battles_history/liaoshen/1948/第七十一军第八十八师在四平被歼侧记（郑殿起）.html"
     - title: "四平街战役侧记（高青山）"
