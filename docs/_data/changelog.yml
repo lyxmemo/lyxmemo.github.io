@@ -1,3 +1,8 @@
+- date: 2026-04-01
+  commit_message: "+ 1968年11月25日廖耀湘谈话记录（手迹影印及校注）"
+  changes:
+    - title: "1968年11月25日廖耀湘谈话记录：六页手写原件影印并排转录，含十条校注"
+      url: "/newspapers/19681125廖耀湘谈话记录.html"
 - date: 2026-03-30
   commit_message: "+ 5 新文章"
   changes:
