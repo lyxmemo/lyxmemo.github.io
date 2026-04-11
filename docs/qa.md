@@ -298,17 +298,6 @@ description: "与廖耀湘相关人士的 Q&A 访谈合集"
     margin: 0;
   }
 
-  /* Drop cap on the very first answer of each chapter */
-  .qa-chapter .qa-answers > .qa-answer:first-child .qa-answer-text::first-letter {
-    font-family: var(--font-serif);
-    font-size: 3.4rem;
-    font-weight: 700;
-    line-height: 0.9;
-    float: left;
-    margin: 0.35rem 0.4rem 0 0;
-    color: var(--color-accent-red);
-  }
-
   .qa-answer-empty {
     font-style: italic;
     color: var(--color-gray-400);
@@ -470,9 +459,6 @@ description: "与廖耀湘相关人士的 Q&A 访谈合集"
     .qa-chapter-num { font-size: 3.2rem; }
     .qa-chapter-question { font-size: 1.28rem; }
     .qa-answer-text { font-size: 1rem; line-height: 1.85; }
-    .qa-chapter .qa-answers > .qa-answer:first-child .qa-answer-text::first-letter {
-      font-size: 2.6rem;
-    }
   }
 
   @media (max-width: 600px) {
