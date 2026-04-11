@@ -180,6 +180,14 @@ description: "与廖耀湘相关人士的 Q&A 访谈合集"
     white-space: pre-wrap;
   }
 
+  .qa-photo {
+    display: block;
+    max-width: 100%;
+    margin: 1rem 0 0.5rem;
+    border: 1px solid var(--color-border-light);
+    border-radius: 4px;
+  }
+
   .qa-empty {
     color: var(--color-gray-400);
     font-style: italic;
@@ -212,7 +220,7 @@ description: "与廖耀湘相关人士的 Q&A 访谈合集"
   <header class="qa-header">
     <p class="qa-eyebrow">Interview · 访谈</p>
     <h1 class="qa-title">{{ page.title }}</h1>
-    <p class="qa-subtitle">共 8 个问题</p>
+    <p class="qa-subtitle">共 {{ site.data.qa | size }} 个问题</p>
   </header>
 
   <nav class="qa-toc" aria-label="目录">
@@ -253,6 +261,14 @@ description: "与廖耀湘相关人士的 Q&A 访谈合集"
             <span class="qa-a-text">{{ ans.text }}</span>
           {% else %}
             <span class="qa-empty">[待录入]</span>
+          {% endif %}
+          {% if ans.image %}
+            <img class="qa-photo" src="{{ ans.image }}" alt="{{ ans.respondent }} 附图" loading="lazy">
+          {% endif %}
+          {% if ans.images %}
+            {% for img in ans.images %}
+              <img class="qa-photo" src="{{ img }}" alt="{{ ans.respondent }} 附图" loading="lazy">
+            {% endfor %}
           {% endif %}
         </div>
       </li>
