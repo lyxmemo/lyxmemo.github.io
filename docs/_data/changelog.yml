@@ -1,3 +1,8 @@
+- date: 2026-04-15
+  commit_message: "+ 廖耀湘120周年诞辰纪念问卷"
+  changes:
+    - title: "廖耀湘120周年诞辰纪念问卷"
+      url: "/qa.html"
 - date: 2026-04-01
   commit_message: "+ 1968年11月25日廖耀湘谈话记录（手迹影印及校注）"
   changes:
