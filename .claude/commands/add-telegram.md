@@ -59,7 +59,7 @@ date: YYYY-MM-DD 00:00:00 +0000
 
 2. **Telegram body text**: Preserve original formatting and punctuation. Break the body into logical paragraphs — the raw text from the user is often a continuous block, but should be segmented at natural topic boundaries (e.g. separate the opening address, each distinct topic/request, and the closing signature into their own paragraphs). Each paragraph should be separated by a blank line.
 
-3. **Footnotes/annotations**: Format with `\*` for single footnotes or numbered footnotes as appropriate. Place after the main body with a blank line separator.
+3. **Footnotes/annotations**: Format with `\*` for single footnotes or numbered footnotes as appropriate. Place after the main body with a blank line separator. Use proper Chinese quotation marks `\u201c\u201d` (not straight ASCII `"`) in body text and footnotes — e.g. `\*意同\u201c不卑不亢\u201d。` Since the Write/Edit tools may not reliably produce these, use a python script to replace straight `"` pairs in the body text with `\u201c`/`\u201d` after writing the file.
 
 4. **录入校对 credit**: Format as `>*录入校对：<name>*` on its own line, preceded by a blank line.
 
