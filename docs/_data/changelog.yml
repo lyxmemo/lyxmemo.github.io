@@ -1,3 +1,8 @@
+- date: 2026-04-20
+  commit_message: "录入《新六军的诞生 廖耀湘军长一夕谈》扫荡报通讯全文"
+  changes:
+    - title: "录入：新六军的诞生 廖耀湘军长一夕谈（扫荡报通讯，1944-12-28）"
+      url: "/newspapers/新六军的诞生 廖耀湘军长一夕谈.html"
 - date: 2026-04-16
   commit_message: "+ 7 新文章"
   changes:
