@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Text Annotator</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font-serif: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --color-charcoal: #333333;
+  --color-gold: #C5A02F;
+  --color-border: #E0E0E0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: #f0f0f0;
+  color: var(--color-charcoal);
+  min-height: 100vh;
+}
+
+/* Toolbar */
+.toolbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: #fff;
+  border-bottom: 2px solid var(--color-charcoal);
+  padding: 0.6rem 1.5rem;
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+}
+.toolbar-title {
+  font-family: var(--font-serif);
+  font-weight: 700; font-size: 1rem; margin-right: auto;
+}
+.toolbar label {
+  font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; color: #666;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.toolbar input[type="number"], .toolbar select {
+  font-family: var(--font-sans); font-size: 0.8rem;
+  padding: 4px 8px; border: 1px solid var(--color-border); background: #fff; outline: none;
+}
+.toolbar input[type="number"] { width: 60px; }
+.toolbar input[type="color"] { width: 32px; height: 28px; padding: 2px; cursor: pointer; border: 1px solid var(--color-border); }
+
+.btn {
+  font-family: var(--font-sans); font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 6px 16px; border: none; cursor: pointer; transition: all 0.15s;
+}
+.btn-outline { background: #fff; color: var(--color-charcoal); border: 1px solid var(--color-border); }
+.btn-outline:hover { border-color: var(--color-charcoal); }
+.btn-gold { background: var(--color-gold); color: #fff; }
+.btn-gold:hover { background: #B18E26; }
+.btn-danger { background: #D12F2F; color: #fff; }
+.btn-danger:hover { background: #b02525; }
+
+/* File input: visually hidden but still functional */
+.file-input-wrap {
+  position: relative; overflow: hidden; display: inline-block;
+}
+.file-input-wrap input[type="file"] {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  opacity: 0; cursor: pointer;
+}
+
+/* Drop zone */
+.drop-zone {
+  margin-top: 56px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: calc(100vh - 56px); padding: 2rem;
+}
+.drop-area {
+  border: 3px dashed var(--color-border); padding: 4rem 6rem;
+  text-align: center; background: #fff; transition: border-color 0.2s; cursor: pointer;
+}
+.drop-area.dragover { border-color: var(--color-gold); }
+.drop-area h2 { font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 0.5rem; border: none; }
+.drop-area p { font-size: 0.85rem; color: #888; }
+
+/* Workspace */
+.workspace {
+  margin-top: 56px; padding: 2rem; display: flex; justify-content: center;
+}
+
+/* Side-by-side wrapper */
+.canvas-annotation-wrap {
+  display: flex; align-items: stretch;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+}
+
+/* Image side */
+.canvas-container {
+  position: relative; display: block;
+  background: #fff;
+  cursor: default;
+  flex-shrink: 0;
+}
+.canvas-container img {
+  display: block; max-width: 55vw; max-height: 85vh;
+  user-select: none; -webkit-user-drag: none; pointer-events: none;
+}
+
+/* Annotation panel to the right */
+.annotation-panel {
+  position: relative;
+  width: 380px;
+  background: #fff;
+  border-left: 2px solid var(--color-border);
+  cursor: crosshair;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.panel-hint {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center; color: #ccc; pointer-events: none;
+  font-size: 0.85rem; line-height: 1.8;
+}
+
+/* Text block wrapper (handles delete btn outside contentEditable) */
+.block-wrap {
+  position: absolute;
+  cursor: move;
+}
+.block-wrap .delete-btn {
+  position: absolute; top: -10px; right: -10px;
+  width: 20px; height: 20px; background: #D12F2F; color: #fff;
+  border: none; border-radius: 50%; cursor: pointer;
+  font-size: 12px; line-height: 20px; text-align: center;
+  display: none; z-index: 10;
+}
+.block-wrap:hover .delete-btn,
+.block-wrap.selected .delete-btn { display: block; }
+
+/* The editable text area */
+.block-text {
+  font-family: var(--font-serif);
+  color: var(--color-charcoal);
+  min-width: 30px; min-height: 1.2em;
+  padding: 2px 4px;
+  white-space: pre-wrap; word-break: break-word;
+  line-height: 1.8;
+  outline: 2px solid transparent;
+  transition: outline-color 0.15s;
+  cursor: text;
+}
+.block-wrap:hover .block-text { outline-color: rgba(197,160,47,0.4); }
+.block-wrap.selected .block-text { outline: 2px solid var(--color-gold); }
+
+.hidden { display: none !important; }
+#export-canvas { display: none; }
+
+/* Instructions */
+.instructions {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.85); color: #ccc;
+  font-size: 0.75rem; padding: 0.5rem 1.5rem;
+  display: flex; gap: 2rem; z-index: 100;
+}
+.instructions kbd {
+  background: #555; color: #fff; padding: 1px 6px;
+  border-radius: 3px; font-size: 0.7rem;
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="toolbar-title">Image Annotator</span>
+  <div class="file-input-wrap">
+    <button class="btn btn-outline">Open Image</button>
+    <input type="file" id="file-input" accept="image/*">
+  </div>
+  <label>Size <input type="number" id="font-size" value="16" min="8" max="200" step="1"></label>
+  <label>Weight
+    <select id="font-weight">
+      <option value="400">Regular</option>
+      <option value="600">Semibold</option>
+      <option value="700" selected>Bold</option>
+    </select>
+  </label>
+  <label>Color <input type="color" id="font-color" value="#333333"></label>
+  <label>BG <input type="color" id="bg-color" value="#ffffff"> <input type="checkbox" id="bg-transparent" checked> None</label>
+  <button class="btn btn-gold" onclick="saveImage()">Save Image</button>
+  <button class="btn btn-danger" onclick="clearAll()">Clear All</button>
+</div>
+
+<div class="drop-zone" id="drop-zone">
+  <div class="drop-area" id="drop-area">
+    <h2>Drop image here</h2>
+    <p>or click Open Image above</p>
+  </div>
+</div>
+
+<div class="workspace hidden" id="workspace">
+  <div class="canvas-annotation-wrap">
+    <div class="canvas-container" id="canvas-container">
+      <img id="base-image" alt="">
+    </div>
+    <div class="annotation-panel" id="annotation-panel">
+      <div class="panel-hint" id="panel-hint">Click here<br>to add text</div>
+    </div>
+  </div>
+</div>
+
+<div class="instructions hidden" id="instructions">
+  <span><kbd>Click</kbd> on annotation panel to add text</span>
+  <span><kbd>Drag</kbd> to move text blocks</span>
+  <span><kbd>Click</kbd> text to edit</span>
+  <span><kbd>x</kbd> button to delete</span>
+</div>
+
+<canvas id="export-canvas"></canvas>
+
+<script>
+(function() {
+  var blocks = [];
+  var selectedWrap = null;
+  var natW = 0, natH = 0;
+
+  var container = document.getElementById('canvas-container');
+  var img = document.getElementById('base-image');
+  var workspace = document.getElementById('workspace');
+  var dropZone = document.getElementById('drop-zone');
+  var instEl = document.getElementById('instructions');
+  var annotationPanel = document.getElementById('annotation-panel');
+  var panelHint = document.getElementById('panel-hint');
+
+  // ---- File loading ----
+  function loadFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    var r = new FileReader();
+    r.onload = function(ev) {
+      img.onload = function() {
+        natW = img.naturalWidth;
+        natH = img.naturalHeight;
+        annotationPanel.style.height = img.clientHeight + 'px';
+        dropZone.classList.add('hidden');
+        workspace.classList.remove('hidden');
+        instEl.classList.remove('hidden');
+      };
+      img.src = ev.target.result;
+    };
+    r.readAsDataURL(file);
+  }
+
+  document.getElementById('file-input').addEventListener('change', function(e) {
+    if (e.target.files[0]) loadFile(e.target.files[0]);
+  });
+
+  // Drop support
+  var da = document.getElementById('drop-area');
+  da.addEventListener('dragover', function(e) { e.preventDefault(); da.classList.add('dragover'); });
+  da.addEventListener('dragleave', function() { da.classList.remove('dragover'); });
+  da.addEventListener('drop', function(e) {
+    e.preventDefault(); da.classList.remove('dragover');
+    if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  document.body.addEventListener('dragover', function(e) { e.preventDefault(); });
+  document.body.addEventListener('drop', function(e) {
+    e.preventDefault();
+    if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+
+  // ---- Helpers ----
+  function scale() { return natW ? img.clientWidth / natW : 1; }
+
+  function getStyle() {
+    return {
+      fontSize: parseFloat(document.getElementById('font-size').value) || 16,
+      fontWeight: document.getElementById('font-weight').value,
+      fontColor: document.getElementById('font-color').value,
+      bgColor: document.getElementById('bg-transparent').checked ? 'transparent' : document.getElementById('bg-color').value,
+    };
+  }
+
+  // ---- Create block ----
+  function addBlock(px, py) {
+    var s = scale();
+    var st = getStyle();
+
+    // Hide hint once first block added
+    panelHint.style.display = 'none';
+
+    // Wrapper (handles positioning & drag)
+    var wrap = document.createElement('div');
+    wrap.className = 'block-wrap';
+    wrap.style.left = px + 'px';
+    wrap.style.top = py + 'px';
+
+    // Delete button (outside contentEditable)
+    var del = document.createElement('button');
+    del.className = 'delete-btn';
+    del.textContent = '\u00d7';
+    del.onmousedown = function(e) { e.stopPropagation(); };
+    del.onclick = function(e) { e.stopPropagation(); removeBlock(wrap); };
+
+    // Editable text
+    var txt = document.createElement('div');
+    txt.className = 'block-text';
+    txt.contentEditable = 'true';
+    txt.style.fontSize = (st.fontSize * s) + 'px';
+    txt.style.fontWeight = st.fontWeight;
+    txt.style.color = st.fontColor;
+    txt.style.backgroundColor = st.bgColor;
+
+    // Store natural values (positions relative to annotation panel)
+    wrap.dataset.natX = (px / s).toFixed(1);
+    wrap.dataset.natY = (py / s).toFixed(1);
+    wrap.dataset.natFontSize = st.fontSize;
+    wrap.dataset.fontWeight = st.fontWeight;
+    wrap.dataset.fontColor = st.fontColor;
+    wrap.dataset.bgColor = st.bgColor;
+
+    wrap.appendChild(del);
+    wrap.appendChild(txt);
+    annotationPanel.appendChild(wrap);
+    blocks.push(wrap);
+
+    selectWrap(wrap);
+    txt.focus();
+
+    // Drag-or-edit: mousedown on text starts potential drag.
+    txt.addEventListener('mousedown', function(e) {
+      if (e.target === del) return;
+      selectWrap(wrap);
+      var startX = e.clientX, startY = e.clientY;
+      var origL = parseInt(wrap.style.left) || 0;
+      var origT = parseInt(wrap.style.top) || 0;
+      var dragging = false;
+
+      function onMove(ev) {
+        var dx = ev.clientX - startX, dy = ev.clientY - startY;
+        if (!dragging && Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+        if (!dragging) {
+          dragging = true;
+          txt.contentEditable = 'false';
+          txt.style.cursor = 'move';
+          window.getSelection().removeAllRanges();
+        }
+        wrap.style.left = (origL + dx) + 'px';
+        wrap.style.top = (origT + dy) + 'px';
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        if (dragging) {
+          var s = scale();
+          wrap.dataset.natX = (parseInt(wrap.style.left) / s).toFixed(1);
+          wrap.dataset.natY = (parseInt(wrap.style.top) / s).toFixed(1);
+          setTimeout(function() {
+            txt.contentEditable = 'true';
+            txt.style.cursor = 'text';
+          }, 0);
+        }
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+
+    return wrap;
+  }
+
+  function removeBlock(wrap) {
+    var i = blocks.indexOf(wrap);
+    if (i > -1) blocks.splice(i, 1);
+    if (selectedWrap === wrap) selectedWrap = null;
+    wrap.remove();
+    if (blocks.length === 0) panelHint.style.display = '';
+  }
+
+  function selectWrap(wrap) {
+    if (selectedWrap) selectedWrap.classList.remove('selected');
+    selectedWrap = wrap;
+    if (wrap) wrap.classList.add('selected');
+  }
+
+  function clearAll() {
+    blocks.slice().forEach(removeBlock);
+  }
+  window.clearAll = clearAll;
+
+  // ---- Click on annotation panel to add block ----
+  annotationPanel.addEventListener('click', function(e) {
+    if (e.target !== annotationPanel) return;
+    var r = annotationPanel.getBoundingClientRect();
+    addBlock(e.clientX - r.left, e.clientY - r.top);
+  });
+
+  // Deselect when clicking outside
+  document.addEventListener('mousedown', function(e) {
+    if (!e.target.closest('.block-wrap') && !e.target.closest('.toolbar') && e.target !== annotationPanel) {
+      selectWrap(null);
+    }
+  });
+
+  // ---- Toolbar → update selected ----
+  ['font-size', 'font-weight', 'font-color', 'bg-color', 'bg-transparent'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', function() {
+      if (!selectedWrap) return;
+      var st = getStyle();
+      var s = scale();
+      var txt = selectedWrap.querySelector('.block-text');
+      txt.style.fontSize = (st.fontSize * s) + 'px';
+      txt.style.fontWeight = st.fontWeight;
+      txt.style.color = st.fontColor;
+      txt.style.backgroundColor = st.bgColor;
+      selectedWrap.dataset.natFontSize = st.fontSize;
+      selectedWrap.dataset.fontWeight = st.fontWeight;
+      selectedWrap.dataset.fontColor = st.fontColor;
+      selectedWrap.dataset.bgColor = st.bgColor;
+    });
+  });
+
+  // ---- Resize: reposition blocks & sync panel height ----
+  window.addEventListener('resize', function() {
+    var s = scale();
+    annotationPanel.style.height = img.clientHeight + 'px';
+    blocks.forEach(function(w) {
+      w.style.left = (parseFloat(w.dataset.natX) * s) + 'px';
+      w.style.top = (parseFloat(w.dataset.natY) * s) + 'px';
+      var txt = w.querySelector('.block-text');
+      txt.style.fontSize = (parseFloat(w.dataset.natFontSize) * s) + 'px';
+    });
+  });
+
+  // ---- Save / export: image + annotation panel side by side ----
+  function saveImage() {
+    var c = document.getElementById('export-canvas');
+    var ctx = c.getContext('2d');
+    var s = scale();
+    var natPanelW = Math.round(annotationPanel.clientWidth / s);
+
+    c.width = natW + natPanelW;
+    c.height = natH;
+
+    // Draw the image
+    ctx.drawImage(img, 0, 0, natW, natH);
+
+    // Draw annotation panel background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(natW, 0, natPanelW, natH);
+
+    // Draw separator line
+    ctx.strokeStyle = '#E0E0E0';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(natW, 0);
+    ctx.lineTo(natW, natH);
+    ctx.stroke();
+
+    // Draw blocks
+    blocks.forEach(function(w) {
+      var nx = parseFloat(w.dataset.natX) + natW; // offset into annotation area
+      var ny = parseFloat(w.dataset.natY);
+      var nfs = parseFloat(w.dataset.natFontSize);
+      var fw = w.dataset.fontWeight || '700';
+      var fc = w.dataset.fontColor || '#333';
+      var bg = w.dataset.bgColor || 'transparent';
+
+      var txt = w.querySelector('.block-text').innerText.trim();
+      if (!txt) return;
+
+      var lines = txt.split('\n');
+      var lh = nfs * 1.8;
+
+      ctx.font = fw + ' ' + nfs + 'px "Noto Serif SC", serif';
+
+      if (bg !== 'transparent') {
+        var maxW = 0;
+        lines.forEach(function(l) { var m = ctx.measureText(l).width; if (m > maxW) maxW = m; });
+        ctx.fillStyle = bg;
+        ctx.fillRect(nx, ny, maxW + 8, lines.length * lh + 4);
+      }
+
+      ctx.fillStyle = fc;
+      ctx.textBaseline = 'top';
+      lines.forEach(function(l, i) {
+        ctx.fillText(l, nx + 2, ny + 2 + i * lh);
+      });
+    });
+
+    c.toBlob(function(blob) {
+      var a = document.createElement('a');
+      a.download = 'annotated-image.png';
+      a.href = URL.createObjectURL(blob);
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }, 'image/png');
+  }
+  window.saveImage = saveImage;
+
+})();
+</script>
+</body>
+</html>
