@@ -1,3 +1,8 @@
+- date: 2026-04-23
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "从参加抗战到目睹日军投降（节选）（冷欣）"
+      url: "/ten_year_memorial/从参加抗战到目睹日军投降（节选）（冷欣）.html"
 - date: 2026-04-20
   commit_message: "录入《新六军的诞生 廖耀湘军长一夕谈》扫荡报通讯全文"
   changes:
