@@ -173,4 +173,7 @@ exclude:
   - resources/
   # Large bundle PDF exceeds Cloudflare Pages' 25 MiB per-file limit.
   # Downloads are served from GitHub Releases (see home.html footer).
-  - assets/与廖耀湘有关的文字资料合集.pdf
+  # Glob is ASCII-only because Jekyll's entry_filter compares the pattern
+  # against filenames read as ASCII-8BIT on the CF build host — a UTF-8
+  # pattern with Chinese chars triggers Encoding::CompatibilityError.
+  - assets/*.pdf
