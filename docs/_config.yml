@@ -171,3 +171,6 @@ exclude:
   - assets/404.html
   - assets/feed.xml
   - resources/
+  # Large bundle PDF exceeds Cloudflare Pages' 25 MiB per-file limit.
+  # Downloads are served from GitHub Releases (see home.html footer).
+  - assets/与廖耀湘有关的文字资料合集.pdf
