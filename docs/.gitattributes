@@ -1,3 +1,7 @@
 # PDFs are stored as LFS objects but served via GitHub raw URLs.
 # LFS filter is disabled to allow CI/CD clones without LFS bandwidth.
 *.pdf -filter -diff -merge binary
+
+# Exception: the bundled collection is >25 MiB, which Cloudflare Pages rejects.
+# Keep LFS filter enabled so CF's non-LFS clone only pulls the pointer.
+assets/与廖耀湘有关的文字资料合集.* filter=lfs diff=lfs merge=lfs -text
