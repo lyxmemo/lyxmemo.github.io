@@ -3,7 +3,7 @@
 
 ## Website Information
 Name: Liao Yaoxiang Memorial
-URL: https://lyxmemo.github.io
+URL: https://liaoyaoxiang.com
 Description: A historical documentation site dedicated to Liao Yaoxiang (廖耀湘), a notable Chinese military general, containing historical documents, battle records, memorials, and related materials.
 Language: Simplified Chinese, English
 

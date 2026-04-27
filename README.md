@@ -1,6 +1,6 @@
 # 廖耀湘相关文字资料合集 / Liao Yaoxiang Archive
 
-https://lyxmemo.github.io
+https://liaoyaoxiang.com
 
 ## What is this?
 
