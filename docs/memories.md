@@ -1,6 +1,7 @@
 ---
 layout: default
 title: 分类
+permalink: /memories/
 ---
 
 <style>
