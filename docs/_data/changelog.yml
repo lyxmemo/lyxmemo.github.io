@@ -1,3 +1,8 @@
+- date: 2026-05-19
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "缅甸作战（节选）（日本防卫厅防卫研究所战史研究室）"
+      url: "/battles_history/1942/缅甸作战（节选）（日本防卫厅防卫研究所战史研究室）.html"
 - date: 2026-04-26
   commit_message: "+ 8 电报"
   changes:
