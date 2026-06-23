@@ -1,3 +1,8 @@
+- date: 2026-06-23
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "我所知道的廖耀湘和他的夫人（金咸宗根据其母陈氏口述记录整理）"
+      url: "/ten_year_memorial/我所知道的廖耀湘和他的夫人（金咸宗根据其母陈氏口述记录整理）.html"
 - date: 2026-05-28
   commit_message: "+ 1 新文章 并更新《缅甸作战》第五章"
   changes:
