@@ -33,6 +33,7 @@ layout: null
     {
       "title": {{ item.title | jsonify }},
       "title_en": {{ item.title_en | jsonify }},
+      "keywords_en": {{ item.keywords_en | strip | jsonify }},
       "english_abstract": {{ item.english_abstract | strip | jsonify }},
       "url": "{{ item.url | relative_url }}",
       "content": {{ item.content | strip_html | strip_newlines | jsonify }}

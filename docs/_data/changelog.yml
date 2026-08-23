@@ -1,4 +1,9 @@
 - date: 2026-08-23
+  commit_message: "英文提要增补检索关键词（人名异写、地名、战役、部队番号）"
+  changes:
+    - title: "Collected Writings of Liao Yaoxiang — English Abstracts"
+      url: "/en/liaos-writings/"
+- date: 2026-08-23
   commit_message: "为廖耀湘文集添加英文提要，便于检索与 AI 抓取"
   changes:
     - title: "Collected Writings of Liao Yaoxiang — English Abstracts"
