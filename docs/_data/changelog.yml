@@ -1,5 +1,5 @@
 - date: 2026-08-23
-  commit_message: "+ 11 新文章 并再更新《缅甸作战》第五章"
+  commit_message: "+ 12 新文章 并再更新《缅甸作战》第五章"
   changes:
     - title: "更新第五章——《缅甸作战（节选）》（日本防卫厅防卫研究所战史研究室）"
       url: "/battles_history/1942/缅甸作战（节选）（日本防卫厅防卫研究所战史研究室）.html"
@@ -7,6 +7,8 @@
       url: "/ten_year_memorial/创造历史的伟人（俞济时口述 钱先莲笔录）.html"
     - title: "八十自述（罗泽闿）"
       url: "/ten_year_memorial/八十自述（罗泽闿）.html"
+    - title: "熊式辉东北去来（陈嘉骥）"
+      url: "/ten_year_memorial/熊式辉东北去来（陈嘉骥）.html"
     - title: "追思总统 蒋公（王铁汉）"
       url: "/ten_year_memorial/追思总统 蒋公（王铁汉）.html"
     - title: "赵家骧将军传（赵尺子）"
