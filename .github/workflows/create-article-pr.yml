@@ -56,9 +56,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          gh pr create \
-            --title "新文章: ${{ steps.process.outputs.article_title }}" \
-            --body "$(cat <<'EOF'
+          if gh pr list --head "article/issue-${ISSUE_NUMBER}" --json number --jq 'length' | grep -qx 0; then
+            gh pr create \
+              --title "新文章: ${{ steps.process.outputs.article_title }}" \
+              --body "$(cat <<'EOF'
           ## 自动生成的文章 PR
 
           Closes #${{ github.event.issue.number }}
@@ -71,8 +72,11 @@ jobs:
           🤖 Generated with GitHub Actions + Claude API
           EOF
           )" \
-            --base main \
-            --head "article/issue-${ISSUE_NUMBER}"
+              --base main \
+              --head "article/issue-${ISSUE_NUMBER}"
+          else
+            echo "PR already exists for article/issue-${ISSUE_NUMBER}, skipping create."
+          fi
 
       - name: Comment on issue (success)
         if: success()

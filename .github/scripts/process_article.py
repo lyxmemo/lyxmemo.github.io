@@ -79,7 +79,11 @@ SYSTEM_PROMPT = """\
 1. **绝不输出 YAML frontmatter**（即 `---` 块）。你只输出正文 Markdown。
 2. **绝不修改、删除或改写历史原文内容。** 保持每一个字、每一个标点完全不变。
 3. **保留中文标点**（全角句号、逗号、引号等），不要替换为英文标点。
-4. 不要添加任何你自己的评论、注释、说明或总结。
+4. **中文引号方向必须与原文逐字一致，不得对调、不得一律改成后引号：**
+   - 前双引号是 “（U+201C LEFT DOUBLE QUOTATION MARK），后双引号是 ”（U+201D RIGHT DOUBLE QUOTATION MARK）。
+   - 「」『』 以及单引号 ‘’ 同样保持原文方向。
+   - 错误示例：把 “战犯楼” 写成 ”战犯楼“ 或 ”战犯楼”。
+5. 不要添加任何你自己的评论、注释、说明或总结。
 
 排版规范：
 - 使用 Markdown 标题（### 三级标题）来标记文章中明显的章节划分。
@@ -132,6 +136,28 @@ def build_footer(data: dict) -> str:
     return "\n".join(lines)
 
 
+# Haiku (and other LLMs) frequently flip 前双引号 “ (U+201C) into 后双引号 ”
+# (U+201D). We restore the original quote glyphs in order after formatting.
+QUOTE_CHARS = "“”‘’「」『』\"'"
+
+
+def restore_quotes(original: str, formatted: str) -> str:
+    """Replay the original quote-character sequence onto the formatted text."""
+    orig_seq = [c for c in original if c in QUOTE_CHARS]
+    if not orig_seq:
+        return formatted
+
+    out: list[str] = []
+    idx = 0
+    for c in formatted:
+        if c in QUOTE_CHARS and idx < len(orig_seq):
+            out.append(orig_seq[idx])
+            idx += 1
+        else:
+            out.append(c)
+    return "".join(out)
+
+
 def call_claude(data: dict) -> str:
     """Send the raw content to Claude and return formatted markdown body."""
     client = anthropic.Anthropic()
@@ -153,7 +179,8 @@ def call_claude(data: dict) -> str:
         messages=[{"role": "user", "content": user_message}],
     )
 
-    return message.content[0].text
+    formatted = message.content[0].text
+    return restore_quotes(data["content"], formatted)
 
 
 # ── generate frontmatter (deterministic) ────────────────────────────
@@ -225,6 +252,12 @@ def determine_url(file_path: Path) -> str:
     return "/" + "/".join(parts)
 
 
+def yaml_double_quoted(value: str) -> str:
+    """Quote a scalar with ASCII double quotes (YAML does not accept curly quotes)."""
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
 def update_changelog(title: str, url: str) -> None:
     """Prepend a new entry (or append to today's entry) in changelog.yml.
 
@@ -244,7 +277,6 @@ def update_changelog(title: str, url: str) -> None:
         # Insert our new change line before that boundary
         lines = existing.split("\n")
         insert_idx = None
-        in_first_entry = True
         for i, line in enumerate(lines):
             if i == 0:
                 continue
@@ -257,21 +289,25 @@ def update_changelog(title: str, url: str) -> None:
             while insert_idx > 0 and lines[insert_idx - 1].strip() == "":
                 insert_idx -= 1
 
-        new_change = f'    - title: "{title}"\n      url: "{url}"'
+        new_change = f"    - title: {yaml_double_quoted(title)}\n      url: {yaml_double_quoted(url)}"
         lines.insert(insert_idx, new_change)
         updated = "\n".join(lines)
     else:
         # Prepend a brand-new entry
         new_entry = (
             f"- date: {today}\n"
-            f'  commit_message: "+ 1 新文章"\n'
+            f"  commit_message: {yaml_double_quoted('+ 1 新文章')}\n"
             f"  changes:\n"
-            f'    - title: "{title}"\n'
-            f'      url: "{url}"\n'
+            f"    - title: {yaml_double_quoted(title)}\n"
+            f"      url: {yaml_double_quoted(url)}\n"
         )
         updated = new_entry + existing
 
     CHANGELOG.write_text(updated, encoding="utf-8")
+    try:
+        yaml.safe_load(updated)
+    except yaml.YAMLError as exc:
+        raise RuntimeError(f"changelog.yml became invalid YAML after update: {exc}") from exc
 
 
 # ── main ────────────────────────────────────────────────────────────
