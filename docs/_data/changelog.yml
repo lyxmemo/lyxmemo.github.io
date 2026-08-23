@@ -1,3 +1,8 @@
+- date: 2026-08-23
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "创造历史的伟人（俞济时口述 钱先莲笔录）"
+      url: "/ten_year_memorial/创造历史的伟人（俞济时口述 钱先莲笔录）.html"
 - date: 2026-06-27
   commit_message: "+ 1 新文章 并再更新《缅甸作战》第五章"
   changes:
