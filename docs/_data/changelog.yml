@@ -1,14 +1,22 @@
 - date: 2026-08-23
-  commit_message: "+ 3 新文章 并再更新《缅甸作战》第五章"
+  commit_message: "+ 7 新文章 并再更新《缅甸作战》第五章"
   changes:
+    - title: "更新第五章——《缅甸作战（节选）》（日本防卫厅防卫研究所战史研究室）"
+      url: "/battles_history/1942/缅甸作战（节选）（日本防卫厅防卫研究所战史研究室）.html"
     - title: "创造历史的伟人（俞济时口述 钱先莲笔录）"
       url: "/ten_year_memorial/创造历史的伟人（俞济时口述 钱先莲笔录）.html"
     - title: "八十自述（罗泽闿）"
       url: "/ten_year_memorial/八十自述（罗泽闿）.html"
-    - title: "新增第五章——《缅甸作战（节选）》（日本防卫厅防卫研究所战史研究室）"
-      url: "/battles_history/1942/缅甸作战（节选）（日本防卫厅防卫研究所战史研究室）.html"
     - title: "陕西知识青年从军记（张逸智）"
       url: "/ten_year_memorial/陕西知识青年从军记（张逸智）.html"
+    - title: "还俗记（钮先铭）"
+      url: "/ten_year_memorial/还俗记（钮先铭）.html"
+    - title: "东北接收与沦陷纪痛（金戎）"
+      url: "/ten_year_memorial/东北接收与沦陷纪痛（金戎）.html"
+    - title: "抗战胜利后接收东北的回忆（吴焕章）"
+      url: "/ten_year_memorial/抗战胜利后接收东北的回忆（吴焕章）.html"
+    - title: "接收东北宣传业务的回忆（陈鎭）"
+      url: "/ten_year_memorial/接收东北宣传业务的回忆（陈鎭）.html"
 - date: 2026-06-27
   commit_message: "+ 1 新文章 并再更新《缅甸作战》第五章"
   changes:
