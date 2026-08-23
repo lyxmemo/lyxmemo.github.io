@@ -434,6 +434,84 @@ img { max-width: 100%; }
   margin-bottom: 2rem;
 }
 
+/* English abstract — for researchers, search engines, and LLM crawlers */
+.english-abstract {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--color-charcoal-light);
+  background: #fff;
+  border: 1px solid var(--color-border-light);
+  border-left: 3px solid var(--color-accent-gold);
+  padding: 1rem 1.25rem 1.1rem;
+  margin: 0 0 1.5rem;
+}
+
+.english-abstract-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-gold);
+  margin: 0 0 0.35rem;
+}
+
+.english-abstract-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--color-charcoal);
+  margin: 0 0 0.65rem;
+  line-height: 1.4;
+}
+
+.english-abstract-body {
+  margin: 0;
+}
+
+.english-abstract-index {
+  max-width: 42rem;
+}
+
+.english-abstract-index > header {
+  margin-bottom: 2rem;
+}
+
+.english-abstract-index h1 {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  margin: 0 0 0.75rem;
+}
+
+.english-abstract-index .index-lede {
+  font-size: 1rem;
+  color: var(--color-charcoal-light);
+}
+
+.english-abstract-entry {
+  border-top: 1px solid var(--color-border-light);
+  padding: 1.5rem 0;
+}
+
+.english-abstract-entry h2 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  margin: 0 0 0.25rem;
+}
+
+.english-abstract-entry .entry-meta {
+  font-size: 0.8rem;
+  color: var(--color-gray-500);
+  margin: 0 0 0.75rem;
+}
+
+.english-abstract-entry .entry-zh {
+  font-size: 0.85rem;
+  color: var(--color-gray-600);
+  margin: 0 0 0.6rem;
+}
+
 .post-breadcrumb,
 .breadcrumb {
   font-size: 0.85rem;

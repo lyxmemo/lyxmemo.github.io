@@ -1,0 +1,41 @@
+{%- if page.english_abstract -%}
+{%- assign abstract_text = page.english_abstract | strip -%}
+<aside class="english-abstract" lang="en" aria-label="English abstract">
+  <p class="english-abstract-label">English Abstract / 英文提要</p>
+  {%- if page.title_en -%}
+  <p class="english-abstract-title" itemprop="alternativeHeadline">{{ page.title_en }}</p>
+  {%- endif -%}
+  <div class="english-abstract-body" itemprop="abstract">
+    {{ abstract_text | newline_to_br }}
+  </div>
+</aside>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": {{ page.title | jsonify }},
+  {%- if page.title_en %}
+  "alternativeHeadline": {{ page.title_en | jsonify }},
+  {%- endif %}
+  "author": {
+    "@type": "Person",
+    "name": {{ page.author | default: "廖耀湘" | jsonify }}
+  },
+  "datePublished": "{{ page.date | date: '%Y-%m-%d' }}",
+  "inLanguage": ["zh-CN", "en"],
+  "abstract": {{ abstract_text | jsonify }},
+  "description": {{ abstract_text | jsonify }},
+  "url": {{ page.url | absolute_url | jsonify }},
+  "isPartOf": {
+    "@type": "Collection",
+    "name": "Collected Writings of General Liao Yaoxiang",
+    "url": "{{ '/en/liaos-writings/' | absolute_url }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ site.title | jsonify }},
+    "url": {{ site.url | jsonify }}
+  }
+}
+</script>
+{%- endif -%}

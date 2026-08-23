@@ -1,4 +1,9 @@
 - date: 2026-08-23
+  commit_message: "为廖耀湘文集添加英文提要，便于检索与 AI 抓取"
+  changes:
+    - title: "Collected Writings of Liao Yaoxiang — English Abstracts"
+      url: "/en/liaos-writings/"
+- date: 2026-08-23
   commit_message: "+ 13 新文章 并再更新《缅甸作战》第五章"
   changes:
     - title: "更新第五章——《缅甸作战（节选）》（日本防卫厅防卫研究所战史研究室）"

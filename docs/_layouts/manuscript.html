@@ -23,6 +23,7 @@ layout: default
   <div class="post-author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">{{ page.author }}</span></div>
   {%- endif -%}
   <meta itemprop="publisher" content="{{ site.title }}">
+  {% include english_abstract.html %}
   <div class="post-divider"></div>
   <div class="manuscript-body" itemprop="articleBody">
     {{ content }}
