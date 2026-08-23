@@ -6,6 +6,9 @@
   <title>{% if page.title and page.title != site.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index, follow">
+  {%- if page.keywords_en %}
+  <meta name="keywords" content="{{ page.keywords_en | strip | normalize_whitespace | escape }}">
+  {%- endif %}
   <link rel="icon" href="/assets/images/favicon5.png" type="image/png">
   <link rel="apple-touch-icon" href="/assets/images/favicon5.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,6 +59,7 @@
           keys: [
             { name: 'title', weight: 2 },
             { name: 'title_en', weight: 1.5 },
+            { name: 'keywords_en', weight: 1.4 },
             { name: 'english_abstract', weight: 1.2 },
             { name: 'content', weight: 1 }
           ],

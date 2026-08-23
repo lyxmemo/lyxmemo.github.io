@@ -8,6 +8,15 @@
   <div class="english-abstract-body" itemprop="abstract">
     {{ abstract_text | newline_to_br }}
   </div>
+  {%- if page.keywords_en -%}
+  {%- assign keyword_list = page.keywords_en | strip | split: "," -%}
+  <p class="english-abstract-keywords">
+    <span class="english-abstract-keywords-label">Keywords / 关键词：</span>
+    {%- for keyword in keyword_list -%}
+    <span class="english-abstract-keyword" itemprop="keywords">{{ keyword | strip }}</span>{% unless forloop.last %}<span class="english-abstract-keyword-sep"> · </span>{% endunless %}
+    {%- endfor -%}
+  </p>
+  {%- endif -%}
 </aside>
 <script type="application/ld+json">
 {
@@ -25,6 +34,9 @@
   "inLanguage": ["zh-CN", "en"],
   "abstract": {{ abstract_text | jsonify }},
   "description": {{ abstract_text | jsonify }},
+  {%- if page.keywords_en %}
+  "keywords": {{ page.keywords_en | strip | jsonify }},
+  {%- endif %}
   "url": {{ page.url | absolute_url | jsonify }},
   "isPartOf": {
     "@type": "Collection",

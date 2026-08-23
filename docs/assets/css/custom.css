@@ -470,6 +470,36 @@ img { max-width: 100%; }
   margin: 0;
 }
 
+.english-abstract-keywords {
+  margin: 0.75rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--color-border-light);
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--color-gray-600);
+}
+
+.english-abstract-keywords-label {
+  font-weight: 600;
+  color: var(--color-gray-500);
+}
+
+.english-abstract-keyword-sep {
+  color: var(--color-border-light);
+}
+
+.english-abstract-entry .entry-keywords {
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--color-gray-600);
+}
+
+.english-abstract-entry .entry-keywords-label {
+  font-weight: 600;
+  color: var(--color-gray-500);
+}
+
 .english-abstract-index {
   max-width: 42rem;
 }
