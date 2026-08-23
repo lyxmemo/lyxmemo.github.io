@@ -147,5 +147,15 @@ url=$(gh issue create \
   --label "new-article" \
   --body-file "$tmpfile")
 
+# `gh issue create --label` can silently omit the label (missing permission,
+# or the label not existing yet). The PR workflow only runs on `labeled`,
+# so re-apply if needed.
+issue_num="${url##*/}"
+if ! gh issue view "$issue_num" --repo lyxmemo/lyxmemo.github.io \
+      --json labels --jq '.labels[].name' | grep -qx 'new-article'; then
+  echo -e "${yellow}未检测到 new-article 标签，正在补加...${reset}"
+  gh issue edit "$issue_num" --repo lyxmemo/lyxmemo.github.io --add-label "new-article"
+fi
+
 echo -e "${green}${bold}✓ Issue 已创建: ${url}${reset}"
-echo -e "${dim}PR 将在约 1 分钟后自动生成。${reset}"
+echo -e "${dim}已附加 new-article 标签；PR 将在约 1 分钟后自动生成。${reset}"
