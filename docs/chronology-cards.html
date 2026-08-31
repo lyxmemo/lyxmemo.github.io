@@ -162,13 +162,19 @@ body{
 }
 .bd--center{ justify-content:center; }
 .bd--toc{ justify-content:space-between; }
+.bd--fanli{ justify-content:space-between; }
 
 .ent{
   flex:none;
   display:grid;
   grid-template-columns:126px 1fr;
   padding:calc((21px + var(--slack,0px)) * var(--fs)) 0;
+  --ent-fs:33px; --ent-ind:0px; --ent-col:var(--ink);
 }
+/* 低一格：所部、关涉、附、谱后 */
+.ent--sub{ --ent-fs:30px; --ent-ind:33px; --ent-col:var(--ink-2); }
+/* 低二格：时事 */
+.ent--bg { --ent-fs:28px; --ent-ind:66px; --ent-col:var(--ink-2); }
 .ent:first-child{ padding-top:0; }
 .ent + .ent{ border-top:1px solid var(--rule-2); }
 
@@ -183,16 +189,23 @@ body{
   white-space:nowrap;
 }
 .ent__date .cjk{ font-family:'Noto Serif SC','Songti SC',serif; letter-spacing:.06em; }
+.ent__kind{
+  margin-top:calc(7px * var(--fs));
+  font-family:'Noto Serif SC','Songti SC',serif;
+  font-size:calc(17px * var(--fs));
+  line-height:1.4; letter-spacing:.14em;
+  color:var(--ink-3);
+}
 .ent__body{
   min-width:0;
   border-left:1px solid var(--rule-2);
-  padding-left:26px;
+  padding-left:calc(26px + var(--ent-ind));
 }
 .ent__text{
   margin:0;
-  font-size:calc(33px * var(--fs));
+  font-size:calc(var(--ent-fs) * var(--fs));
   line-height:1.82;
-  color:var(--ink);
+  color:var(--ent-col);
   text-align:left;
   overflow-wrap:break-word;
 }
@@ -296,6 +309,33 @@ body{
   font-size:16px; color:var(--ink-3);
 }
 .toc__cell.peak b{ color:var(--accent); font-weight:600; }
+
+/* ---------- 凡例 ---------- */
+.fl__lead{
+  font-size:24px; line-height:1.85; color:var(--ink-2);
+  margin:0 0 34px; letter-spacing:.02em;
+}
+.fl__row{
+  display:grid; grid-template-columns:118px 1fr 68px;
+  gap:0 22px; align-items:baseline;
+  padding:19px 0; border-top:1px solid var(--rule-2);
+}
+.fl__row:first-of-type{ border-top:none; }
+.fl__tag{
+  font-size:25px; letter-spacing:.1em; color:var(--ink);
+  white-space:nowrap;
+}
+.fl__desc{ font-size:22px; line-height:1.7; color:var(--ink-2); }
+.fl__desc i{ font-style:normal; color:var(--ink-3); }
+.fl__n{
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:23px; font-weight:500; color:var(--ink); text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.fl__foot{
+  margin:30px 0 0; padding-top:20px; border-top:1px solid var(--rule);
+  font-size:19px; line-height:1.75; color:var(--ink-3);
+}
 
 /* ---------- contents figure ---------- */
 .hg{ margin-top:26px; }
@@ -409,7 +449,7 @@ body{
 <div class="card" id="measure"></div>
 
 <div id="hud">
-  <kbd>←</kbd><kbd>→</kbd> 翻页　<kbd>↑</kbd><kbd>↓</kbd> 换年　<kbd>1948</kbd> 跳转年份　<kbd>S</kbd> 来源　<kbd>N</kbd> 按语　<kbd>D</kbd> 配色　<kbd>E</kbd> 导出 PNG　<kbd>?</kbd> 帮助
+  <kbd>←</kbd><kbd>→</kbd> 翻页　<kbd>↑</kbd><kbd>↓</kbd> 换年　<kbd>1948</kbd> 跳转年份　<kbd>S</kbd> 来源　<kbd>N</kbd> 按语　<kbd>K</kbd> 分目　<kbd>D</kbd> 配色　<kbd>E</kbd> 导出 PNG　<kbd>?</kbd> 帮助
 </div>
 <div id="jump"></div>
 <div id="toast"></div>
@@ -425,6 +465,7 @@ body{
     <div class="help__row"><i><b>Home</b><b>End</b></i><span>首页 / 末页</span></div>
     <div class="help__row"><i><b>S</b></i><span>显示或隐藏「来源」</span></div>
     <div class="help__row"><i><b>N</b></i><span>显示或隐藏「按语」</span></div>
+    <div class="help__row"><i><b>K</b></i><span>体例分目：所部 / 关涉 / 时事 / 附 / 谱后</span></div>
     <div class="help__row"><i><b>D</b></i><span>切换配色：白纸 / 米色 / 墨色</span></div>
     <div class="help__row"><i><b>E</b></i><span>导出当前卡片为 1080×1440 PNG</span></div>
     <div class="help__row"><i><b>F</b></i><span>全屏</span></div>
@@ -472,6 +513,129 @@ var YEARS = RAW.map(function(y){
     entries: orderEntries((y.e || []).filter(function(e){ return (e.c || '').trim() !== ''; }))
   };
 }).filter(function(y){ return y.entries.length > 0; });
+
+/* ================= 体例分类 =================
+   由条目文字判定其性质，不写回原始数据。规则依年谱通例：
+   顶格者为谱主行实，其余低一格书之。 */
+
+/* 谱主 */
+var LIAO_LEAD = /^(廖耀湘|廖建楚|廖军长|廖将军|廖司令|廖长官|廖兵团|廖师|廖部|廖本人|廖将|廖等|廖、|廖率|廖以)/;
+var LIAO_ANY  = /廖耀湘|廖建楚|廖军长|廖将军|廖司令|廖长官|廖兵团|廖师|廖部|廖(?![昌鹏显])/;
+
+/* 谱主自将之番号 */
+var LIAO_UNIT = /(?:新(?:编)?(?:第)?)?(?:二十二|廿二|二二|22)师|N22D|新(?:编)?(?:第)?[六6]军|N6A|第[九9]兵团|廖兵团|六十[四五六]团|6[456]团|207师/;
+
+/* 以番号发端者，事属所部 */
+var UNIT_LEAD = new RegExp('^(?:第[二]?批)?(?:' + [
+  '新(?:编)?(?:第)?(?:二十二|廿二|二二|六|十一)[师军]', '新\\d+[师军]',
+  'N22D', 'N6A', 'N\\d+[DA]', '新六军', '新军',
+  '第[一二三四五六七八九十]+(?:兵团|[军师团旅营])', '第\\d+(?:兵团|[军师团旅营])',
+  '\\d+[师团军]', '骑兵第\\d+军', '青年军', '六十[四五六]团',
+  '所部', '该[军师团部]', '军部', '远征军', '驻印军', '机械化'
+].join('|') + ')');
+
+/* 他人 */
+var PERSON = [
+  '蒋中正', '蒋介石', '蒋委员长', '蒋主席', '蒋经国', '蒋百里', '蒋公',
+  '何应钦', '杜聿明', '郑洞国', '陈诚', '陈林达', '史迪威', '林蔚', '林彪',
+  '罗荣桓', '罗卓英', '罗衣考', '卫立煌', '孙立人', '白崇禧', '顾祝同',
+  '徐永昌', '宋子文', '熊式辉', '张嘉璈', '魏德迈', '赵家骧', '赵霞',
+  '舒适存', '潘裕昆', '龙天武', '李以劻', '傅宗良', '邱中岳', '邱清泉',
+  '毛定松', '郑介民', '王铁汉', '萧毅肃', '戴安澜', '俞飞鹏', '杨业孔',
+  '周恩来', '马歇尔', '邓军林', '关麟征', '叶锟', '梁华盛', '郑庭笈',
+  '傅作义', '王耀武', '刘玉章', '康泽', '文强'
+];
+var PERSON_LEAD = new RegExp('^(?:' + PERSON.join('|') + ')');
+var PERSON_ANY  = new RegExp(PERSON.join('|'));
+
+/* 以职衔领起的他人 */
+var TITLE_LEAD = /^[一-龥]{2,10}?(主席|司令官|司令|军长|师长|团长|长官|部长|参谋长|处长|将军|委员长|总统|社长|专员|教授|会长|院长|顾问|特派员|记者|秘书)[一-龥]{2,4}/;
+
+/* 机关、部队、报章 */
+var ORG_LEAD = new RegExp('^(?:' + [
+  '中央社', '申报', '新报', '小春秋晚报', '中央日报', '军民日报', '大公报',
+  '本报', '合众社', '路透社', '〔',
+  '国民政府', '国民党', '国民革命军', '军事委员会', '军委会', '国防部',
+  '军令部', '军政部', '军训部', '参谋本部', '统帅部', '侍从室',
+  '行政院', '行辕', '东北行辕', '东北行营', '长春警备司令部',
+  '军事调处执行部', '军事复员会议', '全国政协', '政协', '民革',
+  '中共', '共军', '共方', '解放军', '东北民主联军', '共产党',
+  '日军', '日本', '美军', '美国', '美陆军', '苏军', '苏联', '盟军',
+  '国军', '东北国军', '东北前线', '东北将领', '中印公路', '中华口琴会',
+  '黄埔军校', '中央军校', '陆军大学', '蓝姆伽'
+].join('|') + ')');
+
+/* 亲属 */
+var FAMILY_LEAD = /^(妻|夫人|汪青|黄伯溶|父|母|祖父|祖母|长子|次子|长女|子女|家属|家人|廖显悌|廖昌仕|廖鹏程|堂兄)/;
+
+/* 任免、勋赏、生死：虽以番号发端，仍属谱主行实 */
+var SELF_EVENT = /(升任|晋任|调任|接任|继任|兼任|奉派|奉调|奉命|奉令|获颁|获授|荣获|任命为|受命|出任|免职|撤职|被俘|获释|特赦|逝世|辞世|病逝)/;
+
+/* 前句他人之事，后句转述谱主行实 */
+var SELF_CLAUSE = /[。；]\s*(率|偕|与|电|致|呈|奉|赴|抵|返|作|题|挽|撰|著|出席|主持|下令|命|派|升|获)/;
+
+/* 省略主语（即谱主）的句首动词、时地状语 */
+var VERB_LEAD = /^(电|致|呈|复|函|率|奉|入|赴|抵|莅|飞|到|返|回|转|升|晋|任|派|受|被|获|著|撰|作|写|考|加|参|出|视|主|决|批|命|令|下|发|通|宣|请|拟|查|与|同|偕|陪|会|见|访|谒|往|由|自|从|因|为|以|在|于|据|随|收|占|兼|离|毕|叙|推|攻|进|巡|驻|扫|连|宴|慰|归|停|打|指|退|乘|接|撤|经|向|题|挽|摄|代|独|暂|密|手|歼|完|列|签|订|是|同|次|翌|本|当|今|昨|前|后|约|旋|时|先|至|春|夏|秋|冬|年|月|日|初|中|末|晚|晨|午|夜|拂|黄|上|幼|正)/;
+
+function leadOf(text){ return String(text).split(/[，。；、（(「《：:]/)[0]; }
+
+function classify(text, posthumous){
+  if (posthumous) return '谱后';
+  var t = String(text), lead = leadOf(t);
+
+  function unitBranch(){ return (SELF_EVENT.test(t) || LIAO_ANY.test(t)) ? '本人' : '所部'; }
+  function otherBranch(){
+    if (LIAO_ANY.test(t)) return '关涉';
+    return (LIAO_UNIT.test(t) || SELF_CLAUSE.test(t)) ? '关涉' : '时事';
+  }
+
+  if (LIAO_LEAD.test(lead)) return '本人';
+
+  /* 以职衔领起：冠以本部番号者仍属所部，余为他人 */
+  if (TITLE_LEAD.test(lead)) return LIAO_UNIT.test(lead) ? unitBranch() : otherBranch();
+
+  if (UNIT_LEAD.test(lead))   return unitBranch();
+  if (FAMILY_LEAD.test(lead)) return LIAO_ANY.test(t) ? '本人' : '附';
+  if (PERSON_LEAD.test(lead) || ORG_LEAD.test(lead)) return otherBranch();
+
+  /* 时地状语在前、他人在后者，仍以他人为主语；句首即动词者主语已省，不适用 */
+  if (!VERB_LEAD.test(lead)){
+    var head = t.slice(0, 14), m = head.match(PERSON_ANY);
+    if (m){
+      var liaoAt = t.search(LIAO_ANY);
+      if (liaoAt < 0 || head.indexOf(m[0]) < liaoAt) return otherBranch();
+    }
+  }
+
+  /* 通篇不及谱主而事在本部者，系于所部 */
+  if (!LIAO_ANY.test(t) && LIAO_UNIT.test(t) && !VERB_LEAD.test(lead)) return '所部';
+
+  return '本人';
+}
+
+var DEATH_YEAR = 1968, DEATH_DATE = '1968-12-02';
+YEARS.forEach(function(y){
+  var death = -1;
+  if (y.year === DEATH_YEAR){
+    for (var i = 0; i < y.entries.length; i++)
+      if (y.entries[i].d === DEATH_DATE){ death = i; break; }
+  }
+  y.entries.forEach(function(e, i){
+    e.k = classify(e.c, y.year > DEATH_YEAR || (y.year === DEATH_YEAR && death >= 0 && i > death));
+  });
+});
+
+var KIND_DEF = [
+  ['本人', '顶格',   '谱主亲历之事'],
+  ['所部', '低一格', '所统部队之行动，谱主未必在场'],
+  ['关涉', '低一格', '他人行事而事关谱主或所部'],
+  ['时事', '低二格', '时代背景，与谱主行止相关者始录'],
+  ['附',   '低一格', '亲属及旁涉之事'],
+  ['谱后', '低一格', '身后之事']
+];
+var KIND_CLASS = { 本人:'', 所部:'ent--sub', 关涉:'ent--sub', 附:'ent--sub', 谱后:'ent--sub', 时事:'ent--bg' };
+var KIND_COUNTS = {};
+YEARS.forEach(function(y){ y.entries.forEach(function(e){ KIND_COUNTS[e.k] = (KIND_COUNTS[e.k] || 0) + 1; }); });
 
 var TOTAL_ENTRIES = YEARS.reduce(function(n,y){ return n + y.entries.length; }, 0);
 var FIRST_YEAR = YEARS.length ? YEARS[0].year : 0;
@@ -523,6 +687,7 @@ var state = {
   idx: 0,
   showSource: load('lyx.card.src', '1') === '1',
   showNote:   load('lyx.card.note', '0') === '1',
+  showKind:   load('lyx.card.kind', '1') === '1',
   theme:      load('lyx.card.theme', 'paper'),
   hud:        true
 };
@@ -559,7 +724,12 @@ function headerHTML(year, sub, cont){
 }
 
 function entryHTML(e){
-  var h = '<div class="ent"><div class="ent__date">' + dateLabel(e) + '</div><div class="ent__body">';
+  var k = state.showKind ? (e.k || '本人') : '本人';
+  var cls = KIND_CLASS[k] || '';
+  var h = '<div class="ent' + (cls ? ' ' + cls : '') + '">' +
+    '<div class="ent__date">' + dateLabel(e) +
+      (k === '本人' ? '' : '<div class="ent__kind">〔' + k + '〕</div>') +
+    '</div><div class="ent__body">';
   h += '<p class="ent__text">' + esc(e.c) + '</p>';
   if (state.showNote && e.n) h += '<p class="ent__note"><b>按</b>' + esc(e.n.replace(/^按[：:]\s*/, '')) + '</p>';
   if (state.showSource && e.s) h += '<p class="ent__src"><b>来源</b>' + joinSources(e.s) + '</p>';
@@ -597,7 +767,9 @@ function fillAt(y, sub, start, fs){
 
 function paginate(){
   paginateRuns += 1;
-  pages = [{ type:'cover' }, { type:'toc' }];
+  pages = [{ type:'cover' }];
+  if (state.showKind) pages.push({ type:'notes' });
+  pages.push({ type:'toc' });
 
   YEARS.forEach(function(y, yi){
     var i = 0, sub = 0, made = [];
@@ -659,6 +831,26 @@ function coverHTML(){
   footerHTML('封 面');
 }
 
+function fanliHTML(){
+  var rows = KIND_DEF.map(function(d, i){
+    var n = KIND_COUNTS[d[0]] || 0;
+    if (!n) return '';
+    var pad = i === 0 ? '' : (d[1] === '低二格' ? ' style="padding-left:66px"' : ' style="padding-left:33px"');
+    return '<div class="fl__row"' + pad + '>' +
+      '<div class="fl__tag">〔' + d[0] + '〕</div>' +
+      '<div class="fl__desc">' + d[2] + '　<i>' + d[1] + '</i></div>' +
+      '<div class="fl__n">' + n + '</div>' +
+    '</div>';
+  }).join('');
+  return mastheadHTML('凡 例', 'Editorial Note', '六目 · ' + TOTAL_ENTRIES + ' 条', false) +
+    '<div class="bd bd--fanli">' +
+      '<div><p class="fl__lead">年谱以谱主为纲，事系于人：凡与谱主相涉者始入谱，不相涉者虽大不录。条目性质别为六目，版式随之——顶格者谱主亲历，余低一格、低二格书之，字亦递小。</p>' +
+      rows + '</div>' +
+      '<p class="fl__foot">目类依条目文字判定，非原始著录之一部；如有未安，以正文及所注出处为准。按 K 键去分类，则一律顶格。</p>' +
+    '</div>' +
+    footerHTML('凡 例');
+}
+
 function histHTML(){
   var by = {}, max = 0;
   YEARS.forEach(function(y){ by[y.year] = y.entries.length; max = Math.max(max, y.entries.length); });
@@ -703,9 +895,10 @@ function yearPageHTML(p){
 function render(){
   var p = pages[state.idx];
   card.style.setProperty('--fs', p.fs || 1);
-  if (p.type === 'cover')    card.innerHTML = coverHTML();
-  else if (p.type === 'toc') card.innerHTML = tocHTML();
-  else                       card.innerHTML = yearPageHTML(p);
+  if (p.type === 'cover')        card.innerHTML = coverHTML();
+  else if (p.type === 'notes')   card.innerHTML = fanliHTML();
+  else if (p.type === 'toc')     card.innerHTML = tocHTML();
+  else                           card.innerHTML = yearPageHTML(p);
   balance();
   syncHash();
 }
@@ -715,7 +908,8 @@ function render(){
    two-entry page never turns into a double-spaced one). */
 function balance(){
   var bd = card.querySelector('.bd');
-  if (!bd || bd.classList.contains('bd--cover') || bd.classList.contains('bd--toc')) return;
+  if (!bd || bd.classList.contains('bd--cover') || bd.classList.contains('bd--toc')
+      || bd.classList.contains('bd--fanli')) return;
   var kids = bd.children, n = kids.length;
   if (!n) return;
   var used = 0;
@@ -764,9 +958,15 @@ function gotoYear(year){
   if (YEARS[best].year !== year) toast('无 ' + year + ' 年纪事，已跳至 ' + YEARS[best].year + ' 年');
 }
 
+function indexOfType(t){
+  for (var i = 0; i < pages.length; i++) if (pages[i].type === t) return i;
+  return 0;
+}
+
 function syncHash(){
   var p = pages[state.idx], h;
   if (p.type === 'cover') h = '#cover';
+  else if (p.type === 'notes') h = '#notes';
   else if (p.type === 'toc') h = '#contents';
   else h = '#' + YEARS[p.yi].year + (p.sub > 1 ? '-' + p.sub : '');
   if (location.hash !== h){
@@ -776,7 +976,8 @@ function syncHash(){
 function fromHash(){
   var h = decodeURIComponent(location.hash || '').replace(/^#/, '');
   if (!h || h === 'cover') return 0;
-  if (h === 'contents' || h === 'toc') return 1;
+  if (h === 'notes' || h === 'style') return indexOfType('notes');
+  if (h === 'contents' || h === 'toc') return indexOfType('toc');
   var m = h.match(/^(\d{4})(?:-(\d+))?$/);
   if (!m) return 0;
   var yi = -1;
@@ -923,6 +1124,9 @@ document.addEventListener('keydown', function(e){
     case 'n': case 'N':
       state.showNote = !state.showNote; save('lyx.card.note', state.showNote ? '1' : '0');
       repaginate(); toast(state.showNote ? '显示按语' : '隐藏按语'); break;
+    case 'k': case 'K':
+      state.showKind = !state.showKind; save('lyx.card.kind', state.showKind ? '1' : '0');
+      repaginate(); toast(state.showKind ? '显示体例分目' : '不分目，一律顶格'); break;
     case 'd': case 'D':
       var order = ['paper','ivory','ink'];
       setTheme(order[(order.indexOf(state.theme) + 1) % order.length]);
