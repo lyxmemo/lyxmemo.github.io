@@ -12,7 +12,7 @@ sitemap: false
 <link rel="icon" href="/assets/images/favicon5.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ==========================================================================
    廖耀湘年谱 · 卡片视图
@@ -169,12 +169,20 @@ body{
   display:grid;
   grid-template-columns:126px 1fr;
   padding:calc((21px + var(--slack,0px)) * var(--fs)) 0;
-  --ent-fs:33px; --ent-ind:0px; --ent-col:var(--ink);
+  --ent-fs:33px; --ent-col:var(--ink);
+  --ent-ff:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',ui-serif,Georgia,serif;
+  --ent-fw:400;
 }
-/* 低一格：所部、关涉、附、谱后 */
-.ent--sub{ --ent-fs:30px; --ent-ind:33px; --ent-col:var(--ink-2); }
-/* 低二格：时事 */
-.ent--bg { --ent-fs:28px; --ent-ind:66px; --ent-col:var(--ink-2); }
+/* 黑体：所部、关涉、附、谱后 */
+.ent--sub{
+  --ent-fs:30px; --ent-col:var(--ink-2); --ent-fw:300;
+  --ent-ff:'Noto Sans SC','Source Han Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+}
+/* 黑体·小：时事 */
+.ent--bg{
+  --ent-fs:28px; --ent-col:var(--ink-2); --ent-fw:300;
+  --ent-ff:'Noto Sans SC','Source Han Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+}
 .ent:first-child{ padding-top:0; }
 .ent + .ent{ border-top:1px solid var(--rule-2); }
 
@@ -199,13 +207,16 @@ body{
 .ent__body{
   min-width:0;
   border-left:1px solid var(--rule-2);
-  padding-left:calc(26px + var(--ent-ind));
+  padding-left:26px;
+  font-family:var(--ent-ff);
+  font-weight:var(--ent-fw);
 }
 .ent__text{
   margin:0;
   font-size:calc(var(--ent-fs) * var(--fs));
   line-height:1.82;
   color:var(--ent-col);
+  font-family:inherit; font-weight:inherit;
   text-align:left;
   overflow-wrap:break-word;
 }
@@ -324,8 +335,12 @@ body{
 .fl__tag{
   font-size:25px; letter-spacing:.1em; color:var(--ink);
   white-space:nowrap;
+  font-family:var(--ent-ff, inherit); font-weight:var(--ent-fw, 400);
 }
-.fl__desc{ font-size:22px; line-height:1.7; color:var(--ink-2); }
+.fl__desc{
+  font-size:22px; line-height:1.7; color:var(--ink-2);
+  font-family:var(--ent-ff, inherit); font-weight:var(--ent-fw, 400);
+}
 .fl__desc i{ font-style:normal; color:var(--ink-3); }
 .fl__n{
   font-family:'Inter',system-ui,sans-serif;
@@ -568,8 +583,20 @@ var ORG_LEAD = new RegExp('^(?:' + [
 /* 亲属 */
 var FAMILY_LEAD = /^(妻|夫人|汪青|黄伯溶|父|母|祖父|祖母|长子|次子|长女|子女|家属|家人|廖显悌|廖昌仕|廖鹏程|堂兄)/;
 
-/* 任免、勋赏、生死：虽以番号发端，仍属谱主行实 */
-var SELF_EVENT = /(升任|晋任|调任|接任|继任|兼任|奉派|奉调|奉命|奉令|获颁|获授|荣获|任命为|受命|出任|免职|撤职|被俘|获释|特赦|逝世|辞世|病逝)/;
+/* 任免、勋赏、生死：事及其身者，仍属谱主行实 */
+var SELF_EVENT = /(升任|晋任|调任|调升|升充|升为|升授|接任|继任|兼任|奉派|奉调|奉命|奉令|派充|派任|委充|委任|就职|就任|视事|到职|莅任|获颁|获授|荣获|任命为|受命|出任|免职|撤职|被俘|获释|特赦|逝世|辞世|病逝|授予|给予|颁给|颁赠|颁授|晋升)/;
+
+/* 动词加于谱主者，谱主为受事；无此则为共事之人 */
+var OBJ_VERB = /[电致函呈复令命召访对向授给颁赠嘱谓告询问见批派调免捕俘讯转饬谕示知核议论评述提涉指骂惩办]/;
+
+/* 另起一句而以谱主为主语，或与人连称者（「廖耀湘军」「廖师」等指部队，不计） */
+var LIAO_SUBJECT = /[，。；：、和与及偕同暨]\s*(?:廖(?:耀湘|建楚)(?![军师部兵团])|廖(?![耀建昌鹏显军师部兵团两]))/;
+
+/* 须其人在场之事：虽由他人发端，谱主实与其役 */
+var PRESENCE = /(召见|接见|会见|会晤|晤谈|宴请|设宴|款待|接待|陪同|偕同|偕行|随行|同行|同赴|会商|会谈|商讨|面谒|谒见|参加|出席|列席|开会|会议|集会|检讨)/;
+
+/* 职衔与姓名相属者，其人即主语，非受事 */
+var TITLE_BEFORE = /(司令|司令官|军长|师长|团长|部长|处长|长官|主席|将军|参谋长|委员长)$/;
 
 /* 前句他人之事，后句转述谱主行实 */
 var SELF_CLAUSE = /[。；]\s*(率|偕|与|电|致|呈|奉|赴|抵|返|作|题|挽|撰|著|出席|主持|下令|命|派|升|获)/;
@@ -585,22 +612,43 @@ function classify(text, posthumous){
 
   function unitBranch(){ return (SELF_EVENT.test(t) || LIAO_ANY.test(t)) ? '本人' : '所部'; }
   function otherBranch(){
-    if (LIAO_ANY.test(t)) return '关涉';
+    if (LIAO_ANY.test(t)){
+      /* 谱主见于条中，须辨其为共事、受事，抑或仅为他人所称述 */
+      /* 任免、勋赏、在场之证，须与其名相邻，不取一篇之内偶见者 */
+      var at = t.search(/廖/);
+      var near = at < 0 ? '' : t.slice(Math.max(0, at - 20), at + 24);
+      if (SELF_EVENT.test(near)) return '本人';   /* 任免勋赏及于其身 */
+      if (PRESENCE.test(near)) return '本人';     /* 须其人在场 */
+      /* 与人连称须真为主语：其上若有加于其身之动词，则仍是受事之列 */
+      var j = t.search(LIAO_SUBJECT);
+      if (j >= 0){
+        var clause = t.slice(0, j + 1).split(/[。；]/).pop();
+        if (!OBJ_VERB.test(clause)) return '本人';
+      }
+      var i = lead.search(/廖(耀湘|建楚)/);
+      if (i > 0 && !TITLE_BEFORE.test(lead.slice(0, i)) && OBJ_VERB.test(lead.charAt(i - 1)))
+        return '关涉';                            /* 动词加于其身，谱主为受事 */
+      if (i >= 0) return '本人';                  /* 与人连称，同预其事 */
+      return '关涉';
+    }
     return (LIAO_UNIT.test(t) || SELF_CLAUSE.test(t)) ? '关涉' : '时事';
   }
 
   if (LIAO_LEAD.test(lead)) return '本人';
 
+  var elided = VERB_LEAD.test(lead);   /* 句首即动词，主语已省，即谱主 */
+
   /* 以职衔领起：冠以本部番号者仍属所部，余为他人 */
-  if (TITLE_LEAD.test(lead)) return LIAO_UNIT.test(lead) ? unitBranch() : otherBranch();
+  if (!elided && TITLE_LEAD.test(lead))
+    return LIAO_UNIT.test(lead) ? unitBranch() : otherBranch();
 
   if (UNIT_LEAD.test(lead))   return unitBranch();
   if (FAMILY_LEAD.test(lead)) return LIAO_ANY.test(t) ? '本人' : '附';
   if (PERSON_LEAD.test(lead) || ORG_LEAD.test(lead)) return otherBranch();
 
   /* 时地状语在前、他人在后者，仍以他人为主语；句首即动词者主语已省，不适用 */
-  if (!VERB_LEAD.test(lead)){
-    var head = t.slice(0, 14), m = head.match(PERSON_ANY);
+  if (!elided){
+    var head = t.slice(0, 6), m = head.match(PERSON_ANY);
     if (m){
       var liaoAt = t.search(LIAO_ANY);
       if (liaoAt < 0 || head.indexOf(m[0]) < liaoAt) return otherBranch();
@@ -608,7 +656,7 @@ function classify(text, posthumous){
   }
 
   /* 通篇不及谱主而事在本部者，系于所部 */
-  if (!LIAO_ANY.test(t) && LIAO_UNIT.test(t) && !VERB_LEAD.test(lead)) return '所部';
+  if (!LIAO_ANY.test(t) && LIAO_UNIT.test(t) && !elided && !SELF_EVENT.test(t)) return '所部';
 
   return '本人';
 }
@@ -626,12 +674,12 @@ YEARS.forEach(function(y){
 });
 
 var KIND_DEF = [
-  ['本人', '顶格',   '谱主亲历之事'],
-  ['所部', '低一格', '所统部队之行动，谱主未必在场'],
-  ['关涉', '低一格', '他人行事而事关谱主或所部'],
-  ['时事', '低二格', '时代背景，与谱主行止相关者始录'],
-  ['附',   '低一格', '亲属及旁涉之事'],
-  ['谱后', '低一格', '身后之事']
+  ['本人', '宋体',     '谱主亲历之事',                 ''],
+  ['所部', '黑体',     '所统部队之行动，谱主未必在场', 'ent--sub'],
+  ['关涉', '黑体',     '他人行事而事关谱主或所部',     'ent--sub'],
+  ['时事', '黑体·小',  '时代背景，与谱主行止相关者始录', 'ent--bg'],
+  ['附',   '黑体',     '亲属及旁涉之事',               'ent--sub'],
+  ['谱后', '黑体',     '身后之事',                     'ent--sub']
 ];
 var KIND_CLASS = { 本人:'', 所部:'ent--sub', 关涉:'ent--sub', 附:'ent--sub', 谱后:'ent--sub', 时事:'ent--bg' };
 var KIND_COUNTS = {};
@@ -835,8 +883,7 @@ function fanliHTML(){
   var rows = KIND_DEF.map(function(d, i){
     var n = KIND_COUNTS[d[0]] || 0;
     if (!n) return '';
-    var pad = i === 0 ? '' : (d[1] === '低二格' ? ' style="padding-left:66px"' : ' style="padding-left:33px"');
-    return '<div class="fl__row"' + pad + '>' +
+    return '<div class="fl__row ' + (d[3] || '') + '">' +
       '<div class="fl__tag">〔' + d[0] + '〕</div>' +
       '<div class="fl__desc">' + d[2] + '　<i>' + d[1] + '</i></div>' +
       '<div class="fl__n">' + n + '</div>' +
@@ -844,9 +891,9 @@ function fanliHTML(){
   }).join('');
   return mastheadHTML('凡 例', 'Editorial Note', '六目 · ' + TOTAL_ENTRIES + ' 条', false) +
     '<div class="bd bd--fanli">' +
-      '<div><p class="fl__lead">年谱以谱主为纲，事系于人：凡与谱主相涉者始入谱，不相涉者虽大不录。条目性质别为六目，版式随之——顶格者谱主亲历，余低一格、低二格书之，字亦递小。</p>' +
+      '<div><p class="fl__lead">年谱以谱主为纲，事系于人：凡与谱主相涉者始入谱，不相涉者虽大不录。条目性质别为六目，字体随之——谱主亲历者用宋体，其余用黑体，字亦递小。</p>' +
       rows + '</div>' +
-      '<p class="fl__foot">目类依条目文字判定，非原始著录之一部；如有未安，以正文及所注出处为准。按 K 键去分类，则一律顶格。</p>' +
+      '<p class="fl__foot">目类依条目文字判定，非原始著录之一部；如有未安，以正文及所注出处为准。按 K 键去分目，则一律用宋体。</p>' +
     '</div>' +
     footerHTML('凡 例');
 }
@@ -1176,11 +1223,12 @@ window.addEventListener('hashchange', function(){ go(fromHash()); });
    glyphs are used. Paginating before they land measures fallback metrics and
    leaves every card short, so ask for the whole corpus up front — and
    re-paginate if a subset still shows up late. */
-function corpusProbe(){
+function corpusProbe(pred){
   var seen = Object.create(null), out = [];
   for (var a = 0; a < YEARS.length; a++){
     var es = YEARS[a].entries;
     for (var b = 0; b < es.length; b++){
+      if (pred && !pred(es[b])) continue;
       var t = es[b].c + (es[b].s || '') + (es[b].n || '');
       for (var c = 0; c < t.length; c++){
         var ch = t.charAt(c);
@@ -1194,9 +1242,12 @@ function corpusProbe(){
 function warmFonts(){
   if (!document.fonts || !document.fonts.load) return Promise.resolve();
   var probe = corpusProbe();
+  var sans = corpusProbe(function(e){ return e.k && e.k !== '本人'; });
   var jobs = [
     ['400 33px "Noto Serif SC"', probe],
     ['400 22px "Noto Serif SC"', probe],
+    ['300 30px "Noto Sans SC"', sans],
+    ['300 22px "Noto Sans SC"', sans],
     ['600 23px "Noto Serif SC"', '廖耀湘年谱目录封面续是年月日'],
     ['700 104px "Noto Serif SC"', '年谱目录'],
     ['600 78px "Inter"', '0123456789'],
