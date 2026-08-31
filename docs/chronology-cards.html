@@ -3,7 +3,7 @@ title: 廖耀湘年谱 · 卡片
 sitemap: false
 ---
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="paper">
+<html lang="zh-CN" data-palette="paper">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -37,12 +37,12 @@ sitemap: false
   --hud:    rgba(20,22,25,.45);
 }
 
-:root[data-theme="ivory"]{
+:root[data-palette="ivory"]{
   --paper:#fbf7f0; --stage:#e3dbcd; --ink:#221d17; --ink-2:#4f463a;
   --ink-3:#8d8271; --rule:#ddd2bf; --rule-2:#ece4d6; --accent:#8c2f24;
   --accent-soft:#f3e9df; --hud:rgba(34,29,23,.45);
 }
-:root[data-theme="ink"]{
+:root[data-palette="ink"]{
   --paper:#15181c; --stage:#0a0c0e; --ink:#eceae6; --ink-2:#b3b8bf;
   --ink-3:#7b838d; --rule:#2c3238; --rule-2:#23282d; --accent:#c9584a;
   --accent-soft:#221a19; --hud:rgba(236,234,230,.42);
@@ -836,7 +836,7 @@ function repaginate(){
 
 function setTheme(t){
   state.theme = t;
-  document.documentElement.setAttribute('data-theme', t);
+  document.documentElement.setAttribute('data-palette', t);
   save('lyx.card.theme', t);
 }
 
