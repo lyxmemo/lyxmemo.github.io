@@ -954,10 +954,14 @@ stage.addEventListener('touchend', function(e){
   }
 }, { passive:false });
 
-stage.addEventListener('click', function(e){
-  go(state.idx + (e.clientX > window.innerWidth / 2 ? 1 : -1));
-  pokeHud();
-});
+/* Tap-to-page only where there is no keyboard; on a desktop a stray click
+   should never move the card out from under a screenshot. */
+if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches){
+  stage.addEventListener('click', function(e){
+    go(state.idx + (e.clientX > window.innerWidth / 2 ? 1 : -1));
+    pokeHud();
+  });
+}
 helpEl.addEventListener('click', function(){ toggleHelp(false); });
 
 window.addEventListener('resize', fit);
