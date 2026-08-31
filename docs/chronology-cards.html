@@ -1,0 +1,1030 @@
+---
+title: 廖耀湘年谱 · 卡片
+sitemap: false
+---
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>廖耀湘年谱 · 卡片</title>
+<link rel="icon" href="/assets/images/favicon5.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   廖耀湘年谱 · 卡片视图
+   固定 3:4（宽:高）版面，1080×1440 设计尺寸，键盘翻页，便于截图分享。
+   ========================================================================== */
+
+:root{
+  --cw: 1080px;
+  --ch: 1440px;
+  --scale: 1;
+  --fs: 1;
+
+  --paper:  #ffffff;
+  --stage:  #e7e5e0;
+  --ink:    #16191c;
+  --ink-2:  #474d55;
+  --ink-3:  #8b929b;
+  --rule:   #d6d6d0;
+  --rule-2: #ececE7;
+  --accent: #8c2f24;
+  --accent-soft: #f6efed;
+  --hud:    rgba(20,22,25,.45);
+}
+
+:root[data-theme="ivory"]{
+  --paper:#fbf7f0; --stage:#e3dbcd; --ink:#221d17; --ink-2:#4f463a;
+  --ink-3:#8d8271; --rule:#ddd2bf; --rule-2:#ece4d6; --accent:#8c2f24;
+  --accent-soft:#f3e9df; --hud:rgba(34,29,23,.45);
+}
+:root[data-theme="ink"]{
+  --paper:#15181c; --stage:#0a0c0e; --ink:#eceae6; --ink-2:#b3b8bf;
+  --ink-3:#7b838d; --rule:#2c3238; --rule-2:#23282d; --accent:#c9584a;
+  --accent-soft:#221a19; --hud:rgba(236,234,230,.42);
+}
+
+*{ box-sizing:border-box; }
+
+html,body{
+  margin:0; padding:0; height:100%;
+  background:var(--stage);
+  overflow:hidden;
+  -webkit-text-size-adjust:100%;
+  overscroll-behavior:none;
+}
+body{
+  font-family:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',ui-serif,Georgia,serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  user-select:none; -webkit-user-select:none;
+  touch-action:manipulation;
+}
+
+.sans{ font-family:'Inter',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif; font-feature-settings:'tnum' 1,'lnum' 1; }
+
+/* ---------- stage ---------- */
+#stage{
+  position:fixed; inset:0;
+  background:var(--stage);
+  display:grid; place-items:center;
+  overflow:hidden;
+}
+#frame{
+  position:relative;
+  width:calc(1080px * var(--scale));
+  height:calc(1440px * var(--scale));
+}
+#card{
+  position:absolute; left:0; top:0;
+  transform:scale(var(--scale));
+  transform-origin:0 0;
+}
+
+/* ---------- card ---------- */
+.card{
+  position:relative;
+  width:var(--cw); height:var(--ch);
+  padding:62px 68px 44px;
+  background:var(--paper);
+  color:var(--ink);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 28px 70px rgba(0,0,0,.18), 0 3px 10px rgba(0,0,0,.08);
+}
+.card::before{
+  content:''; position:absolute; left:0; right:0; top:0; height:7px;
+  background:var(--accent);
+}
+#measure{
+  position:absolute; left:-20000px; top:0;
+  visibility:hidden; pointer-events:none;
+  box-shadow:none;
+}
+
+/* ---------- header ---------- */
+.hd{ flex:none; }
+.hd__brand{
+  display:flex; align-items:baseline; justify-content:space-between;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--rule);
+}
+.hd__mark{
+  font-size:23px; font-weight:600; letter-spacing:.34em;
+  color:var(--ink-2);
+}
+.hd__latin{
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:15px; font-weight:500; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+.hd__year{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  padding:26px 0 24px;
+  border-bottom:2px solid var(--ink);
+}
+.hd__num{
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:78px; font-weight:600; line-height:.92;
+  letter-spacing:-.018em; color:var(--ink);
+}
+.hd__num em{ font-style:normal; color:var(--accent); }
+.hd__meta{
+  text-align:right; line-height:1.5;
+  font-size:22px; font-weight:400; color:var(--ink-2);
+  letter-spacing:.08em;
+}
+.hd__meta span{ display:block; font-size:18px; color:var(--ink-3); letter-spacing:.14em; }
+
+/* continuation header */
+.hd--cont .hd__year{ padding:18px 0 14px; border-bottom-width:1px; border-bottom-color:var(--rule); }
+.hd--cont .hd__num{ font-size:38px; }
+.hd--cont .hd__meta{ font-size:19px; }
+.hd--cont .hd__meta span{ display:none; }
+.hd__cont{
+  font-family:'Noto Serif SC','Songti SC',serif;
+  font-size:18px; font-weight:400; letter-spacing:.2em;
+  color:var(--ink-3); border:1px solid var(--rule);
+  border-radius:3px; padding:3px 6px 3px 12px;
+  margin-left:16px; vertical-align:6px;
+}
+
+/* ---------- body ---------- */
+.bd{
+  flex:1 1 auto; min-height:0;
+  overflow:hidden;
+  padding-top:30px;
+  display:flex; flex-direction:column;
+}
+.bd--center{ justify-content:center; }
+.bd--toc{ justify-content:space-between; }
+
+.ent{
+  flex:none;
+  display:grid;
+  grid-template-columns:126px 1fr;
+  padding:calc((21px + var(--slack,0px)) * var(--fs)) 0;
+}
+.ent:first-child{ padding-top:0; }
+.ent + .ent{ border-top:1px solid var(--rule-2); }
+
+.ent__date{
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:calc(22px * var(--fs));
+  font-weight:500; letter-spacing:.02em;
+  line-height:calc(34px * var(--fs));
+  color:var(--ink-3);
+  text-align:right;
+  padding-right:26px;
+  white-space:nowrap;
+}
+.ent__date .cjk{ font-family:'Noto Serif SC','Songti SC',serif; letter-spacing:.06em; }
+.ent__body{
+  min-width:0;
+  border-left:1px solid var(--rule-2);
+  padding-left:26px;
+}
+.ent__text{
+  margin:0;
+  font-size:calc(33px * var(--fs));
+  line-height:1.82;
+  color:var(--ink);
+  text-align:left;
+  overflow-wrap:break-word;
+}
+.ent__note{
+  margin:calc(13px * var(--fs)) 0 0;
+  padding:calc(10px * var(--fs)) 0 calc(10px * var(--fs)) 18px;
+  border-left:2px solid var(--accent);
+  background:var(--accent-soft);
+  font-size:calc(22px * var(--fs));
+  line-height:1.72;
+  color:var(--ink-2);
+}
+.ent__note b{ font-weight:600; color:var(--accent); margin-right:.4em; }
+.ent__src{
+  margin:calc(11px * var(--fs)) 0 0;
+  font-size:calc(20px * var(--fs));
+  line-height:1.6;
+  color:var(--ink-3);
+  letter-spacing:.02em;
+}
+.ent__src b{
+  font-weight:500; color:var(--accent);
+  margin-right:.6em; letter-spacing:.14em;
+}
+
+/* ---------- footer ---------- */
+.ft{
+  flex:none;
+  display:flex; align-items:baseline; justify-content:space-between;
+  margin-top:22px; padding-top:16px;
+  border-top:1px solid var(--rule);
+  font-size:18px; color:var(--ink-3); letter-spacing:.1em;
+}
+.ft__r{ font-family:'Inter',system-ui,sans-serif; letter-spacing:.08em; }
+.ft__r b{ color:var(--ink-2); font-weight:500; }
+
+/* ---------- cover ---------- */
+.bd--cover{ display:flex; flex-direction:column; padding-top:0; }
+.cv__mid{ margin:auto 0; }
+.cv__name{
+  font-size:38px; font-weight:400; letter-spacing:.62em;
+  color:var(--ink-2); margin:0 0 18px;
+}
+.cv__eyebrow{
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px; font-weight:500; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--ink-3);
+  margin-bottom:30px;
+}
+.cv__title{
+  font-size:100px; font-weight:700; line-height:1.06;
+  letter-spacing:.1em; margin:0 0 24px; color:var(--ink);
+}
+.cv__rule{ width:132px; height:5px; background:var(--accent); margin:0 0 30px; }
+.cv__sub{
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:25px; font-weight:400; letter-spacing:.06em;
+  line-height:1.5; color:var(--ink-2); margin:0 0 12px;
+}
+.cv__dates{
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:20px; letter-spacing:.18em; color:var(--ink-3); margin:0 0 58px;
+}
+.cv__desc{
+  font-size:25px; line-height:1.95; color:var(--ink-2);
+  margin:0; max-width:860px;
+}
+.cv__stats{
+  display:flex; gap:64px; padding-top:28px; margin-top:42px;
+  border-top:1px solid var(--rule);
+}
+.cv__stat b{
+  display:block;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:46px; font-weight:600; line-height:1.1; color:var(--ink);
+}
+.cv__stat span{
+  font-size:18px; letter-spacing:.16em; color:var(--ink-3);
+}
+.cv__foot{
+  margin-top:34px; font-size:19px; line-height:1.7; color:var(--ink-3);
+}
+
+/* ---------- contents ---------- */
+.toc__lead{
+  font-size:22px; line-height:1.7; color:var(--ink-2);
+  margin:0 0 30px; letter-spacing:.04em;
+}
+.toc__grid{
+  display:grid; grid-template-columns:repeat(7,1fr);
+  gap:26px 8px;
+}
+.toc__cell{ text-align:center; }
+.toc__cell b{
+  display:block;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:27px; font-weight:500; color:var(--ink); line-height:1.2;
+}
+.toc__cell span{
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px; color:var(--ink-3);
+}
+.toc__cell.peak b{ color:var(--accent); font-weight:600; }
+
+/* ---------- contents figure ---------- */
+.hg{ margin-top:26px; }
+.hg__cap{
+  margin:0 0 14px; font-size:19px; color:var(--ink-2); letter-spacing:.04em;
+}
+.hg__cap b{ font-weight:600; color:var(--accent); margin-right:.7em; }
+.hg__bars{
+  display:flex; align-items:flex-end; gap:2px;
+  height:176px; border-bottom:1px solid var(--ink);
+}
+.hg__bar{ flex:1 1 0; background:var(--ink-3); min-height:0; }
+.hg__bar.peak{ background:var(--accent); }
+.hg__axis{ display:flex; gap:2px; height:26px; }
+.hg__cell{ flex:1 1 0; position:relative; }
+.hg__cell:last-child i{ left:auto; right:0; transform:none; }
+.hg__cell i{
+  position:absolute; top:6px; left:50%; transform:translateX(-50%);
+  font-family:'Inter',system-ui,sans-serif; font-size:15px;
+  color:var(--ink-3); font-style:normal; white-space:nowrap;
+}
+.hg__cell.tick::before{
+  content:''; position:absolute; top:0; left:50%; width:1px; height:5px;
+  background:var(--rule);
+}
+
+/* ---------- HUD (outside the card, never in a card screenshot) ---------- */
+#hud{
+  position:fixed; left:0; right:0; bottom:12px;
+  text-align:center; pointer-events:none;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:12.5px; letter-spacing:.08em; color:var(--hud);
+  transition:opacity .45s ease;
+}
+#hud kbd{
+  font-family:inherit; font-size:11.5px;
+  border:1px solid currentColor; border-radius:4px;
+  padding:1px 5px; margin:0 2px; opacity:.85;
+}
+#hud.hidden{ opacity:0; }
+
+#jump{
+  position:fixed; left:50%; top:24px; transform:translateX(-50%);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:15px; letter-spacing:.28em;
+  padding:7px 18px; border-radius:999px;
+  background:var(--paper); color:var(--ink); border:1px solid var(--rule);
+  box-shadow:0 4px 18px rgba(0,0,0,.14);
+  opacity:0; transition:opacity .18s ease; pointer-events:none;
+}
+#jump.on{ opacity:1; }
+
+#toast{
+  position:fixed; left:50%; bottom:52px; transform:translateX(-50%);
+  font-family:'Inter',system-ui,sans-serif; font-size:13px; letter-spacing:.06em;
+  padding:9px 20px; border-radius:999px;
+  background:rgba(20,22,25,.86); color:#fff;
+  opacity:0; transition:opacity .25s ease; pointer-events:none;
+}
+#toast.on{ opacity:1; }
+
+/* ---------- help ---------- */
+#help{
+  position:fixed; inset:0; z-index:20;
+  display:none; place-items:center;
+  background:rgba(12,14,16,.62);
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+}
+#help.on{ display:grid; }
+.help__panel{
+  width:min(560px,88vw);
+  background:var(--paper); color:var(--ink);
+  border-radius:6px; padding:34px 38px 30px;
+  box-shadow:0 30px 80px rgba(0,0,0,.4);
+}
+.help__panel h2{
+  margin:0 0 4px; font-size:21px; font-weight:600; letter-spacing:.18em;
+}
+.help__panel p.sub{
+  margin:0 0 22px; font-size:13px; color:var(--ink-3); letter-spacing:.08em;
+  font-family:'Inter',system-ui,sans-serif;
+}
+.help__row{
+  display:grid; grid-template-columns:150px 1fr; gap:10px;
+  padding:8px 0; border-top:1px solid var(--rule-2);
+  font-size:15px; color:var(--ink-2); align-items:center;
+}
+.help__row i{
+  font-style:normal;
+  font-family:'Inter',system-ui,sans-serif; font-size:12.5px;
+  color:var(--ink); letter-spacing:.04em;
+}
+.help__row i b{
+  font-weight:500; border:1px solid var(--rule);
+  border-radius:4px; padding:2px 7px; margin-right:4px;
+  display:inline-block; background:var(--accent-soft);
+}
+#loading{
+  position:fixed; inset:0; display:grid; place-items:center;
+  background:var(--stage); z-index:30;
+  font-size:14px; letter-spacing:.3em; color:var(--ink-3);
+}
+#loading.done{ display:none; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="frame"><div id="card" class="card"></div></div>
+</div>
+<div class="card" id="measure"></div>
+
+<div id="hud">
+  <kbd>←</kbd><kbd>→</kbd> 翻页　<kbd>↑</kbd><kbd>↓</kbd> 换年　<kbd>1948</kbd> 跳转年份　<kbd>S</kbd> 来源　<kbd>N</kbd> 按语　<kbd>D</kbd> 配色　<kbd>E</kbd> 导出 PNG　<kbd>?</kbd> 帮助
+</div>
+<div id="jump"></div>
+<div id="toast"></div>
+
+<div id="help">
+  <div class="help__panel">
+    <h2>键盘操作</h2>
+    <p class="sub">KEYBOARD SHORTCUTS · 3:4 CARD VIEW</p>
+    <div class="help__row"><i><b>←</b><b>→</b></i><span>上一页 / 下一页</span></div>
+    <div class="help__row"><i><b>↑</b><b>↓</b></i><span>上一年 / 下一年</span></div>
+    <div class="help__row"><i><b>空格</b></i><span>下一页（Shift+空格 上一页）</span></div>
+    <div class="help__row"><i><b>数字</b><b>Enter</b></i><span>输入年份跳转，如 1948</span></div>
+    <div class="help__row"><i><b>Home</b><b>End</b></i><span>首页 / 末页</span></div>
+    <div class="help__row"><i><b>S</b></i><span>显示或隐藏「来源」</span></div>
+    <div class="help__row"><i><b>N</b></i><span>显示或隐藏「按语」</span></div>
+    <div class="help__row"><i><b>D</b></i><span>切换配色：白纸 / 米色 / 墨色</span></div>
+    <div class="help__row"><i><b>E</b></i><span>导出当前卡片为 1080×1440 PNG</span></div>
+    <div class="help__row"><i><b>F</b></i><span>全屏</span></div>
+    <div class="help__row"><i><b>C</b></i><span>隐藏或显示底部提示</span></div>
+    <div class="help__row"><i><b>?</b><b>Esc</b></i><span>打开 / 关闭本说明</span></div>
+    <div class="help__row"><i><b>点按</b></i><span>手机上轻点左半 / 右半屏翻页</span></div>
+  </div>
+</div>
+
+<div id="loading">排 版 中</div>
+
+<script id="chron-data" type="application/json">
+[{% for y in site.data.chronology %}{"y":{{ y.year }},"e":[{% for e in y.entries %}{"d":{{ e.date | default: "" | jsonify }},"p":{{ e.date_display | default: "" | jsonify }},"c":{{ e.content | default: "" | jsonify }},"s":{{ e.source | default: "" | jsonify }},"n":{{ e.notes | default: "" | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}]
+</script>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================ data ============================ */
+var RAW = JSON.parse(document.getElementById('chron-data').textContent);
+
+/* Some years carry a few entries filed out of date order. Re-seat the dated
+   ones into their own slots, chronologically; entries with no parsable date
+   keep the position the archive gave them. */
+function orderEntries(list){
+  var slots = [], dated = [];
+  list.forEach(function(e, i){
+    var m = (e.d || '').split('-');
+    if (m.length >= 2 && /^\d+$/.test(m[1])){
+      slots.push(i);
+      dated.push({ e:e, i:i,
+        k: (+m[1]) * 100 + (m.length > 2 && /^\d+$/.test(m[2]) ? +m[2] : 0) });
+    }
+  });
+  dated.sort(function(a, b){ return a.k - b.k || a.i - b.i; });
+  var out = list.slice();
+  slots.forEach(function(pos, j){ out[pos] = dated[j].e; });
+  return out;
+}
+
+var YEARS = RAW.map(function(y){
+  return {
+    year: y.y,
+    entries: orderEntries((y.e || []).filter(function(e){ return (e.c || '').trim() !== ''; }))
+  };
+}).filter(function(y){ return y.entries.length > 0; });
+
+var TOTAL_ENTRIES = YEARS.reduce(function(n,y){ return n + y.entries.length; }, 0);
+var FIRST_YEAR = YEARS.length ? YEARS[0].year : 0;
+var LAST_YEAR  = YEARS.length ? YEARS[YEARS.length-1].year : 0;
+var BIRTH_YEAR = 1906;
+
+/* ============================ helpers ============================ */
+var CN = '〇一二三四五六七八九';
+
+function cnNum(n){
+  if (n < 0) return String(n);
+  if (n < 10) return CN[n];
+  if (n < 20) return '十' + (n % 10 ? CN[n % 10] : '');
+  if (n < 100) return CN[Math.floor(n/10)] + '十' + (n % 10 ? CN[n % 10] : '');
+  return String(n);
+}
+function cnYear(y){
+  return String(y).split('').map(function(d){ return CN[+d]; }).join('') + '年';
+}
+var QING = { 1906:'光绪三十二年', 1907:'光绪三十三年', 1908:'光绪三十四年',
+             1909:'宣统元年', 1910:'宣统二年', 1911:'宣统三年' };
+function eraOf(y){
+  if (QING[y]) return QING[y];
+  if (y === 1912) return '民国元年';
+  if (y > 1912 && y <= 1949) return '民国' + cnNum(y - 1911) + '年';
+  return cnYear(y);
+}
+function ageOf(y){
+  var a = y - BIRTH_YEAR;
+  if (a <= 0) return '诞生';
+  return cnNum(a) + '岁';
+}
+function dateLabel(e){
+  if (e.p) return '<span class="cjk">' + esc(e.p) + '</span>';
+  var d = (e.d || '').split('-');
+  if (d.length === 3) return (+d[1]) + '<span class="cjk">月</span>' + (+d[2]) + '<span class="cjk">日</span>';
+  if (d.length === 2) return (+d[1]) + '<span class="cjk">月</span>';
+  return '<span class="cjk">是年</span>';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function joinSources(s){
+  return s.split(/;\s*/).filter(Boolean).map(esc).join('　·　');
+}
+
+/* ============================ state ============================ */
+var state = {
+  idx: 0,
+  showSource: load('lyx.card.src', '1') === '1',
+  showNote:   load('lyx.card.note', '0') === '1',
+  theme:      load('lyx.card.theme', 'paper'),
+  hud:        true
+};
+function load(k, d){ try { var v = localStorage.getItem(k); return v === null ? d : v; } catch(err){ return d; } }
+function save(k, v){ try { localStorage.setItem(k, v); } catch(err){} }
+
+var pages = [];
+var card    = document.getElementById('card');
+var measure = document.getElementById('measure');
+var stage   = document.getElementById('stage');
+
+/* ============================ builders ============================ */
+function brandHTML(mark, latin){
+  return '<div class="hd__brand">' +
+    '<div class="hd__mark">' + mark + '</div>' +
+    '<div class="hd__latin">' + latin + '</div>' +
+  '</div>';
+}
+
+function mastheadHTML(title, meta, sub, cont){
+  return '<div class="hd' + (cont ? ' hd--cont' : '') + '">' +
+    brandHTML('廖耀湘年谱', 'Chronology &middot; Liao Yao-hsiang') +
+    '<div class="hd__year">' +
+      '<div class="hd__num">' + title + '</div>' +
+      '<div class="hd__meta">' + meta + (sub ? '<span>' + sub + '</span>' : '') + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function headerHTML(year, sub, cont){
+  return mastheadHTML(
+    year + (cont ? '<span class="hd__cont">续</span>' : ''),
+    eraOf(year), cont ? '' : ageOf(year), cont);
+}
+
+function entryHTML(e){
+  var h = '<div class="ent"><div class="ent__date">' + dateLabel(e) + '</div><div class="ent__body">';
+  h += '<p class="ent__text">' + esc(e.c) + '</p>';
+  if (state.showNote && e.n) h += '<p class="ent__note"><b>按</b>' + esc(e.n.replace(/^按[：:]\s*/, '')) + '</p>';
+  if (state.showSource && e.s) h += '<p class="ent__src"><b>来源</b>' + joinSources(e.s) + '</p>';
+  return h + '</div></div>';
+}
+
+function footerHTML(right){
+  return '<div class="ft"><div class="ft__l">liaoyaoxiang.com　·　廖耀湘史料档案</div>' +
+         '<div class="ft__r">' + right + '</div></div>';
+}
+
+/* ============================ pagination ============================ */
+var paginateRuns = 0;
+
+/* Fill one card at a given type scale and report what fitted. Heights are
+   summed per entry: a flex container's scrollHeight is floored at its own
+   height, so it cannot tell us how much room is left. */
+function fillAt(y, sub, start, fs){
+  measure.style.setProperty('--fs', fs);
+  measure.innerHTML = headerHTML(y.year, sub, sub > 1) + '<div class="bd"></div>' + footerHTML('&nbsp;');
+  var bd = measure.querySelector('.bd');
+  var avail = bd.clientHeight - (parseFloat(getComputedStyle(bd).paddingTop) || 0);
+  var count = 0, used = 0, j = start;
+  while (j < y.entries.length){
+    bd.insertAdjacentHTML('beforeend', entryHTML(y.entries[j]));
+    var h = bd.lastElementChild.offsetHeight;
+    if (used + h > avail){
+      if (count === 0){ count = 1; used += h; }   /* one entry taller than a card */
+      break;
+    }
+    used += h; count += 1; j += 1;
+  }
+  return { count:count, used:used, avail:avail };
+}
+
+function paginate(){
+  paginateRuns += 1;
+  pages = [{ type:'cover' }, { type:'toc' }];
+
+  YEARS.forEach(function(y, yi){
+    var i = 0, sub = 0, made = [];
+    while (i < y.entries.length){
+      sub += 1;
+      var fs = 1, r = fillAt(y, sub, i, 1), s, r2;
+
+      /* Rather than leave a quarter of the card blank, tighten the type a
+         little if that pulls the next entry onto this page. */
+      if (i + r.count < y.entries.length && (r.avail - r.used) > r.avail * 0.18){
+        var STEPS = [0.94, 0.88];
+        for (s = 0; s < STEPS.length; s++){
+          r2 = fillAt(y, sub, i, STEPS[s]);
+          if (r2.count > r.count){ r = r2; fs = STEPS[s]; break; }
+        }
+      }
+
+      /* A single entry longer than a whole card: shrink until it fits. */
+      if (r.used > r.avail){
+        for (s = 0.94; s >= 0.7; s -= 0.06){
+          var sc = Math.round(s * 100) / 100;
+          r2 = fillAt(y, sub, i, sc);
+          if (r2.count >= 1 && r2.used <= r2.avail){ r = r2; fs = sc; break; }
+          fs = sc;
+        }
+      }
+
+      i += Math.max(1, r.count);
+      made.push({ type:'year', yi:yi, start:i - Math.max(1, r.count), end:i, sub:sub, fs:fs });
+    }
+    made.forEach(function(pg){ pg.subTotal = made.length; pages.push(pg); });
+  });
+
+  measure.style.setProperty('--fs', 1);
+  measure.innerHTML = '';
+}
+
+/* ============================ render ============================ */
+function coverHTML(){
+  return '' +
+  '<div class="hd">' + brandHTML('廖耀湘史料档案', 'liaoyaoxiang.com') + '</div>' +
+  '<div class="bd bd--cover">' +
+    '<div class="cv__mid">' +
+      '<div class="cv__eyebrow">Chronological Biography</div>' +
+      '<p class="cv__name">廖耀湘</p>' +
+      '<h1 class="cv__title">年　谱</h1>' +
+      '<div class="cv__rule"></div>' +
+      '<p class="cv__sub">A Chronology of General Liao Yao-hsiang</p>' +
+      '<p class="cv__dates">1906 &nbsp;&mdash;&nbsp; 1968</p>' +
+      '<p class="cv__desc">依据《抗日名将廖耀湘》等资料整理，并以报刊杂志、外国档案、同侪回忆录逐条补正；每条均注明出处，存疑者别为按语。</p>' +
+    '</div>' +
+    '<div class="cv__stats">' +
+      '<div class="cv__stat"><b>' + TOTAL_ENTRIES + '</b><span>条目</span></div>' +
+      '<div class="cv__stat"><b>' + YEARS.length + '</b><span>纪年</span></div>' +
+      '<div class="cv__stat"><b>' + FIRST_YEAR + '–' + LAST_YEAR + '</b><span>起讫</span></div>' +
+    '</div>' +
+    '<p class="cv__foot">年龄按周岁计，生于一九〇六年五月十六日；纪年一九四九年以前并注清历、民国纪元。</p>' +
+  '</div>' +
+  footerHTML('封 面');
+}
+
+function histHTML(){
+  var by = {}, max = 0;
+  YEARS.forEach(function(y){ by[y.year] = y.entries.length; max = Math.max(max, y.entries.length); });
+  var bars = '', axis = '';
+  for (var y = FIRST_YEAR; y <= LAST_YEAR; y++){
+    var c = by[y] || 0;
+    var h = c ? Math.max(2, Math.round(Math.sqrt(c / max) * 100)) : 0;
+    bars += '<div class="hg__bar' + (c >= max * 0.5 ? ' peak' : '') + '" style="height:' + h + '%"></div>';
+    axis += '<div class="hg__cell' + (y % 10 === 0 ? ' tick' : '') + '">' +
+            (y % 10 === 0 ? '<i>' + y + '</i>' : '') + '</div>';
+  }
+  return '<div class="hg">' +
+    '<p class="hg__cap"><b>图一</b>纪事条目逐年分布，柱高按平方根标度</p>' +
+    '<div class="hg__bars">' + bars + '</div>' +
+    '<div class="hg__axis">' + axis + '</div>' +
+  '</div>';
+}
+
+function tocHTML(){
+  var max = YEARS.reduce(function(m,y){ return Math.max(m, y.entries.length); }, 0);
+  var cells = YEARS.map(function(y){
+    var peak = y.entries.length >= max * 0.5 ? ' peak' : '';
+    return '<div class="toc__cell' + peak + '"><b>' + y.year + '</b><span>' + y.entries.length + '</span></div>';
+  }).join('');
+  return mastheadHTML('目 录', 'Contents', YEARS.length + ' 年 · ' + TOTAL_ENTRIES + ' 条', false) +
+    '<div class="bd bd--toc">' +
+      '<div><p class="toc__lead">下列为存有纪事之年份，小字为该年条目数；朱色标示条目最密之年。</p>' +
+      '<div class="toc__grid">' + cells + '</div></div>' +
+      histHTML() +
+    '</div>' +
+    footerHTML('目 录');
+}
+
+function yearPageHTML(p){
+  var y = YEARS[p.yi];
+  var html = headerHTML(y.year, p.sub, p.sub > 1) + '<div class="bd">';
+  for (var i = p.start; i < p.end; i++) html += entryHTML(y.entries[i]);
+  html += '</div>';
+  return html + footerHTML('<b>' + y.year + '</b>　' + p.sub + ' / ' + p.subTotal);
+}
+
+function render(){
+  var p = pages[state.idx];
+  card.style.setProperty('--fs', p.fs || 1);
+  if (p.type === 'cover')    card.innerHTML = coverHTML();
+  else if (p.type === 'toc') card.innerHTML = tocHTML();
+  else                       card.innerHTML = yearPageHTML(p);
+  balance();
+  syncHash();
+}
+
+/* A page whose entries stop well short of the footer looks unfinished, so
+   hand the leftover height back to the gaps between entries (capped, so a
+   two-entry page never turns into a double-spaced one). */
+function balance(){
+  var bd = card.querySelector('.bd');
+  if (!bd || bd.classList.contains('bd--cover') || bd.classList.contains('bd--toc')) return;
+  var kids = bd.children, n = kids.length;
+  if (!n) return;
+  var used = 0;
+  for (var i = 0; i < n; i++) used += kids[i].offsetHeight;
+  var slack = bd.clientHeight - parseFloat(getComputedStyle(bd).paddingTop || 0) - used;
+  if (slack < 12) return;
+  if (n === 1){ bd.classList.add('bd--center'); return; }
+  bd.style.setProperty('--slack', Math.min(46, Math.floor(slack / (2 * n))) + 'px');
+}
+
+/* ============================ navigation ============================ */
+function go(i){
+  state.idx = Math.max(0, Math.min(pages.length - 1, i));
+  render();
+}
+function currentYearIndex(){
+  var p = pages[state.idx];
+  return p.type === 'year' ? p.yi : -1;
+}
+function firstPageOfYear(yi){
+  for (var i = 0; i < pages.length; i++)
+    if (pages[i].type === 'year' && pages[i].yi === yi) return i;
+  return -1;
+}
+function stepYear(dir){
+  var p = pages[state.idx];
+  if (p.type !== 'year'){
+    if (dir > 0) go(firstPageOfYear(0));
+    else go(0);
+    return;
+  }
+  if (dir < 0 && p.sub > 1){ go(firstPageOfYear(p.yi)); return; }
+  var yi = p.yi + dir;
+  if (yi < 0){ go(0); return; }
+  if (yi >= YEARS.length){ go(pages.length - 1); return; }
+  go(firstPageOfYear(yi));
+}
+function gotoYear(year){
+  var best = -1;
+  for (var i = 0; i < YEARS.length; i++){
+    if (YEARS[i].year === year){ best = i; break; }
+    if (YEARS[i].year < year) best = i;          /* nearest earlier year */
+  }
+  if (best < 0) best = 0;
+  go(firstPageOfYear(best));
+  if (YEARS[best].year !== year) toast('无 ' + year + ' 年纪事，已跳至 ' + YEARS[best].year + ' 年');
+}
+
+function syncHash(){
+  var p = pages[state.idx], h;
+  if (p.type === 'cover') h = '#cover';
+  else if (p.type === 'toc') h = '#contents';
+  else h = '#' + YEARS[p.yi].year + (p.sub > 1 ? '-' + p.sub : '');
+  if (location.hash !== h){
+    try { history.replaceState(null, '', h); } catch(err){}
+  }
+}
+function fromHash(){
+  var h = decodeURIComponent(location.hash || '').replace(/^#/, '');
+  if (!h || h === 'cover') return 0;
+  if (h === 'contents' || h === 'toc') return 1;
+  var m = h.match(/^(\d{4})(?:-(\d+))?$/);
+  if (!m) return 0;
+  var yi = -1;
+  for (var i = 0; i < YEARS.length; i++) if (YEARS[i].year === +m[1]){ yi = i; break; }
+  if (yi < 0) return 0;
+  var base = firstPageOfYear(yi);
+  var sub = m[2] ? Math.max(1, +m[2]) : 1;
+  var t = base + sub - 1;
+  return (pages[t] && pages[t].type === 'year' && pages[t].yi === yi) ? t : base;
+}
+
+/* ============================ chrome ============================ */
+var hudEl = document.getElementById('hud'), hudTimer;
+function pokeHud(){
+  if (!state.hud) return;
+  hudEl.classList.remove('hidden');
+  clearTimeout(hudTimer);
+  hudTimer = setTimeout(function(){ hudEl.classList.add('hidden'); }, 3600);
+}
+var toastEl = document.getElementById('toast'), toastTimer;
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.classList.remove('on'); }, 2200);
+}
+var jumpEl = document.getElementById('jump'), jumpBuf = '', jumpTimer;
+function pokeJump(){
+  jumpEl.textContent = jumpBuf ? jumpBuf.padEnd(4, '·') : '';
+  jumpEl.classList.toggle('on', !!jumpBuf);
+  clearTimeout(jumpTimer);
+  if (jumpBuf) jumpTimer = setTimeout(function(){ jumpBuf = ''; pokeJump(); }, 2000);
+}
+
+function fit(){
+  var pad = window.innerWidth < 700 ? 10 : 34;
+  var s = Math.min((window.innerWidth - pad * 2) / 1080, (window.innerHeight - pad * 2) / 1440);
+  document.documentElement.style.setProperty('--scale', Math.max(0.05, s));
+}
+
+function repaginate(){
+  var p = pages[state.idx], anchor = null;
+  if (p && p.type === 'year') anchor = { yi: p.yi, start: p.start };
+  paginate();
+  if (anchor){
+    var found = 0;
+    for (var i = 0; i < pages.length; i++){
+      if (pages[i].type === 'year' && pages[i].yi === anchor.yi){
+        found = i;
+        if (pages[i].end > anchor.start) break;
+      }
+    }
+    state.idx = found;
+  }
+  go(state.idx);
+}
+
+function setTheme(t){
+  state.theme = t;
+  document.documentElement.setAttribute('data-theme', t);
+  save('lyx.card.theme', t);
+}
+
+/* ============================ PNG export ============================ */
+var h2c = null;
+function loadH2C(){
+  if (h2c) return Promise.resolve(h2c);
+  if (window.html2canvas){ h2c = window.html2canvas; return Promise.resolve(h2c); }
+  return new Promise(function(res, rej){
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload = function(){ h2c = window.html2canvas; res(h2c); };
+    s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+function exportPNG(){
+  toast('正在导出 1080×1440 PNG …');
+  loadH2C().then(function(lib){
+    var prevTransform = card.style.transform, prevShadow = card.style.boxShadow;
+    card.style.transform = 'none';
+    card.style.boxShadow = 'none';
+    return lib(card, {
+      backgroundColor: null, scale: 1, width: 1080, height: 1440,
+      windowWidth: 1080, windowHeight: 1440, useCORS: true, logging: false
+    }).then(function(canvas){
+      card.style.transform = prevTransform;
+      card.style.boxShadow = prevShadow;
+      var p = pages[state.idx];
+      var name = p.type === 'year'
+        ? '廖耀湘年谱-' + YEARS[p.yi].year + '-' + p.sub + '.png'
+        : '廖耀湘年谱-' + p.type + '.png';
+      var a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = name;
+      a.click();
+      toast('已导出 ' + name);
+    });
+  }).catch(function(){
+    toast('导出组件加载失败，请直接截图');
+  });
+}
+
+/* ============================ keyboard ============================ */
+var helpEl = document.getElementById('help');
+function toggleHelp(force){
+  var on = force === undefined ? !helpEl.classList.contains('on') : force;
+  helpEl.classList.toggle('on', on);
+}
+
+document.addEventListener('keydown', function(e){
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  var k = e.key;
+
+  if (helpEl.classList.contains('on')){
+    if (k === 'Escape' || k === '?' || k === '/' || k === 'Enter' || k === ' ') { e.preventDefault(); toggleHelp(false); }
+    return;
+  }
+
+  pokeHud();
+
+  if (k >= '0' && k <= '9'){
+    jumpBuf = (jumpBuf + k).slice(-4);
+    pokeJump();
+    if (jumpBuf.length === 4){ var y = +jumpBuf; jumpBuf = ''; pokeJump(); gotoYear(y); }
+    e.preventDefault(); return;
+  }
+
+  switch (k){
+    case 'ArrowRight': case 'PageDown': go(state.idx + 1); e.preventDefault(); break;
+    case 'ArrowLeft':  case 'PageUp':   go(state.idx - 1); e.preventDefault(); break;
+    case 'ArrowDown':  stepYear(1);  e.preventDefault(); break;
+    case 'ArrowUp':    stepYear(-1); e.preventDefault(); break;
+    case ' ':          go(state.idx + (e.shiftKey ? -1 : 1)); e.preventDefault(); break;
+    case 'Home':       go(0); e.preventDefault(); break;
+    case 'End':        go(pages.length - 1); e.preventDefault(); break;
+    case 'Enter':
+      if (jumpBuf){ gotoYear(+jumpBuf); jumpBuf = ''; pokeJump(); }
+      e.preventDefault(); break;
+    case 'Escape':     jumpBuf = ''; pokeJump(); break;
+    case 's': case 'S':
+      state.showSource = !state.showSource; save('lyx.card.src', state.showSource ? '1' : '0');
+      repaginate(); toast(state.showSource ? '显示来源' : '隐藏来源'); break;
+    case 'n': case 'N':
+      state.showNote = !state.showNote; save('lyx.card.note', state.showNote ? '1' : '0');
+      repaginate(); toast(state.showNote ? '显示按语' : '隐藏按语'); break;
+    case 'd': case 'D':
+      var order = ['paper','ivory','ink'];
+      setTheme(order[(order.indexOf(state.theme) + 1) % order.length]);
+      toast({paper:'白纸',ivory:'米色',ink:'墨色'}[state.theme]); break;
+    case 'c': case 'C':
+      state.hud = !state.hud;
+      hudEl.classList.toggle('hidden', !state.hud);
+      if (state.hud) pokeHud();
+      break;
+    case 'e': case 'E': case 'p': case 'P': exportPNG(); break;
+    case 'f': case 'F':
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+      break;
+    case '?': case '/': toggleHelp(true); e.preventDefault(); break;
+  }
+});
+
+/* ---------- pointer: tap halves / swipe, no visible controls ---------- */
+var tx = 0, ty = 0, tt = 0;
+stage.addEventListener('touchstart', function(e){
+  var t = e.changedTouches[0]; tx = t.clientX; ty = t.clientY; tt = Date.now();
+}, { passive:true });
+stage.addEventListener('touchend', function(e){
+  var t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty;
+  if (Date.now() - tt < 700 && Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.4){
+    go(state.idx + (dx < 0 ? 1 : -1));
+    e.preventDefault();
+  }
+}, { passive:false });
+
+stage.addEventListener('click', function(e){
+  go(state.idx + (e.clientX > window.innerWidth / 2 ? 1 : -1));
+  pokeHud();
+});
+helpEl.addEventListener('click', function(){ toggleHelp(false); });
+
+window.addEventListener('resize', fit);
+window.addEventListener('hashchange', function(){ go(fromHash()); });
+
+/* ============================ fonts ============================ */
+/* Noto Serif SC arrives as ~100 unicode-range subsets, fetched only as the
+   glyphs are used. Paginating before they land measures fallback metrics and
+   leaves every card short, so ask for the whole corpus up front — and
+   re-paginate if a subset still shows up late. */
+function corpusProbe(){
+  var seen = Object.create(null), out = [];
+  for (var a = 0; a < YEARS.length; a++){
+    var es = YEARS[a].entries;
+    for (var b = 0; b < es.length; b++){
+      var t = es[b].c + (es[b].s || '') + (es[b].n || '');
+      for (var c = 0; c < t.length; c++){
+        var ch = t.charAt(c);
+        if (!seen[ch]){ seen[ch] = 1; out.push(ch); }
+      }
+    }
+  }
+  return out.join('');
+}
+
+function warmFonts(){
+  if (!document.fonts || !document.fonts.load) return Promise.resolve();
+  var probe = corpusProbe();
+  var jobs = [
+    ['400 33px "Noto Serif SC"', probe],
+    ['400 22px "Noto Serif SC"', probe],
+    ['600 23px "Noto Serif SC"', '廖耀湘年谱目录封面续是年月日'],
+    ['700 104px "Noto Serif SC"', '年谱目录'],
+    ['600 78px "Inter"', '0123456789'],
+    ['500 15px "Inter"', 'CHRONOLOGYLIAOYXHSNGcontents.']
+  ];
+  return Promise.all(jobs.map(function(j){
+    try { return document.fonts.load(j[0], j[1]); } catch(err){ return null; }
+  })).catch(function(){});
+}
+
+/* ============================ boot ============================ */
+function boot(){
+  setTheme(state.theme);
+  fit();
+  paginate();
+  state.idx = fromHash();
+  render();
+  document.getElementById('loading').classList.add('done');
+  pokeHud();
+}
+
+var started = false;
+function start(){ if (!started){ started = true; boot(); } }
+
+warmFonts().then(start);
+setTimeout(start, 4000);
+
+if (document.fonts && document.fonts.addEventListener){
+  var healTimer;
+  document.fonts.addEventListener('loadingdone', function(){
+    if (!started || paginateRuns > 3) return;
+    clearTimeout(healTimer);
+    healTimer = setTimeout(repaginate, 220);
+  });
+}
+})();
+</script>
+</body>
+</html>
