@@ -12,16 +12,8 @@ sitemap: false
 <link rel="icon" href="/assets/images/favicon5.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* 霞鹜文楷 LXGW WenKai v1.520, subset to the chronology's 2,344 characters.
-   SIL OFL 1.1 — see /assets/fonts/lxgw-wenkai-OFL.txt */
-@font-face{
-  font-family:'LXGW WenKai';
-  src:url('/assets/fonts/lxgw-wenkai-chronology.woff2') format('woff2');
-  font-weight:400; font-style:normal; font-display:swap;
-}
-
 /* ==========================================================================
    廖耀湘年谱 · 卡片视图
    固定 3:4（宽:高）版面，1080×1440 设计尺寸，键盘翻页，便于截图分享。
@@ -42,18 +34,31 @@ sitemap: false
   --rule-2: #ececE7;
   --accent: #8c2f24;
   --accent-soft: #f6efed;
+  --note-bg: #f5f5f2;
   --hud:    rgba(20,22,25,.45);
+
+  /* 六目之色：墨、靛、朱、苍、褐、黛 */
+  --k-self: #16191c;
+  --k-unit: #27526e;
+  --k-rel:  #8c2f24;
+  --k-bg:   #57685d;
+  --k-app:  #7a5c3a;
+  --k-post: #4d4560;
 }
 
 :root[data-palette="ivory"]{
   --paper:#fbf7f0; --stage:#e3dbcd; --ink:#221d17; --ink-2:#4f463a;
   --ink-3:#8d8271; --rule:#ddd2bf; --rule-2:#ece4d6; --accent:#8c2f24;
-  --accent-soft:#f3e9df; --hud:rgba(34,29,23,.45);
+  --accent-soft:#f3e9df; --note-bg:#f3eee3; --hud:rgba(34,29,23,.45);
+  --k-self:#221d17; --k-unit:#2b5570; --k-rel:#8c2f24;
+  --k-bg:#55654f; --k-app:#775734; --k-post:#4f4560;
 }
 :root[data-palette="ink"]{
   --paper:#15181c; --stage:#0a0c0e; --ink:#eceae6; --ink-2:#b3b8bf;
   --ink-3:#7b838d; --rule:#2c3238; --rule-2:#23282d; --accent:#c9584a;
-  --accent-soft:#221a19; --hud:rgba(236,234,230,.42);
+  --accent-soft:#221a19; --note-bg:#1b1f23; --hud:rgba(236,234,230,.42);
+  --k-self:#eceae6; --k-unit:#86b6d6; --k-rel:#e08a7d;
+  --k-bg:#9ab3a1; --k-app:#cba980; --k-post:#a99bc4;
 }
 
 *{ box-sizing:border-box; }
@@ -177,24 +182,19 @@ body{
   display:grid;
   grid-template-columns:126px 1fr;
   padding:calc((21px + var(--slack,0px)) * var(--fs)) 0;
-  --ent-fs:33px; --ent-col:var(--ink);
+  --ent-fs:33px; --ent-col:var(--k-self);
   --ent-ff:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',ui-serif,Georgia,serif;
   --ent-fw:400;
 }
-/* 黑体：所部、附、谱后 */
-.ent--sub{
-  --ent-fs:30px; --ent-col:var(--ink-2); --ent-fw:300;
-  --ent-ff:'Noto Sans SC','Source Han Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
-}
-/* 楷体：关涉 */
-.ent--kai{
-  --ent-fs:32px; --ent-col:var(--ink-2); --ent-fw:400;
-  --ent-ff:'LXGW WenKai','Kaiti SC','STKaiti','KaiTi','楷体',serif;
-}
-/* 隶书：时事（系统字体，缺则退为黑体） */
+/* 一体而异色：靛、朱、褐、黛 */
+.ent--unit{ --ent-col:var(--k-unit); }
+.ent--rel { --ent-col:var(--k-rel);  }
+.ent--app { --ent-col:var(--k-app);  }
+.ent--post{ --ent-col:var(--k-post); }
+/* 时事独用隶书，色苍（无隶书则退为宋体） */
 .ent--li{
-  --ent-fs:29px; --ent-col:var(--ink-2); --ent-fw:400;
-  --ent-ff:'LiSu','SimLi','STLiti','Baoli SC','隶书','Noto Sans SC','PingFang SC',sans-serif;
+  --ent-fs:31px; --ent-col:var(--k-bg);
+  --ent-ff:'LiSu','SimLi','STLiti','Baoli SC','隶书','Noto Serif SC',serif;
 }
 .ent--li .ent__text{ letter-spacing:.03em; }
 .ent:first-child{ padding-top:0; }
@@ -216,11 +216,12 @@ body{
   font-family:'Noto Serif SC','Songti SC',serif;
   font-size:calc(17px * var(--fs));
   line-height:1.4; letter-spacing:.14em;
-  color:var(--ink-3);
+  color:var(--ent-col);
 }
 .ent__body{
   min-width:0;
   border-left:1px solid var(--rule-2);
+  border-left-color:color-mix(in srgb, var(--ent-col) 34%, transparent);
   padding-left:26px;
   font-family:var(--ent-ff);
   font-weight:var(--ent-fw);
@@ -237,13 +238,13 @@ body{
 .ent__note{
   margin:calc(13px * var(--fs)) 0 0;
   padding:calc(10px * var(--fs)) 0 calc(10px * var(--fs)) 18px;
-  border-left:2px solid var(--accent);
-  background:var(--accent-soft);
+  border-left:2px solid var(--ent-col);
+  background:var(--note-bg);
   font-size:calc(22px * var(--fs));
   line-height:1.72;
   color:var(--ink-2);
 }
-.ent__note b{ font-weight:600; color:var(--accent); margin-right:.4em; }
+.ent__note b{ font-weight:600; color:var(--ent-col); margin-right:.4em; }
 .ent__src{
   margin:calc(11px * var(--fs)) 0 0;
   font-size:calc(20px * var(--fs));
@@ -252,7 +253,7 @@ body{
   letter-spacing:.02em;
 }
 .ent__src b{
-  font-weight:500; color:var(--accent);
+  font-weight:500; color:var(--ink-3);
   margin-right:.6em; letter-spacing:.14em;
 }
 
@@ -347,14 +348,17 @@ body{
 }
 .fl__row:first-of-type{ border-top:none; }
 .fl__tag{
-  font-size:25px; letter-spacing:.1em; color:var(--ink);
+  font-size:25px; letter-spacing:.1em;
+  color:var(--ent-col, var(--ink));
   white-space:nowrap;
   font-family:var(--ent-ff, inherit); font-weight:var(--ent-fw, 400);
 }
 .fl__desc{
-  font-size:22px; line-height:1.7; color:var(--ink-2);
+  font-size:22px; line-height:1.7;
+  color:var(--ent-col, var(--ink-2));
   font-family:var(--ent-ff, inherit); font-weight:var(--ent-fw, 400);
 }
+.fl__desc i{ color:var(--ink-3); }
 .fl__desc i{ font-style:normal; color:var(--ink-3); }
 .fl__n{
   font-family:'Inter',system-ui,sans-serif;
@@ -703,14 +707,14 @@ function hasFont(family){
 var HAS_LISHU = ['LiSu', 'SimLi', 'STLiti', 'Baoli SC', '隶书'].some(hasFont);
 
 var KIND_DEF = [
-  ['本人', '宋体', '谱主亲历之事',                   ''],
-  ['所部', '黑体', '所统部队之行动，谱主未必在场',   'ent--sub'],
-  ['关涉', '楷体', '他人行事而事关谱主或所部',       'ent--kai'],
-  ['时事', HAS_LISHU ? '隶书' : '黑体', '时代背景，与谱主行止相关者始录', 'ent--li'],
-  ['附',   '黑体', '亲属及旁涉之事',                 'ent--sub'],
-  ['谱后', '黑体', '身后之事',                       'ent--sub']
+  ['本人', '墨', '谱主亲历之事',                   ''],
+  ['所部', '靛', '所统部队之行动，谱主未必在场',   'ent--unit'],
+  ['关涉', '朱', '他人行事而事关谱主或所部',       'ent--rel'],
+  ['时事', HAS_LISHU ? '苍·隶书' : '苍', '时代背景，与谱主行止相关者始录', 'ent--li'],
+  ['附',   '褐', '亲属及旁涉之事',                 'ent--app'],
+  ['谱后', '黛', '身后之事',                       'ent--post']
 ];
-var KIND_CLASS = { 本人:'', 所部:'ent--sub', 关涉:'ent--kai', 附:'ent--sub', 谱后:'ent--sub', 时事:'ent--li' };
+var KIND_CLASS = { 本人:'', 所部:'ent--unit', 关涉:'ent--rel', 附:'ent--app', 谱后:'ent--post', 时事:'ent--li' };
 var KIND_COUNTS = {};
 YEARS.forEach(function(y){ y.entries.forEach(function(e){ KIND_COUNTS[e.k] = (KIND_COUNTS[e.k] || 0) + 1; }); });
 
@@ -920,10 +924,10 @@ function fanliHTML(){
   }).join('');
   return mastheadHTML('凡 例', 'Editorial Note', '六目 · ' + TOTAL_ENTRIES + ' 条', false) +
     '<div class="bd bd--fanli">' +
-      '<div><p class="fl__lead">年谱以谱主为纲，事系于人：凡与谱主相涉者始入谱，不相涉者虽大不录。条目性质别为六目，字体随之——谱主亲历者用宋体，他人事关谱主者用楷体，时代背景用' +
-        (HAS_LISHU ? '隶书' : '黑体') + '，所部及旁涉者用黑体。</p>' +
+      '<div><p class="fl__lead">年谱以谱主为纲，事系于人：凡与谱主相涉者始入谱，不相涉者虽大不录。条目性质别为六目，墨色随之——谱主亲历用墨，所部用靛，关涉用朱，时事用苍' +
+        (HAS_LISHU ? '而书以隶体' : '') + '，亲属旁涉用褐，身后用黛。</p>' +
       rows + '</div>' +
-      '<p class="fl__foot">目类依条目文字判定，非原始著录之一部；如有未安，以正文及所注出处为准。按 K 键去分目，则一律用宋体。</p>' +
+      '<p class="fl__foot">目类依条目文字判定，非原始著录之一部；如有未安，以正文及所注出处为准。按 K 键去分目，则一律墨书。</p>' +
     '</div>' +
     footerHTML('凡 例');
 }
@@ -1272,13 +1276,10 @@ function corpusProbe(pred){
 function warmFonts(){
   if (!document.fonts || !document.fonts.load) return Promise.resolve();
   var probe = corpusProbe();
-  var sans = corpusProbe(function(e){ return e.k && e.k !== '本人' && e.k !== '关涉'; });
   var jobs = [
     ['400 33px "Noto Serif SC"', probe],
     ['400 22px "Noto Serif SC"', probe],
-    ['300 30px "Noto Sans SC"', sans],
-    ['300 22px "Noto Sans SC"', sans],
-    ['400 32px "LXGW WenKai"', corpusProbe(function(e){ return e.k === '关涉'; }) + '楷体关涉'],
+    ['400 31px "Noto Serif SC"', probe],
     ['600 23px "Noto Serif SC"', '廖耀湘年谱目录封面续是年月日'],
     ['700 104px "Noto Serif SC"', '年谱目录'],
     ['600 78px "Inter"', '0123456789'],
