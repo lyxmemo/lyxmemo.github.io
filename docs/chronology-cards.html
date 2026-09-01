@@ -186,6 +186,48 @@ body{
 .ent--li{
   --ent-ff:'LiSu','SimLi','STLiti','Baoli SC','隶书','Noto Serif SC',serif;
 }
+
+/* ---------- 两栏：左七右三，同系一时间轴 ---------- */
+.cols{ display:grid; grid-template-columns:1fr; align-items:start; }
+.cols--split{
+  grid-template-columns:70fr 30fr;
+  column-gap:30px;
+  position:relative;
+}
+.lane{ display:flex; flex-direction:column; min-width:0; }
+.lane--l{ gap:calc(30px + var(--lane-gap-l, 0px)); }
+.lane--r{ gap:calc(24px + var(--lane-gap-r, 0px)); }
+.cols--split::before{
+  content:''; position:absolute; top:0; bottom:0;
+  left:calc((100% - 30px) * 0.7 + 15px);
+  width:1px; background:var(--rule-2);
+}
+.lane > .ent{
+  display:block; padding:0;
+  grid-template-columns:none;
+}
+.lane > .ent + .ent{ border-top:none; }
+.lane__head{
+  display:flex; align-items:baseline; gap:14px;
+  margin-bottom:calc(9px * var(--fs));
+}
+.lane__head .ent__date{
+  padding-right:0; text-align:left;
+  font-size:calc(21px * var(--fs));
+  line-height:1.3;
+}
+.lane__head .ent__kind{ margin-top:0; }
+.lane > .ent > .ent__body{
+  border-left:none; padding-left:0;
+}
+/* 右栏：旁注之体，字小而窄 */
+.ent--lane-r{ --ent-fs:21px; }
+.ent--lane-r .lane__head .ent__date{ font-size:calc(18px * var(--fs)); }
+.ent--lane-r .lane__head{ gap:9px; margin-bottom:calc(6px * var(--fs)); }
+.ent--lane-r .ent__kind{ font-size:calc(16px * var(--fs)); letter-spacing:.1em; }
+.ent--lane-r .ent__text{ line-height:1.72; }
+.ent--lane-r .ent__src{ font-size:calc(16px * var(--fs)); margin-top:calc(7px * var(--fs)); }
+.ent--lane-r .ent__note{ font-size:calc(17px * var(--fs)); padding-left:12px; }
 .ent--li .ent__text{ letter-spacing:.03em; }
 .ent:first-child{ padding-top:0; }
 .ent + .ent{ border-top:1px solid var(--rule-2); }
@@ -708,12 +750,12 @@ function hasFont(family){
 var HAS_LISHU = ['LiSu', 'SimLi', 'STLiti', 'Baoli SC', '隶书'].some(hasFont);
 
 var KIND_DEF = [
-  ['本人', '墨书', '谱主亲历之事',                   ''],
-  ['所部', '附见', '所统部队之行动，谱主未必在场',   'ent--aux'],
-  ['关涉', '附见', '他人行事而事关谱主或所部',       'ent--aux'],
-  ['时事', HAS_LISHU ? '附见·隶书' : '附见', '时代背景，与谱主行止相关者始录', 'ent--aux ent--li'],
-  ['附',   '附见', '亲属及旁涉之事',                 'ent--aux'],
-  ['谱后', '附见', '身后之事',                       'ent--aux']
+  ['本人', '左栏',      '谱主亲历之事',                   ''],
+  ['所部', '右栏',      '所统部队之行动，谱主未必在场',   'ent--aux'],
+  ['关涉', '右栏',      '他人行事而事关谱主或所部',       'ent--aux'],
+  ['时事', HAS_LISHU ? '右栏·隶书' : '右栏', '时代背景，与谱主行止相关者始录', 'ent--aux ent--li'],
+  ['附',   '右栏',      '亲属及旁涉之事',                 'ent--aux'],
+  ['谱后', '右栏',      '身后之事',                       'ent--aux']
 ];
 var KIND_CLASS = { 本人:'', 所部:'ent--aux', 关涉:'ent--aux', 附:'ent--aux',
                    谱后:'ent--aux', 时事:'ent--aux ent--li' };
@@ -819,17 +861,43 @@ function headerHTML(year, sub, cont){
     eraOf(year), cont ? '' : ageOf(year), cont);
 }
 
-function entryHTML(e){
-  var k = state.showKind ? (e.k || '本人') : '本人';
-  var cls = KIND_CLASS[k] || '';
-  var h = '<div class="ent' + (cls ? ' ' + cls : '') + '">' +
-    '<div class="ent__date">' + dateLabel(e) +
-      (k === '本人' ? '' : '<div class="ent__kind">〔' + k + '〕</div>') +
-    '</div><div class="ent__body">';
-  h += '<p class="ent__text">' + esc(e.c) + '</p>';
+/* 左七右三分栏，唯全录而分目时用之；专取一等则通栏 */
+function isSplit(){ return state.showKind && state.view === 'all'; }
+
+function bodyHTML(e){
+  var h = '<p class="ent__text">' + esc(e.c) + '</p>';
   if (state.showNote && e.n) h += '<p class="ent__note"><b>按</b>' + esc(e.n.replace(/^按[：:]\s*/, '')) + '</p>';
   if (state.showSource && e.s) h += '<p class="ent__src"><b>来源</b>' + joinSources(e.s) + '</p>';
-  return h + '</div></div>';
+  return h;
+}
+
+function entryHTML(e, lane){
+  var k = state.showKind ? (e.k || '本人') : '本人';
+  var cls = KIND_CLASS[k] || '';
+  var mark = k === '本人' ? '' : '<div class="ent__kind">〔' + k + '〕</div>';
+
+  if (!lane){                                   /* 通栏：日期居左，正文次之 */
+    return '<div class="ent' + (cls ? ' ' + cls : '') + '">' +
+      '<div class="ent__date">' + dateLabel(e) + mark + '</div>' +
+      '<div class="ent__body">' + bodyHTML(e) + '</div></div>';
+  }
+  return '<div class="ent ent--lane-' + lane + (cls ? ' ' + cls : '') + '">' +
+    '<div class="lane__head"><span class="ent__date">' + dateLabel(e) + '</span>' + mark + '</div>' +
+    '<div class="ent__body">' + bodyHTML(e) + '</div></div>';
+}
+
+function colsHTML(entries, split){
+  if (!split){
+    return '<div class="cols">' + entries.map(function(e){ return entryHTML(e); }).join('') + '</div>';
+  }
+  var l = '', r = '';
+  entries.forEach(function(e){
+    if (isSelf(e)) l += entryHTML(e, 'l'); else r += entryHTML(e, 'r');
+  });
+  return '<div class="cols cols--split">' +
+    '<div class="lane lane--l">' + l + '</div>' +
+    '<div class="lane lane--r">' + r + '</div>' +
+  '</div>';
 }
 
 function footerHTML(right){
@@ -844,22 +912,44 @@ var paginateRuns = 0;
 /* Fill one card at a given type scale and report what fitted. Heights are
    summed per entry: a flex container's scrollHeight is floored at its own
    height, so it cannot tell us how much room is left. */
-function fillAt(y, sub, start, fs){
+/* 两栏共一时序：逐条分入左右，任一栏满则止，故两栏所纪同其时段 */
+function fillAt(y, sub, start, fs, split){
   measure.style.setProperty('--fs', fs);
-  measure.innerHTML = headerHTML(y.year, sub, sub > 1) + '<div class="bd"></div>' + footerHTML('&nbsp;');
-  var bd = measure.querySelector('.bd');
+  measure.innerHTML = headerHTML(y.year, sub, sub > 1) +
+    '<div class="bd">' + colsHTML([], split) + '</div>' + footerHTML('&nbsp;');
+  var bd = measure.querySelector('.bd'), cols = measure.querySelector('.cols');
   var avail = bd.clientHeight - (parseFloat(getComputedStyle(bd).paddingTop) || 0);
+  var lanes = split ? { l: cols.children[0], r: cols.children[1] } : null;
   var count = 0, used = 0, j = start;
   while (j < y.entries.length){
-    bd.insertAdjacentHTML('beforeend', entryHTML(y.entries[j]));
-    var h = bd.lastElementChild.offsetHeight;
-    if (used + h > avail){
-      if (count === 0){ count = 1; used += h; }   /* one entry taller than a card */
+    var e = y.entries[j];
+    var box = split ? lanes[isSelf(e) ? 'l' : 'r'] : cols;
+    box.insertAdjacentHTML('beforeend', entryHTML(e, split ? (isSelf(e) ? 'l' : 'r') : null));
+    var h = cols.offsetHeight;
+    if (h > avail){
+      if (count === 0){ count = 1; used = h; }    /* one entry taller than a card */
+      else box.removeChild(box.lastElementChild);
       break;
     }
-    used += h; count += 1; j += 1;
+    used = h; count += 1; j += 1;
   }
   return { count:count, used:used, avail:avail };
+}
+
+/* 一页之中两等俱备则分栏，否则通栏 */
+function mixed(y, start, end){
+  var self = 0, aux = 0;
+  for (var i = start; i < end; i++){ if (isSelf(y.entries[i])) self++; else aux++; }
+  return self > 0 && aux > 0;
+}
+
+function fitPage(y, sub, start, fs){
+  if (!isSplit()) return fillAt(y, sub, start, fs, false);
+  var r = fillAt(y, sub, start, fs, true);
+  if (mixed(y, start, start + r.count)){ r.split = true; return r; }
+  var w = fillAt(y, sub, start, fs, false);   /* 一等独行，通栏为宜 */
+  if (!mixed(y, start, start + w.count)){ w.split = false; return w; }
+  r.split = true; return r;
 }
 
 function paginate(){
@@ -873,14 +963,14 @@ function paginate(){
     var i = 0, sub = 0, made = [];
     while (i < y.entries.length){
       sub += 1;
-      var fs = 1, r = fillAt(y, sub, i, 1), s, r2;
+      var fs = 1, r = fitPage(y, sub, i, 1), s, r2;
 
       /* Rather than leave a quarter of the card blank, tighten the type a
          little if that pulls the next entry onto this page. */
       if (i + r.count < y.entries.length && (r.avail - r.used) > r.avail * 0.18){
         var STEPS = [0.94, 0.88];
         for (s = 0; s < STEPS.length; s++){
-          r2 = fillAt(y, sub, i, STEPS[s]);
+          r2 = fitPage(y, sub, i, STEPS[s]);
           if (r2.count > r.count){ r = r2; fs = STEPS[s]; break; }
         }
       }
@@ -889,14 +979,15 @@ function paginate(){
       if (r.used > r.avail){
         for (s = 0.94; s >= 0.7; s -= 0.06){
           var sc = Math.round(s * 100) / 100;
-          r2 = fillAt(y, sub, i, sc);
+          r2 = fitPage(y, sub, i, sc);
           if (r2.count >= 1 && r2.used <= r2.avail){ r = r2; fs = sc; break; }
           fs = sc;
         }
       }
 
       i += Math.max(1, r.count);
-      made.push({ type:'year', yi:yi, start:i - Math.max(1, r.count), end:i, sub:sub, fs:fs });
+      made.push({ type:'year', yi:yi, start:i - Math.max(1, r.count), end:i, sub:sub, fs:fs,
+                  split: !!r.split });
     }
     made.forEach(function(pg){ pg.subTotal = made.length; pages.push(pg); });
   });
@@ -941,10 +1032,10 @@ function fanliHTML(){
   }).join('');
   return mastheadHTML('凡 例', 'Editorial Note', '六目 · ' + TOTAL_ENTRIES + ' 条', false) +
     '<div class="bd bd--fanli">' +
-      '<div><p class="fl__lead">年谱以谱主为纲，事系于人：凡与谱主相涉者始入谱，不相涉者虽大不录。书法分两等——谱主亲历者墨书，字大；余皆附见，色淡字小，各标其目于日下' +
-        (HAS_LISHU ? '，时事并书以隶体' : '') + '。按 V 键可专取一等，各自成幅。</p>' +
+      '<div><p class="fl__lead">年谱以谱主为纲，事系于人：凡与谱主相涉者始入谱，不相涉者虽大不录。每幅分两栏：左七分书谱主亲历，字大墨书；右三分为附见，字小色淡，各标其目于日下' +
+        (HAS_LISHU ? '，时事并书以隶体' : '') + '。两栏共一时序，各以时先后为次；一幅之中惟一等者，则通栏书之。按 V 键可专取一等。</p>' +
       rows + '</div>' +
-      '<p class="fl__foot">目类依条目文字判定，非原始著录之一部；如有未安，以正文及所注出处为准。按 K 键去分目，则一律墨书。</p>' +
+      '<p class="fl__foot">目类依条目文字判定，非原始著录之一部；如有未安，以正文及所注出处为准。按 K 键去分栏，则通栏一律墨书。</p>' +
     '</div>' +
     footerHTML('凡 例');
 }
@@ -985,9 +1076,8 @@ function tocHTML(){
 
 function yearPageHTML(p){
   var y = VIEW[p.yi];
-  var html = headerHTML(y.year, p.sub, p.sub > 1) + '<div class="bd">';
-  for (var i = p.start; i < p.end; i++) html += entryHTML(y.entries[i]);
-  html += '</div>';
+  var html = headerHTML(y.year, p.sub, p.sub > 1) +
+    '<div class="bd">' + colsHTML(y.entries.slice(p.start, p.end), !!p.split) + '</div>';
   return html + footerHTML('<b>' + y.year + '</b>　' + p.sub + ' / ' + p.subTotal);
 }
 
@@ -1009,14 +1099,24 @@ function balance(){
   var bd = card.querySelector('.bd');
   if (!bd || bd.classList.contains('bd--cover') || bd.classList.contains('bd--toc')
       || bd.classList.contains('bd--fanli')) return;
-  var kids = bd.children, n = kids.length;
+  var cols = bd.querySelector('.cols');
+  if (!cols) return;
+  var n = cols.children.length;
   if (!n) return;
-  var used = 0;
-  for (var i = 0; i < n; i++) used += kids[i].offsetHeight;
-  var slack = bd.clientHeight - parseFloat(getComputedStyle(bd).paddingTop || 0) - used;
+  var slack = bd.clientHeight - parseFloat(getComputedStyle(bd).paddingTop || 0) - cols.offsetHeight;
   if (slack < 12) return;
   if (n === 1){ bd.classList.add('bd--center'); return; }
-  bd.style.setProperty('--slack', Math.min(46, Math.floor(slack / (2 * n))) + 'px');
+  if (cols.classList.contains('cols--split')){
+    ['l', 'r'].forEach(function(side, idx){
+      var lane = cols.children[idx], gaps = lane.children.length - 1;
+      if (gaps < 1) return;
+      var room = bd.clientHeight - parseFloat(getComputedStyle(bd).paddingTop || 0) - lane.offsetHeight;
+      if (room > 12) cols.style.setProperty('--lane-gap-' + side,
+        Math.min(100, Math.floor(room / gaps)) + 'px');
+    });
+  } else {
+    bd.style.setProperty('--slack', Math.min(46, Math.floor(slack / (2 * n))) + 'px');
+  }
 }
 
 /* ============================ navigation ============================ */
