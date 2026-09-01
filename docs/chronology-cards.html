@@ -37,28 +37,22 @@ sitemap: false
   --note-bg: #f5f5f2;
   --hud:    rgba(20,22,25,.45);
 
-  /* 六目之色：墨、靛、朱、苍、褐、黛 */
+  /* 两等：谱主行实用墨，附见用淡 */
   --k-self: #16191c;
-  --k-unit: #27526e;
-  --k-rel:  #8c2f24;
-  --k-bg:   #57685d;
-  --k-app:  #7a5c3a;
-  --k-post: #4d4560;
+  --k-aux:  #5d6771;
 }
 
 :root[data-palette="ivory"]{
   --paper:#fbf7f0; --stage:#e3dbcd; --ink:#221d17; --ink-2:#4f463a;
   --ink-3:#8d8271; --rule:#ddd2bf; --rule-2:#ece4d6; --accent:#8c2f24;
   --accent-soft:#f3e9df; --note-bg:#f3eee3; --hud:rgba(34,29,23,.45);
-  --k-self:#221d17; --k-unit:#2b5570; --k-rel:#8c2f24;
-  --k-bg:#55654f; --k-app:#775734; --k-post:#4f4560;
+  --k-self:#221d17; --k-aux:#6d6455;
 }
 :root[data-palette="ink"]{
   --paper:#15181c; --stage:#0a0c0e; --ink:#eceae6; --ink-2:#b3b8bf;
   --ink-3:#7b838d; --rule:#2c3238; --rule-2:#23282d; --accent:#c9584a;
   --accent-soft:#221a19; --note-bg:#1b1f23; --hud:rgba(236,234,230,.42);
-  --k-self:#eceae6; --k-unit:#86b6d6; --k-rel:#e08a7d;
-  --k-bg:#9ab3a1; --k-app:#cba980; --k-post:#a99bc4;
+  --k-self:#eceae6; --k-aux:#98a1ab;
 }
 
 *{ box-sizing:border-box; }
@@ -186,14 +180,10 @@ body{
   --ent-ff:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',ui-serif,Georgia,serif;
   --ent-fw:400;
 }
-/* 一体而异色：靛、朱、褐、黛 */
-.ent--unit{ --ent-col:var(--k-unit); }
-.ent--rel { --ent-col:var(--k-rel);  }
-.ent--app { --ent-col:var(--k-app);  }
-.ent--post{ --ent-col:var(--k-post); }
-/* 时事独用隶书，色苍（无隶书则退为宋体） */
+/* 附见：所部、关涉、时事、附、谱后同为一等，色淡字小 */
+.ent--aux{ --ent-fs:30px; --ent-col:var(--k-aux); }
+/* 时事于附见中独用隶书（无隶书则退为宋体） */
 .ent--li{
-  --ent-fs:31px; --ent-col:var(--k-bg);
   --ent-ff:'LiSu','SimLi','STLiti','Baoli SC','隶书','Noto Serif SC',serif;
 }
 .ent--li .ent__text{ letter-spacing:.03em; }
@@ -482,7 +472,7 @@ body{
 <div class="card" id="measure"></div>
 
 <div id="hud">
-  <kbd>←</kbd><kbd>→</kbd> 翻页　<kbd>↑</kbd><kbd>↓</kbd> 换年　<kbd>1948</kbd> 跳转年份　<kbd>S</kbd> 来源　<kbd>N</kbd> 按语　<kbd>K</kbd> 分目　<kbd>D</kbd> 配色　<kbd>E</kbd> 导出 PNG　<kbd>?</kbd> 帮助
+  <kbd>←</kbd><kbd>→</kbd> 翻页　<kbd>↑</kbd><kbd>↓</kbd> 换年　<kbd>1948</kbd> 跳转年份　<kbd>S</kbd> 来源　<kbd>N</kbd> 按语　<kbd>K</kbd> 分目　<kbd>V</kbd> 取阅　<kbd>D</kbd> 配色　<kbd>E</kbd> 导出 PNG　<kbd>?</kbd> 帮助
 </div>
 <div id="jump"></div>
 <div id="toast"></div>
@@ -498,6 +488,7 @@ body{
     <div class="help__row"><i><b>Home</b><b>End</b></i><span>首页 / 末页</span></div>
     <div class="help__row"><i><b>S</b></i><span>显示或隐藏「来源」</span></div>
     <div class="help__row"><i><b>N</b></i><span>显示或隐藏「按语」</span></div>
+    <div class="help__row"><i><b>V</b></i><span>取阅：全部 / 仅谱主行实 / 仅附见</span></div>
     <div class="help__row"><i><b>K</b></i><span>体例分目：所部 / 关涉 / 时事 / 附 / 谱后</span></div>
     <div class="help__row"><i><b>D</b></i><span>切换配色：白纸 / 米色 / 墨色</span></div>
     <div class="help__row"><i><b>E</b></i><span>导出当前卡片为 1080×1440 PNG</span></div>
@@ -556,7 +547,7 @@ var LIAO_LEAD = /^(廖耀湘|廖建楚|廖军长|廖将军|廖司令|廖长官|�
 var LIAO_ANY  = /廖耀湘|廖建楚|廖军长|廖将军|廖司令|廖长官|廖兵团|廖师|廖部|廖(?![昌鹏显])/;
 
 /* 谱主自将之番号 */
-var LIAO_UNIT = /(?:新(?:编)?(?:第)?)?(?:二十二|廿二|二二|22)师|N22D|新(?:编)?(?:第)?[六6]军|N6A|第[九9]兵团|廖兵团|六十[四五六]团|6[456]团|207师/;
+var LIAO_UNIT = /全师|本师|该师|本军|全军|(?:新(?:编)?(?:第)?)?(?:二十二|廿二|二二|22)师|N22D|新(?:编)?(?:第)?[六6]军|N6A|第[九9]兵团|廖兵团|六十[四五六]团|6[456]团|207师/;
 
 /* 以番号发端者，事属所部 */
 var UNIT_LEAD = new RegExp('^(?:第[二]?批)?(?:' + [
@@ -585,7 +576,7 @@ var PERSON_ANY  = new RegExp(PERSON.join('|'));
 var TITLE_LEAD = /^[一-龥]{2,10}?(主席|司令官|司令|军长|师长|团长|长官|部长|参谋长|处长|将军|委员长|总统|社长|专员|教授|会长|院长|顾问|特派员|记者|秘书)[一-龥]{2,4}/;
 
 /* 机关、部队、报章 */
-var ORG_LEAD = new RegExp('^(?:' + [
+var ORG_NAMES = [
   '中央社', '申报', '新报', '小春秋晚报', '中央日报', '军民日报', '大公报',
   '本报', '合众社', '路透社', '〔',
   '国民政府', '国民党', '国民革命军', '军事委员会', '军委会', '国防部',
@@ -596,7 +587,12 @@ var ORG_LEAD = new RegExp('^(?:' + [
   '日军', '日本', '美军', '美国', '美陆军', '苏军', '苏联', '盟军',
   '国军', '东北国军', '东北前线', '东北将领', '中印公路', '中华口琴会',
   '黄埔军校', '中央军校', '陆军大学', '蓝姆伽'
-].join('|') + ')');
+];
+var ORG_LEAD = new RegExp('^(?:' + ORG_NAMES.join('|') + ')');
+var ORG_ANY  = new RegExp(ORG_NAMES.join('|'));
+
+/* 外间之事：攻守易手、政局更迭之类 */
+var EVENT = /(陷敌|失守|沦陷|克复|收复|攻占|占领|攻克|失陷|停战|投降|宣战|起义|成立|改组|改编|通车|爆发|签订|停火|受降|光复)/;
 
 /* 亲属 */
 var FAMILY_LEAD = /^(妻|夫人|汪青|黄伯溶|父|母|祖父|祖母|长子|次子|长女|子女|家属|家人|廖显悌|廖昌仕|廖鹏程|堂兄)/;
@@ -620,7 +616,7 @@ var TITLE_BEFORE = /(司令|司令官|军长|师长|团长|部长|处长|长官|
 var SELF_CLAUSE = /[。；]\s*(率|偕|与|电|致|呈|奉|赴|抵|返|作|题|挽|撰|著|出席|主持|下令|命|派|升|获)/;
 
 /* 省略主语（即谱主）的句首动词、时地状语 */
-var VERB_LEAD = /^(电|致|呈|复|函|率|奉|入|赴|抵|莅|飞|到|返|回|转|升|晋|任|派|受|被|获|著|撰|作|写|考|加|参|出|视|主|决|批|命|令|下|发|通|宣|请|拟|查|与|同|偕|陪|会|见|访|谒|往|由|自|从|因|为|以|在|于|据|随|收|占|兼|离|毕|叙|推|攻|进|巡|驻|扫|连|宴|慰|归|停|打|指|退|乘|接|撤|经|向|题|挽|摄|代|独|暂|密|手|歼|完|列|签|订|是|同|次|翌|本|当|今|昨|前|后|约|旋|时|先|至|春|夏|秋|冬|年|月|日|初|中|末|晚|晨|午|夜|拂|黄|上|幼|正)/;
+var VERB_LEAD = /^(电|致|呈|复|函|率|奉|入|赴|抵|莅|飞|到|返|回|转|升|晋|任|派|受|被|获|著|撰|作|写|考|加|参|出|视|主|决|批|命|令|下|发|通|宣|请|拟|查|与|同|偕|陪|会|见|访|谒|往|由|自|从|因|为|以|在|于|据|随|收|占|兼|离|毕|叙|推|攻|进|巡|驻|扫|连|宴|慰|归|停|打|指|退|乘|接|撤|经|向|题|挽|摄|代|独|暂|密|手|歼|完|列|签|订|是|同|次|翌|本|当|今|昨|前|后|约|旋|时|先|至|春|夏|秋|冬|年|月|日|初|中|末|晚|晨|午|夜|拂|黄|上|幼|正|早|调|署|充|补|嗣|旋|寻|越|逾|翌|迨|比|洎)|^约?[〇一二三四五六七八九十廿卅两0-9]+(?:岁|余岁|年|月|日|时|周岁)/;
 
 function leadOf(text){ return String(text).split(/[，。；、（(「《：:]/)[0]; }
 
@@ -673,8 +669,13 @@ function classify(text, posthumous){
     }
   }
 
-  /* 通篇不及谱主而事在本部者，系于所部 */
-  if (!LIAO_ANY.test(t) && LIAO_UNIT.test(t) && !elided && !SELF_EVENT.test(t)) return '所部';
+  /* 通篇不及谱主，句首又非省主语之动词者，其事不在谱主：
+     及于本部者系所部，余为时事。 */
+  if (!LIAO_ANY.test(t) && !elided && !SELF_EVENT.test(t)){
+    if (LIAO_UNIT.test(t)) return '所部';
+    /* 须有他人、机关或外事之迹，否则仍以谱主为主语 */
+    if (PERSON_ANY.test(lead) || ORG_ANY.test(lead) || EVENT.test(t)) return '时事';
+  }
 
   return '本人';
 }
@@ -707,18 +708,31 @@ function hasFont(family){
 var HAS_LISHU = ['LiSu', 'SimLi', 'STLiti', 'Baoli SC', '隶书'].some(hasFont);
 
 var KIND_DEF = [
-  ['本人', '墨', '谱主亲历之事',                   ''],
-  ['所部', '靛', '所统部队之行动，谱主未必在场',   'ent--unit'],
-  ['关涉', '朱', '他人行事而事关谱主或所部',       'ent--rel'],
-  ['时事', HAS_LISHU ? '苍·隶书' : '苍', '时代背景，与谱主行止相关者始录', 'ent--li'],
-  ['附',   '褐', '亲属及旁涉之事',                 'ent--app'],
-  ['谱后', '黛', '身后之事',                       'ent--post']
+  ['本人', '墨书', '谱主亲历之事',                   ''],
+  ['所部', '附见', '所统部队之行动，谱主未必在场',   'ent--aux'],
+  ['关涉', '附见', '他人行事而事关谱主或所部',       'ent--aux'],
+  ['时事', HAS_LISHU ? '附见·隶书' : '附见', '时代背景，与谱主行止相关者始录', 'ent--aux ent--li'],
+  ['附',   '附见', '亲属及旁涉之事',                 'ent--aux'],
+  ['谱后', '附见', '身后之事',                       'ent--aux']
 ];
-var KIND_CLASS = { 本人:'', 所部:'ent--unit', 关涉:'ent--rel', 附:'ent--app', 谱后:'ent--post', 时事:'ent--li' };
+var KIND_CLASS = { 本人:'', 所部:'ent--aux', 关涉:'ent--aux', 附:'ent--aux',
+                   谱后:'ent--aux', 时事:'ent--aux ent--li' };
+function isSelf(e){ return !e.k || e.k === '本人'; }
 var KIND_COUNTS = {};
 YEARS.forEach(function(y){ y.entries.forEach(function(e){ KIND_COUNTS[e.k] = (KIND_COUNTS[e.k] || 0) + 1; }); });
 
 var TOTAL_ENTRIES = YEARS.reduce(function(n,y){ return n + y.entries.length; }, 0);
+
+/* 取一等自成一幅：全部 / 仅谱主行实 / 仅附见 */
+var VIEW = YEARS;
+var VIEW_LABEL = { all:'', self:'仅录谱主行实', aux:'仅录附见' };
+function applyView(){
+  if (state.view === 'all'){ VIEW = YEARS; return; }
+  var want = state.view === 'self';
+  VIEW = YEARS.map(function(y){
+    return { year:y.year, entries:y.entries.filter(function(e){ return isSelf(e) === want; }) };
+  }).filter(function(y){ return y.entries.length > 0; });
+}
 var FIRST_YEAR = YEARS.length ? YEARS[0].year : 0;
 var LAST_YEAR  = YEARS.length ? YEARS[YEARS.length-1].year : 0;
 var BIRTH_YEAR = 1906;
@@ -769,6 +783,7 @@ var state = {
   showSource: load('lyx.card.src', '1') === '1',
   showNote:   load('lyx.card.note', '0') === '1',
   showKind:   load('lyx.card.kind', '1') === '1',
+  view:       load('lyx.card.view', 'all'),
   theme:      load('lyx.card.theme', 'paper'),
   hud:        true
 };
@@ -818,7 +833,8 @@ function entryHTML(e){
 }
 
 function footerHTML(right){
-  return '<div class="ft"><div class="ft__l">liaoyaoxiang.com　·　廖耀湘史料档案</div>' +
+  var note = VIEW_LABEL[state.view] || '廖耀湘史料档案';
+  return '<div class="ft"><div class="ft__l">liaoyaoxiang.com　·　' + note + '</div>' +
          '<div class="ft__r">' + right + '</div></div>';
 }
 
@@ -848,11 +864,12 @@ function fillAt(y, sub, start, fs){
 
 function paginate(){
   paginateRuns += 1;
+  applyView();
   pages = [{ type:'cover' }];
   if (state.showKind) pages.push({ type:'notes' });
   pages.push({ type:'toc' });
 
-  YEARS.forEach(function(y, yi){
+  VIEW.forEach(function(y, yi){
     var i = 0, sub = 0, made = [];
     while (i < y.entries.length){
       sub += 1;
@@ -924,8 +941,8 @@ function fanliHTML(){
   }).join('');
   return mastheadHTML('凡 例', 'Editorial Note', '六目 · ' + TOTAL_ENTRIES + ' 条', false) +
     '<div class="bd bd--fanli">' +
-      '<div><p class="fl__lead">年谱以谱主为纲，事系于人：凡与谱主相涉者始入谱，不相涉者虽大不录。条目性质别为六目，墨色随之——谱主亲历用墨，所部用靛，关涉用朱，时事用苍' +
-        (HAS_LISHU ? '而书以隶体' : '') + '，亲属旁涉用褐，身后用黛。</p>' +
+      '<div><p class="fl__lead">年谱以谱主为纲，事系于人：凡与谱主相涉者始入谱，不相涉者虽大不录。书法分两等——谱主亲历者墨书，字大；余皆附见，色淡字小，各标其目于日下' +
+        (HAS_LISHU ? '，时事并书以隶体' : '') + '。按 V 键可专取一等，各自成幅。</p>' +
       rows + '</div>' +
       '<p class="fl__foot">目类依条目文字判定，非原始著录之一部；如有未安，以正文及所注出处为准。按 K 键去分目，则一律墨书。</p>' +
     '</div>' +
@@ -934,7 +951,7 @@ function fanliHTML(){
 
 function histHTML(){
   var by = {}, max = 0;
-  YEARS.forEach(function(y){ by[y.year] = y.entries.length; max = Math.max(max, y.entries.length); });
+  VIEW.forEach(function(y){ by[y.year] = y.entries.length; max = Math.max(max, y.entries.length); });
   var bars = '', axis = '';
   for (var y = FIRST_YEAR; y <= LAST_YEAR; y++){
     var c = by[y] || 0;
@@ -951,12 +968,13 @@ function histHTML(){
 }
 
 function tocHTML(){
-  var max = YEARS.reduce(function(m,y){ return Math.max(m, y.entries.length); }, 0);
-  var cells = YEARS.map(function(y){
+  var max = VIEW.reduce(function(m,y){ return Math.max(m, y.entries.length); }, 0);
+  var shown = VIEW.reduce(function(n,y){ return n + y.entries.length; }, 0);
+  var cells = VIEW.map(function(y){
     var peak = y.entries.length >= max * 0.5 ? ' peak' : '';
     return '<div class="toc__cell' + peak + '"><b>' + y.year + '</b><span>' + y.entries.length + '</span></div>';
   }).join('');
-  return mastheadHTML('目 录', 'Contents', YEARS.length + ' 年 · ' + TOTAL_ENTRIES + ' 条', false) +
+  return mastheadHTML('目 录', 'Contents', VIEW.length + ' 年 · ' + shown + ' 条', false) +
     '<div class="bd bd--toc">' +
       '<div><p class="toc__lead">下列为存有纪事之年份，小字为该年条目数；朱色标示条目最密之年。</p>' +
       '<div class="toc__grid">' + cells + '</div></div>' +
@@ -966,7 +984,7 @@ function tocHTML(){
 }
 
 function yearPageHTML(p){
-  var y = YEARS[p.yi];
+  var y = VIEW[p.yi];
   var html = headerHTML(y.year, p.sub, p.sub > 1) + '<div class="bd">';
   for (var i = p.start; i < p.end; i++) html += entryHTML(y.entries[i]);
   html += '</div>';
@@ -1025,18 +1043,18 @@ function stepYear(dir){
   if (dir < 0 && p.sub > 1){ go(firstPageOfYear(p.yi)); return; }
   var yi = p.yi + dir;
   if (yi < 0){ go(0); return; }
-  if (yi >= YEARS.length){ go(pages.length - 1); return; }
+  if (yi >= VIEW.length){ go(pages.length - 1); return; }
   go(firstPageOfYear(yi));
 }
 function gotoYear(year){
   var best = -1;
-  for (var i = 0; i < YEARS.length; i++){
-    if (YEARS[i].year === year){ best = i; break; }
-    if (YEARS[i].year < year) best = i;          /* nearest earlier year */
+  for (var i = 0; i < VIEW.length; i++){
+    if (VIEW[i].year === year){ best = i; break; }
+    if (VIEW[i].year < year) best = i;          /* nearest earlier year */
   }
   if (best < 0) best = 0;
   go(firstPageOfYear(best));
-  if (YEARS[best].year !== year) toast('无 ' + year + ' 年纪事，已跳至 ' + YEARS[best].year + ' 年');
+  if (VIEW[best].year !== year) toast('无 ' + year + ' 年纪事，已跳至 ' + VIEW[best].year + ' 年');
 }
 
 function indexOfType(t){
@@ -1049,7 +1067,7 @@ function syncHash(){
   if (p.type === 'cover') h = '#cover';
   else if (p.type === 'notes') h = '#notes';
   else if (p.type === 'toc') h = '#contents';
-  else h = '#' + YEARS[p.yi].year + (p.sub > 1 ? '-' + p.sub : '');
+  else h = '#' + VIEW[p.yi].year + (p.sub > 1 ? '-' + p.sub : '');
   if (location.hash !== h){
     try { history.replaceState(null, '', h); } catch(err){}
   }
@@ -1062,7 +1080,7 @@ function fromHash(){
   var m = h.match(/^(\d{4})(?:-(\d+))?$/);
   if (!m) return 0;
   var yi = -1;
-  for (var i = 0; i < YEARS.length; i++) if (YEARS[i].year === +m[1]){ yi = i; break; }
+  for (var i = 0; i < VIEW.length; i++) if (VIEW[i].year === +m[1]){ yi = i; break; }
   if (yi < 0) return 0;
   var base = firstPageOfYear(yi);
   var sub = m[2] ? Math.max(1, +m[2]) : 1;
@@ -1101,17 +1119,22 @@ function fit(){
 
 function repaginate(){
   var p = pages[state.idx], anchor = null;
-  if (p && p.type === 'year') anchor = { yi: p.yi, start: p.start };
+  /* anchor on the year itself: filtering reshuffles the indices */
+  if (p && p.type === 'year' && VIEW[p.yi]) anchor = { year: VIEW[p.yi].year, start: p.start };
   paginate();
   if (anchor){
-    var found = 0;
+    var found = 0, best = -1;
     for (var i = 0; i < pages.length; i++){
-      if (pages[i].type === 'year' && pages[i].yi === anchor.yi){
+      if (pages[i].type !== 'year') continue;
+      var yr = VIEW[pages[i].yi].year;
+      if (yr === anchor.year){
         found = i;
         if (pages[i].end > anchor.start) break;
+      } else if (best < 0 && yr > anchor.year){
+        best = i;                       /* that year is gone: take the next one */
       }
     }
-    state.idx = found;
+    state.idx = found || (best < 0 ? 0 : best);
   }
   go(state.idx);
 }
@@ -1149,7 +1172,7 @@ function exportPNG(){
       card.style.boxShadow = prevShadow;
       var p = pages[state.idx];
       var name = p.type === 'year'
-        ? '廖耀湘年谱-' + YEARS[p.yi].year + '-' + p.sub + '.png'
+        ? '廖耀湘年谱-' + VIEW[p.yi].year + '-' + p.sub + '.png'
         : '廖耀湘年谱-' + p.type + '.png';
       var a = document.createElement('a');
       a.href = canvas.toDataURL('image/png');
@@ -1205,6 +1228,12 @@ document.addEventListener('keydown', function(e){
     case 'n': case 'N':
       state.showNote = !state.showNote; save('lyx.card.note', state.showNote ? '1' : '0');
       repaginate(); toast(state.showNote ? '显示按语' : '隐藏按语'); break;
+    case 'v': case 'V':
+      var views = ['all','self','aux'];
+      state.view = views[(views.indexOf(state.view) + 1) % views.length];
+      save('lyx.card.view', state.view);
+      repaginate();
+      toast({ all:'全部条目', self:'仅谱主行实', aux:'仅附见' }[state.view]); break;
     case 'k': case 'K':
       state.showKind = !state.showKind; save('lyx.card.kind', state.showKind ? '1' : '0');
       repaginate(); toast(state.showKind ? '显示体例分目' : '不分目，一律顶格'); break;
