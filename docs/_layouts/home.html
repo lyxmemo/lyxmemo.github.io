@@ -8,10 +8,12 @@ title: 主页
 {%- assign memorial_posts_raw = "" | split: "" -%}
 {%- assign telegrams_raw = "" | split: "" -%}
 {%- assign magazines_raw = "" | split: "" -%}
+{%- assign todo_raw = "" | split: "" -%}
 {%- assign collections_to_search = "liaos_writings,ten_year_memorial,n6a_memorial,n22d_memorial,battles_history,liaos_tele,newspapers" | split: "," -%}
 {%- for collection_name in collections_to_search -%}
   {%- for post in site[collection_name] -%}
     {%- if post.category == "Liao's Tele" -%}{%- assign telegrams_raw = telegrams_raw | push: post -%}{%- elsif post.category == "报刊杂志" -%}{%- assign magazines_raw = magazines_raw | push: post -%}{%- else -%}{%- assign memorial_posts_raw = memorial_posts_raw | push: post -%}{%- endif -%}
+    {%- if post.title contains "待录入" -%}{%- assign todo_raw = todo_raw | push: post -%}{%- endif -%}
   {%- endfor -%}
 {%- endfor -%}
 
@@ -22,6 +24,7 @@ title: 主页
     <button class="tablinks" onclick="openTab(event, 'magazines')" id="magazines-tab">Newspaper / 报刊</button>
     <button class="tablinks" onclick="openTab(event, 'chronology')" id="chronology-tab">年谱 / Chronology</button>
     <button class="tablinks" onclick="openTab(event, 'photos')" id="photos-tab">图片 / Photos</button>
+    <button class="tablinks" onclick="openTab(event, 'todo')" id="todo-tab">待录入 / To Do</button>
     <div class="subscribe-icon-wrapper">
       <button class="subscribe-icon-btn" onclick="toggleSubscribe(this)" title="订阅 / Subscribe">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -300,6 +303,78 @@ title: 主页
     </div>
   </div>
 
+  <div id="todo" class="tabcontent">
+    {%- comment -%}
+      待录入 = 站内已建条目、但正文尚未录入的占位页面。
+      标题以 [待录入] 开头表示尚无人认领，[已认领待录入] 表示已有人在整理。
+      列表由 todo_raw 自动生成，条目录入完成、标记去掉后会自动从本页消失。
+    {%- endcomment -%}
+    {%- assign todo_claimed = "" | split: "" -%}
+    {%- assign todo_unclaimed = "" | split: "" -%}
+    {%- assign todo_tele = "" | split: "" -%}
+    {%- assign todo_other = "" | split: "" -%}
+    {%- for post in todo_raw -%}
+      {%- if post.title contains "已认领" -%}{%- assign todo_claimed = todo_claimed | push: post -%}{%- else -%}{%- assign todo_unclaimed = todo_unclaimed | push: post -%}{%- endif -%}
+      {%- if post.category == "Liao's Tele" -%}{%- assign todo_tele = todo_tele | push: post -%}{%- else -%}{%- assign todo_other = todo_other | push: post -%}{%- endif -%}
+    {%- endfor -%}
+
+    {%- if todo_raw.size > 0 -%}
+    <div class="todo-intro">
+      <p class="todo-intro-lead">这里列出站内已经建好条目、但正文还没有录入的资料。每一条都已经查到出处，只差把原文整理上站。</p>
+      <p class="todo-stats">
+        <span class="todo-stat"><strong>{{ todo_raw.size }}</strong>待录入</span>
+        <span class="todo-stat"><strong>{{ todo_unclaimed.size }}</strong>待认领</span>
+        <span class="todo-stat"><strong>{{ todo_claimed.size }}</strong>已认领</span>
+      </p>
+      <p class="todo-intro-note">带 <span class="todo-badge">已认领</span> 标记的条目已有人在整理中；其余条目欢迎认领。若您手边有这些材料，或愿意帮忙录入、校对，欢迎<a href="mailto:lyxmemo@gmail.com">邮件联系</a>，或在 <a href="https://github.com/lyxmemo/lyxmemo.github.io/issues/new?template=new-article.yml" target="_blank" rel="noopener">GitHub 提交文章</a>。</p>
+    </div>
+
+    {%- if todo_other.size > 0 -%}
+      <h3 class="todo-section-heading">书籍 · 文章 / Books &amp; Articles<span class="todo-count">{{ todo_other.size }}</span></h3>
+      {%- assign todo_other_sorted = todo_other | sort: 'title' -%}
+      {%- assign todo_other_by_book = todo_other_sorted | group_by: "category" | sort: "name" -%}
+      {%- for book in todo_other_by_book -%}
+        <details class="collapsible-book" open>
+          <summary>《{{ book.name }}》<span class="todo-count">{{ book.items.size }}</span></summary>
+          <ul>
+            {%- for post in book.items -%}
+              {%- assign todo_title = post.title | remove_first: "[已认领待录入]" | remove_first: "[待录入]" | strip -%}
+              <li>{%- if post.title contains "已认领" -%}<span class="todo-badge">已认领</span>{%- endif -%}<a href="{{ post.url | relative_url }}">{{ todo_title }}</a>{%- if post.author and post.author != "未知" -%}（{{ post.author }}）{%- endif -%}</li>
+            {%- endfor -%}
+          </ul>
+        </details>
+      {%- endfor -%}
+    {%- endif -%}
+
+    {%- if todo_tele.size > 0 -%}
+      <h3 class="todo-section-heading">电报 / Telegrams<span class="todo-count">{{ todo_tele.size }}</span></h3>
+      {%- assign todo_tele_sorted = todo_tele | sort: 'date' -%}
+      {%- assign todo_tele_by_year = todo_tele_sorted | group_by_exp: "post", "post.date | date: '%Y'" | sort: "name" -%}
+      {%- for year_group in todo_tele_by_year -%}
+        <details class="collapsible-book" open>
+          <summary>{{ year_group.name }} 年<span class="todo-count">{{ year_group.items.size }}</span></summary>
+          <ul class="timeline-list">
+            {%- for post in year_group.items -%}
+              {%- assign todo_title = post.title | remove_first: "[已认领待录入]" | remove_first: "[待录入]" | strip -%}
+              {%- assign first_char = todo_title | slice: 0 -%}
+              {%- if first_char == '1' or first_char == '2' -%}{%- assign todo_title = todo_title | slice: 10, 999 | strip -%}{%- endif -%}
+              <li>
+                <span class="timeline-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                <div>{%- if post.title contains "已认领" -%}<span class="todo-badge">已认领</span>{%- endif -%}<a href="{{ post.url | relative_url }}">{{ todo_title }}</a></div>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </details>
+      {%- endfor -%}
+    {%- endif -%}
+    {%- else -%}
+    <div class="todo-intro">
+      <p class="todo-intro-lead">目前没有待录入的条目 —— 站内所有已建条目的正文都已录入完毕。</p>
+      <p class="todo-intro-note">若您手边有尚未收录的材料，欢迎<a href="mailto:lyxmemo@gmail.com">邮件联系</a>，或在 <a href="https://github.com/lyxmemo/lyxmemo.github.io/issues/new?template=new-article.yml" target="_blank" rel="noopener">GitHub 提交文章</a>。</p>
+    </div>
+    {%- endif -%}
+  </div>
+
 </div>
 
 <div id="original-view" class="view-panel">
@@ -457,7 +532,7 @@ title: 主页
 
     const openTabFromHash = () => {
       const hash = window.location.hash.substring(1);
-      const validTabs = ['news', 'byBook', 'telegrams', 'magazines', 'chronology', 'photos'];
+      const validTabs = ['news', 'byBook', 'telegrams', 'magazines', 'chronology', 'photos', 'todo'];
       let tabToOpen = '';
 
       if (hash && validTabs.includes(hash)) {
