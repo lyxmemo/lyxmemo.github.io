@@ -566,7 +566,7 @@ body{
 <div id="loading">排 版 中</div>
 
 <script id="chron-data" type="application/json">
-[{% for y in site.data.chronology %}{"y":{{ y.year }},"e":[{% for e in y.entries %}{"d":{{ e.date | default: "" | jsonify }},"p":{{ e.date_display | default: "" | jsonify }},"c":{{ e.content | default: "" | jsonify }},"s":{{ e.source | default: "" | jsonify }},"n":{{ e.notes | default: "" | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}]
+[{% for y in site.data.chronology %}{"y":{{ y.year }},"e":[{% for e in y.entries %}{"d":{{ e.date | default: "" | jsonify }},"p":{{ e.date_display | default: "" | jsonify }},"c":{{ e.content | default: "" | jsonify }},"s":{{ e.source | default: "" | jsonify }},"n":{{ e.notes | default: "" | jsonify }},"k":{{ e.lane | default: "" | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}]
 </script>
 
 <script>
@@ -579,6 +579,12 @@ var RAW = JSON.parse(document.getElementById('chron-data').textContent);
 /* Some years carry a few entries filed out of date order. Re-seat the dated
    ones into their own slots, chronologically; entries with no parsable date
    keep the position the archive gave them. */
+function hasDay(e){
+  if (e.p) return true;
+  var m = (e.d || '').split('-');
+  return m.length >= 2 && /^\d+$/.test(m[1]);
+}
+
 function orderEntries(list){
   var slots = [], dated = [];
   list.forEach(function(e, i){
@@ -593,9 +599,9 @@ function orderEntries(list){
   var out = list.slice();
   slots.forEach(function(pos, j){ out[pos] = dated[j].e; });
 
-  /* 「是年」无月日可系，一律移置年末 */
+  /* 「是年」无月日可系，一律移置年末（「1938」之类只有年者亦然） */
   var head = [], tail = [];
-  out.forEach(function(e){ ((!e.d && !e.p) ? tail : head).push(e); });
+  out.forEach(function(e){ (hasDay(e) ? head : tail).push(e); });
   return head.concat(tail);
 }
 
@@ -739,6 +745,7 @@ YEARS.forEach(function(y){
       if (y.entries[i].d === DEATH_DATE){ death = i; break; }
   }
   y.entries.forEach(function(e, i){
+    if (e.k === '左' || e.k === '右') return;      /* 谱中已注者，从其所注 */
     e.k = classify(e.c, y.year > DEATH_YEAR || (y.year === DEATH_YEAR && death >= 0 && i > death));
   });
 });
@@ -1074,7 +1081,7 @@ function fanliHTML(){
       '<div><p class="fl__lead">年谱以谱主为纲，事系于人。每幅分两栏，中缝为时间轴：谱主知其事、或身受其影响者，列于左栏，字大墨书；谱主不与其事、未必与闻者，列于右栏，字小色淡' +
         (HAS_LISHU ? '而书以隶体' : '') + '。逐日为节，日系于中缝，其日之事左右齐首而下；一幅之中惟一栏有事者，则通栏书之。按 V 键可专取一栏。</p>' +
       rows + '</div>' +
-      '<p class="fl__foot">目类依条目文字判定，非原始著录之一部；如有未安，以正文及所注出处为准。按 K 键去分栏，则不问左右，通栏一律墨书。</p>' +
+      '<p class="fl__foot">左右已著录于谱中，可径改；未注者乃依条目文字判定。如有未安，以正文及所注出处为准。按 K 键去分栏，则不问左右，通栏一律墨书。</p>' +
     '</div>' +
     footerHTML('凡 例');
 }
