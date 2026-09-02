@@ -592,13 +592,22 @@ function orderEntries(list){
   dated.sort(function(a, b){ return a.k - b.k || a.i - b.i; });
   var out = list.slice();
   slots.forEach(function(pos, j){ out[pos] = dated[j].e; });
-  return out;
+
+  /* 「是年」无月日可系，一律移置年末 */
+  var head = [], tail = [];
+  out.forEach(function(e){ ((!e.d && !e.p) ? tail : head).push(e); });
+  return head.concat(tail);
 }
 
 var YEARS = RAW.map(function(y){
   return {
     year: y.y,
-    entries: orderEntries((y.e || []).filter(function(e){ return (e.c || '').trim() !== ''; }))
+    entries: orderEntries((y.e || []).filter(function(e){
+      if ((e.c || '').trim() === '') return false;
+      /* 有作「""」者，非日之称，视同无日 */
+      e.p = (e.p || '').replace(/["'\u201c\u201d\u2018\u2019\s]/g, '');
+      return true;
+    }))
   };
 }).filter(function(y){ return y.entries.length > 0; });
 
@@ -635,6 +644,9 @@ var ELIDED = new RegExp('^(?:' + [
   '接', '撤', '题', '挽', '摄', '签', '订', '调', '署', '充', '补', '任', '转',
   '强渡', '渡', '克', '袭', '夺', '守', '围', '突', '援', '扼', '布防', '集结',
   '见', '完全', '全部', '继续', '再度', '当即', '旋即', '遵令', '奉令',
+  '命', '至', '向', '由', '推进', '进抵', '前进', '挺进', '开进', '转进', '移驻',
+  '攻克', '克复', '收复', '占领', '夺取', '攻占', '手书', '收到', '连发', '获悉',
+  '奉到', '遵', '据', '当', '旋', '续', '再', '被', '遂',
   '出席', '列席', '主持', '召集', '发表', '讲话', '训话', '视察', '检阅',
   /* 时地状语 */
   '是日', '是年', '是月', '同日', '次日', '翌日', '本日', '当日', '今日', '昨日',
@@ -667,12 +679,26 @@ var ORG_LEAD = new RegExp('^(?:' + [
   '军事调处执行部', '军事复员会议', '全国政协', '政协', '民革',
   '中共', '共军', '共方', '解放军', '东北民主联军', '共产党',
   '日军', '日本', '美军', '美国', '美陆军', '苏军', '苏联', '盟军',
-  '国军', '东北国军', '东北前线', '东北将领', '中印公路', '中华口琴会',
+  '国军', '东北国军', '东北前线', '东北将领', '中华口琴会',
   '黄埔军校', '中央军校', '陆军大学', '蓝姆伽', '新一军', '新三军', '新五军'
 ].join('|') + ')');
 
 /* 外间之事：攻守易手、政局更迭 */
-var EVENT = /(陷敌|失守|沦陷|克复|收复|攻占|占领|攻克|失陷|停战|投降|宣战|受降|光复|事变|爆发)/;
+var EVENT = /(告陷|陷敌|失守|沦陷|克复|收复|攻占|占领|攻克|失陷|停战|投降|宣战|受降|光复|事变|爆发)/;
+
+/* 加于谱主或其部之动词：其事及身，故居左 */
+var TO_HIM = /(电令|电|致|函|令|命|召见|接见|会见|晤|面告|告知|嘱|谕|授|给予|颁给|颁赠|颁发|派|调|免|对|向|与|偕|同|邀|约|访|见|表扬|斥责|惩办|批准|指定|编入|拨归|配属|改为)\s*(廖(?:耀湘|建楚)?|新(?:编)?(?:第)?(?:二十二|廿二|二二|22)师|新(?:编)?(?:第)?[六6]军|第[五5]军|第[九9]兵团|所部|该师|该军)/;
+
+/* 任免勋赏及于其身 */
+var ON_HIM = /(给予|颁给|颁赠|颁发|授予|晋任|升任|调任|调升|任命|免职|撤职|惩办|嘉奖|记功|申斥)[^。；]{0,8}廖/;
+
+/* 他人往还文书：报告、转述之词，谱主未必与闻 */
+var COMMS = /^[^，。；]{0,12}?(电告|电令|电|致电|致|函呈|函|呈|复电|复函|报告|汇报|转报|通报|通电|呈报|签呈|电陈|面陈|称)/;
+
+/* 前句他事，后句转述谱主行实 */
+var SELF_CLAUSE = /[，。；：]\s*(率|偕|与|电|致|呈|奉|赴|抵|返|作|题|挽|撰|著|书|函|寄|至|入|考|加入|参加|随|从|见|出席|主持|下令|命|派|升|获|遂|乃|因|被|旋|又|复|后|次日|当日|嗣)/;
+
+var MY_UNIT_LEAD = new RegExp('^(?:第[二]?批|所属|所部)?(?:' + MY_UNIT.source + ')');
 
 function leadOf(text){ return String(text).split(/[，。；、（(「《：:]/)[0]; }
 
@@ -681,20 +707,27 @@ function classify(text, posthumous){
   if (posthumous) return '右';
   var t = String(text), lead = leadOf(t);
 
-  /* 事涉其身、其部、其亲者，谱主无不与闻 */
-  if (LIAO.test(t) || MY_UNIT.test(t) || MY_CIRCLE.test(t)) return '左';
-
-  /* 句首即动词或时地状语者，主语已省，即谱主 */
+  /* 一、谱主或其部自为主语 */
+  if (/^(Liao|廖)/.test(lead)) return '左';
+  if (MY_UNIT_LEAD.test(lead)) return '左';   /* 番号居首，即以其部为主语 */
   if (ELIDED.test(lead)) return '左';
 
-  /* 以他人、职衔、机关领起，或时地状语之后即出他人者，谱主不与 */
-  if (PERSON_LEAD.test(lead) || ORG_LEAD.test(lead) || TITLE_LEAD.test(lead)) return '右';
-  var head = t.slice(0, 8), m = head.match(PERSON_ANY);
-  if (m) return '右';
+  /* 二、他人为主语 */
+  /* 他人须领起首句，见于次句者不算 */
+  var third = PERSON_LEAD.test(lead) || ORG_LEAD.test(lead) || TITLE_LEAD.test(lead) ||
+              PERSON_ANY.test(lead.slice(0, 8));
+  if (third){
+    if (TO_HIM.test(t)) return '左';        /* 事加于其身、其部 */
+    if (ON_HIM.test(t)) return '左';        /* 任免勋赏及其身 */
+    if (COMMS.test(lead)) return '右';      /* 他人往还文书，虽及其部，亦不与闻 */
+    if (MY_UNIT.test(t)) return '左';       /* 非文书而处分其部者 */
+    return '右';
+  }
 
-  /* 攻守政局之事，与其身无涉者 */
+  /* 三、主语不显者 */
+  if (SELF_CLAUSE.test(t)) return '左';     /* 后句转述其行实 */
+  if (LIAO.test(t) || MY_UNIT.test(t) || MY_CIRCLE.test(t)) return '左';
   if (EVENT.test(t)) return '右';
-
   return '左';
 }
 
@@ -947,17 +980,16 @@ function runEndOf(y, start){
 function fitPage(y, sub, start, fs){
   if (!isSplit()) return fillAt(y, sub, start, fs, false);
 
-  var runEnd = runEndOf(y, start);
-  var w = fillAt(y, sub, start, fs, false);
-  if (start + w.count <= runEnd){ w.split = false; return w; }   /* 通篇止于一栏 */
-
+  /* 一幅之中两栏俱有事，即分栏书之 */
   var r = fillAt(y, sub, start, fs, true);
-  if (start + r.count <= runEnd){        /* 分栏尚不足以两栏并见，则通栏杂书 */
-    w.split = false;
-    return w;
-  }
-  r.split = true;
-  return r;
+  var runEnd = runEndOf(y, start);
+  if (start + r.count > runEnd){ r.split = true; return r; }
+
+  /* 通篇止于一栏：通栏书之，而止于其栏之末，留他栏之事与下幅分书 */
+  var w = fillAt(y, sub, start, fs, false);
+  w.count = Math.min(w.count, runEnd - start);
+  w.split = false;
+  return w;
 }
 
 function paginate(){
