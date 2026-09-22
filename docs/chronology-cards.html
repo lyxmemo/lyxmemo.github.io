@@ -34,18 +34,25 @@ sitemap: false
   --rule-2: #ececE7;
   --accent: #8c2f24;
   --accent-soft: #f6efed;
+  --note-bg: #f5f5f2;
   --hud:    rgba(20,22,25,.45);
+
+  /* 两等：谱主行实用墨，附见用淡 */
+  --k-self: #16191c;
+  --k-aux:  #5d6771;
 }
 
 :root[data-palette="ivory"]{
   --paper:#fbf7f0; --stage:#e3dbcd; --ink:#221d17; --ink-2:#4f463a;
   --ink-3:#8d8271; --rule:#ddd2bf; --rule-2:#ece4d6; --accent:#8c2f24;
-  --accent-soft:#f3e9df; --hud:rgba(34,29,23,.45);
+  --accent-soft:#f3e9df; --note-bg:#f3eee3; --hud:rgba(34,29,23,.45);
+  --k-self:#221d17; --k-aux:#6d6455;
 }
 :root[data-palette="ink"]{
   --paper:#15181c; --stage:#0a0c0e; --ink:#eceae6; --ink-2:#b3b8bf;
   --ink-3:#7b838d; --rule:#2c3238; --rule-2:#23282d; --accent:#c9584a;
-  --accent-soft:#221a19; --hud:rgba(236,234,230,.42);
+  --accent-soft:#221a19; --note-bg:#1b1f23; --hud:rgba(236,234,230,.42);
+  --k-self:#eceae6; --k-aux:#98a1ab;
 }
 
 *{ box-sizing:border-box; }
@@ -162,13 +169,88 @@ body{
 }
 .bd--center{ justify-content:center; }
 .bd--toc{ justify-content:space-between; }
+.bd--fanli{ justify-content:space-between; }
 
 .ent{
   flex:none;
   display:grid;
   grid-template-columns:126px 1fr;
   padding:calc((21px + var(--slack,0px)) * var(--fs)) 0;
+  --ent-fs:33px; --ent-col:var(--k-self);
+  --ent-ff:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',ui-serif,Georgia,serif;
+  --ent-fw:400;
 }
+/* 附见：所部、关涉、时事、附、谱后同为一等，色淡字小 */
+.ent--aux{ --ent-fs:24px; --ent-col:var(--k-aux); }
+.ent--lane-r.ent--aux{ --ent-fs:21px; }
+/* 时事于附见中独用隶书（无隶书则退为宋体） */
+.ent--li{
+  --ent-ff:'LiSu','SimLi','STLiti','Baoli SC','隶书','Noto Serif SC',serif;
+}
+.ent--li .ent__text{ letter-spacing:.02em; }
+
+/* ---------- 两栏：左七右三，中缝为时间轴 ----------
+   逐日为节：一日之事，左右并列，齐首于其日之下。 */
+.cols{ display:grid; grid-template-columns:1fr; align-items:start; }
+.cols--split{ display:block; position:relative; }
+.cols--split::before{                       /* 中缝 */
+  content:''; position:absolute; top:6px; bottom:6px;
+  left:calc((100% - 30px) * 0.7 + 15px);
+  width:1px; background:var(--rule);
+}
+.band + .band{ margin-top:calc(26px + var(--band-gap, 0px)); }
+.band__date{
+  position:relative;
+  width:calc((100% - 30px) * 0.7 + 10px);
+  padding-right:17px; margin-bottom:calc(11px * var(--fs));
+  text-align:right;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:calc(21px * var(--fs)); font-weight:500;
+  letter-spacing:.02em; color:var(--ink-3);
+  line-height:1.3;
+}
+.band__date .cjk{ font-family:'Noto Serif SC','Songti SC',serif; letter-spacing:.06em; }
+.band__date::after{                         /* 中缝上之刻 */
+  content:''; position:absolute; right:-6px; top:.62em;
+  width:13px; height:1px; background:var(--ink-3);
+}
+.band__cols{
+  display:grid; grid-template-columns:70fr 30fr;
+  column-gap:30px; align-items:start;
+}
+.lane{ display:flex; flex-direction:column; min-width:0; gap:22px; }
+.band--head .band__date::after{ display:none; }
+.band--head{ margin-bottom:8px; }
+.lane__title{
+  font-size:calc(19px * var(--fs));
+  letter-spacing:.3em; line-height:1.4;
+  color:var(--ink-3);
+  padding-bottom:9px; border-bottom:1px solid var(--rule-2);
+}
+.lane__title--r{ letter-spacing:.2em; }
+.lane > .ent{
+  display:block; padding:0;
+  grid-template-columns:none;
+}
+.lane > .ent + .ent{ border-top:none; }
+.lane__head{
+  display:flex; align-items:baseline; gap:14px;
+  margin-bottom:calc(9px * var(--fs));
+}
+.lane__head .ent__date{
+  padding-right:0; text-align:left;
+  font-size:calc(21px * var(--fs));
+  line-height:1.3;
+}
+.lane__head .ent__kind{ margin-top:0; }
+.lane > .ent > .ent__body{
+  border-left:none; padding-left:0;
+}
+/* 右栏：旁注之体，字小而窄 */
+.ent--lane-r .ent__text{ line-height:1.74; }
+.ent--lane-r .ent__src{ font-size:calc(16px * var(--fs)); margin-top:calc(7px * var(--fs)); }
+.ent--lane-r .ent__note{ font-size:calc(17px * var(--fs)); padding-left:12px; }
+.ent--li .ent__text{ letter-spacing:.03em; }
 .ent:first-child{ padding-top:0; }
 .ent + .ent{ border-top:1px solid var(--rule-2); }
 
@@ -183,29 +265,40 @@ body{
   white-space:nowrap;
 }
 .ent__date .cjk{ font-family:'Noto Serif SC','Songti SC',serif; letter-spacing:.06em; }
+.ent__kind{
+  margin-top:calc(7px * var(--fs));
+  font-family:'Noto Serif SC','Songti SC',serif;
+  font-size:calc(17px * var(--fs));
+  line-height:1.4; letter-spacing:.14em;
+  color:var(--ent-col);
+}
 .ent__body{
   min-width:0;
   border-left:1px solid var(--rule-2);
+  border-left-color:color-mix(in srgb, var(--ent-col) 34%, transparent);
   padding-left:26px;
+  font-family:var(--ent-ff);
+  font-weight:var(--ent-fw);
 }
 .ent__text{
   margin:0;
-  font-size:calc(33px * var(--fs));
+  font-size:calc(var(--ent-fs) * var(--fs));
   line-height:1.82;
-  color:var(--ink);
+  color:var(--ent-col);
+  font-family:inherit; font-weight:inherit;
   text-align:left;
   overflow-wrap:break-word;
 }
 .ent__note{
   margin:calc(13px * var(--fs)) 0 0;
   padding:calc(10px * var(--fs)) 0 calc(10px * var(--fs)) 18px;
-  border-left:2px solid var(--accent);
-  background:var(--accent-soft);
+  border-left:2px solid var(--ent-col);
+  background:var(--note-bg);
   font-size:calc(22px * var(--fs));
   line-height:1.72;
   color:var(--ink-2);
 }
-.ent__note b{ font-weight:600; color:var(--accent); margin-right:.4em; }
+.ent__note b{ font-weight:600; color:var(--ent-col); margin-right:.4em; }
 .ent__src{
   margin:calc(11px * var(--fs)) 0 0;
   font-size:calc(20px * var(--fs));
@@ -214,7 +307,7 @@ body{
   letter-spacing:.02em;
 }
 .ent__src b{
-  font-weight:500; color:var(--accent);
+  font-weight:500; color:var(--ink-3);
   margin-right:.6em; letter-spacing:.14em;
 }
 
@@ -296,6 +389,40 @@ body{
   font-size:16px; color:var(--ink-3);
 }
 .toc__cell.peak b{ color:var(--accent); font-weight:600; }
+
+/* ---------- 凡例 ---------- */
+.fl__lead{
+  font-size:24px; line-height:1.85; color:var(--ink-2);
+  margin:0 0 34px; letter-spacing:.02em;
+}
+.fl__row{
+  display:grid; grid-template-columns:118px 1fr 68px;
+  gap:0 22px; align-items:baseline;
+  padding:19px 0; border-top:1px solid var(--rule-2);
+}
+.fl__row:first-of-type{ border-top:none; }
+.fl__tag{
+  font-size:25px; letter-spacing:.1em;
+  color:var(--ent-col, var(--ink));
+  white-space:nowrap;
+  font-family:var(--ent-ff, inherit); font-weight:var(--ent-fw, 400);
+}
+.fl__desc{
+  font-size:22px; line-height:1.7;
+  color:var(--ent-col, var(--ink-2));
+  font-family:var(--ent-ff, inherit); font-weight:var(--ent-fw, 400);
+}
+.fl__desc i{ color:var(--ink-3); }
+.fl__desc i{ font-style:normal; color:var(--ink-3); }
+.fl__n{
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:23px; font-weight:500; color:var(--ink); text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.fl__foot{
+  margin:30px 0 0; padding-top:20px; border-top:1px solid var(--rule);
+  font-size:19px; line-height:1.75; color:var(--ink-3);
+}
 
 /* ---------- contents figure ---------- */
 .hg{ margin-top:26px; }
@@ -409,7 +536,7 @@ body{
 <div class="card" id="measure"></div>
 
 <div id="hud">
-  <kbd>←</kbd><kbd>→</kbd> 翻页　<kbd>↑</kbd><kbd>↓</kbd> 换年　<kbd>1948</kbd> 跳转年份　<kbd>S</kbd> 来源　<kbd>N</kbd> 按语　<kbd>D</kbd> 配色　<kbd>E</kbd> 导出 PNG　<kbd>?</kbd> 帮助
+  <kbd>←</kbd><kbd>→</kbd> 翻页　<kbd>↑</kbd><kbd>↓</kbd> 换年　<kbd>1948</kbd> 跳转年份　<kbd>S</kbd> 来源　<kbd>N</kbd> 按语　<kbd>K</kbd> 分栏　<kbd>V</kbd> 取阅　<kbd>D</kbd> 配色　<kbd>E</kbd> 导出 PNG　<kbd>?</kbd> 帮助
 </div>
 <div id="jump"></div>
 <div id="toast"></div>
@@ -425,6 +552,8 @@ body{
     <div class="help__row"><i><b>Home</b><b>End</b></i><span>首页 / 末页</span></div>
     <div class="help__row"><i><b>S</b></i><span>显示或隐藏「来源」</span></div>
     <div class="help__row"><i><b>N</b></i><span>显示或隐藏「按语」</span></div>
+    <div class="help__row"><i><b>V</b></i><span>取阅：全部 / 仅谱主所与 / 仅时局旁事</span></div>
+    <div class="help__row"><i><b>K</b></i><span>分栏：左谱主所与、右时局旁事</span></div>
     <div class="help__row"><i><b>D</b></i><span>切换配色：白纸 / 米色 / 墨色</span></div>
     <div class="help__row"><i><b>E</b></i><span>导出当前卡片为 1080×1440 PNG</span></div>
     <div class="help__row"><i><b>F</b></i><span>全屏</span></div>
@@ -437,7 +566,7 @@ body{
 <div id="loading">排 版 中</div>
 
 <script id="chron-data" type="application/json">
-[{% for y in site.data.chronology %}{"y":{{ y.year }},"e":[{% for e in y.entries %}{"d":{{ e.date | default: "" | jsonify }},"p":{{ e.date_display | default: "" | jsonify }},"c":{{ e.content | default: "" | jsonify }},"s":{{ e.source | default: "" | jsonify }},"n":{{ e.notes | default: "" | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}]
+[{% for y in site.data.chronology %}{"y":{{ y.year }},"e":[{% for e in y.entries %}{"d":{{ e.date | default: "" | jsonify }},"p":{{ e.date_display | default: "" | jsonify }},"c":{{ e.content | default: "" | jsonify }},"s":{{ e.source | default: "" | jsonify }},"n":{{ e.notes | default: "" | jsonify }},"k":{{ e.lane | default: "" | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}]
 </script>
 
 <script>
@@ -450,6 +579,12 @@ var RAW = JSON.parse(document.getElementById('chron-data').textContent);
 /* Some years carry a few entries filed out of date order. Re-seat the dated
    ones into their own slots, chronologically; entries with no parsable date
    keep the position the archive gave them. */
+function hasDay(e){
+  if (e.p) return true;
+  var m = (e.d || '').split('-');
+  return m.length >= 2 && /^\d+$/.test(m[1]);
+}
+
 function orderEntries(list){
   var slots = [], dated = [];
   list.forEach(function(e, i){
@@ -463,17 +598,196 @@ function orderEntries(list){
   dated.sort(function(a, b){ return a.k - b.k || a.i - b.i; });
   var out = list.slice();
   slots.forEach(function(pos, j){ out[pos] = dated[j].e; });
-  return out;
+
+  /* 「是年」无月日可系，一律移置年末（「1938」之类只有年者亦然） */
+  var head = [], tail = [];
+  out.forEach(function(e){ (hasDay(e) ? head : tail).push(e); });
+  return head.concat(tail);
 }
 
 var YEARS = RAW.map(function(y){
   return {
     year: y.y,
-    entries: orderEntries((y.e || []).filter(function(e){ return (e.c || '').trim() !== ''; }))
+    entries: orderEntries((y.e || []).filter(function(e){
+      if ((e.c || '').trim() === '') return false;
+      /* 有作「""」者，非日之称，视同无日 */
+      e.p = (e.p || '').replace(/["'\u201c\u201d\u2018\u2019\s]/g, '');
+      return true;
+    }))
   };
 }).filter(function(y){ return y.entries.length > 0; });
 
+/* ================= 分栏之法 =================
+   左栏：谱主知其事，或身受其影响者——己所行、所受、所统部队之动止、
+         与之往还之电话言谈、任免勋赏、亲属之事。
+   右栏：谱主不与其事、未必与闻者——时局、他人行止、机关沿革。
+   由条目文字判定，不写回原始数据。 */
+
+/* 谱主之名 */
+var LIAO = /Liao|廖耀湘|廖建楚|廖军长|廖将军|廖司令|廖长官|廖兵团|廖师|廖部|廖公|廖(?![昌鹏显])/;
+
+/* 谱主所隶、所统之番号：其动止，谱主无不与闻 */
+var MY_UNIT = new RegExp([
+  '新(?:编)?(?:第)?(?:二十二|廿二|二二|22)师', '新22师', 'N22D',
+  '(?:新(?:编)?(?:第)?)?二十二师', '廿二师',
+  '新(?:编)?(?:第)?[六6]军', 'N6A', '新六军',
+  '第[九9]兵团', '第[四4]兵团',
+  '第[五5]军(?!长)', '第五军',
+  '六十[四五六]团', '6[456]团', '207师', '青年军207',
+  '所部', '全师', '本师', '本军', '全军', '该师(?!长)', '该军', '该团', '军部',
+  '教导总队', '驻印军', '远征军'
+].join('|'));
+
+/* 身之所系：亲属、囚所 */
+var MY_CIRCLE = /妻|夫人|汪青|黄伯溶|廖显悌|廖定一|长子|次子|祖父|祖母|父亲|母亲|萧太夫人|战犯|管理所|功德林|特赦/;
+
+/* 句首即动词或时地状语者，主语已省，即谱主 */
+var ELIDED = new RegExp('^(?:' + [
+  /* 省主语之动词 */
+  '电', '致', '呈', '复', '函', '率', '奉', '入', '赴', '抵', '莅', '飞', '返',
+  '升', '晋', '派', '受', '获', '著', '撰', '考', '参', '视', '决', '批', '请',
+  '拟', '随', '兼', '离', '毕', '叙', '巡', '驻', '扫', '宴', '慰', '归', '乘',
+  '接', '撤', '题', '挽', '摄', '签', '订', '调', '署', '充', '补', '任', '转',
+  '强渡', '渡', '克', '袭', '夺', '守', '围', '突', '援', '扼', '布防', '集结',
+  '见', '完全', '全部', '继续', '再度', '当即', '旋即', '遵令', '奉令',
+  '命', '至', '向', '由', '推进', '进抵', '前进', '挺进', '开进', '转进', '移驻',
+  '攻克', '克复', '收复', '占领', '夺取', '攻占', '手书', '收到', '连发', '获悉',
+  '奉到', '遵', '据', '当', '旋', '续', '再', '被', '遂',
+  '出席', '列席', '主持', '召集', '发表', '讲话', '训话', '视察', '检阅',
+  /* 时地状语 */
+  '是日', '是年', '是月', '同日', '次日', '翌日', '本日', '当日', '今日', '昨日',
+  '先是', '旋', '寻', '越', '逾', '迨', '比及', '约', '晚', '晨', '午', '夜',
+  '拂晓', '黄昏', '上午', '下午', '早上', '早', '年初', '年末', '年底', '春',
+  '夏', '秋', '冬', '在', '于', '与', '同', '偕', '陪', '会同', '因', '为', '以'
+].join('|') + ')|^约?[〇一二三四五六七八九十廿卅两0-9]+(?:岁|余岁|年|月|日|时|周岁)');
+
+
+/* 他人：以其人、其衔、其机关领起者，谱主不与其事 */
+var PERSON = [
+  '蒋中正', '蒋介石', '蒋委员长', '蒋主席', '蒋经国', '蒋百里', '何应钦',
+  '杜聿明', '郑洞国', '陈诚', '陈林达', '史迪威', '林蔚', '林彪', '罗荣桓',
+  '罗卓英', '卫立煌', '孙立人', '白崇禧', '顾祝同', '徐永昌', '宋子文',
+  '熊式辉', '张嘉璈', '魏德迈', '赵家骧', '赵霞', '舒适存', '潘裕昆',
+  '龙天武', '李以劻', '傅宗良', '邱中岳', '邱清泉', '毛定松', '郑介民',
+  '王铁汉', '萧毅肃', '戴安澜', '俞飞鹏', '杨业孔', '周恩来', '马歇尔',
+  '邓军林', '关麟征', '叶锟', '梁华盛', '郑庭笈', '傅作义', '王耀武',
+  '刘玉章', '康泽', '文强', '马林斯基', '刘安祺', '覃异之', '黄翔', '余韶'
+];
+var PERSON_LEAD = new RegExp('^(?:' + PERSON.join('|') + ')');
+var PERSON_ANY  = new RegExp(PERSON.join('|'));
+var TITLE_LEAD  = /^[一-龥]{2,10}?(主席|司令官|司令|军长|师长|团长|长官|部长|参谋长|处长|将军|委员长|总统|社长|专员|教授|会长|院长|顾问|特派员|记者|秘书)[一-龥]{2,4}/;
+var ORG_LEAD = new RegExp('^(?:' + [
+  '中央社', '申报', '新报', '小春秋晚报', '中央日报', '军民日报', '大公报',
+  '本报', '合众社', '路透社', '〔',
+  '国民政府', '国民党', '国民革命军', '军事委员会', '军委会', '国防部',
+  '军令部', '军政部', '军训部', '参谋本部', '统帅部', '侍从室',
+  '行政院', '行辕', '东北行辕', '东北行营', '长春警备司令部',
+  '军事调处执行部', '军事复员会议', '全国政协', '政协', '民革',
+  '中共', '共军', '共方', '解放军', '东北民主联军', '共产党',
+  '日军', '日本', '美军', '美国', '美陆军', '苏军', '苏联', '盟军',
+  '国军', '东北国军', '东北前线', '东北将领', '中华口琴会',
+  '黄埔军校', '中央军校', '陆军大学', '蓝姆伽', '新一军', '新三军', '新五军'
+].join('|') + ')');
+
+/* 外间之事：攻守易手、政局更迭 */
+var EVENT = /(告陷|陷敌|失守|沦陷|克复|收复|攻占|占领|攻克|失陷|停战|投降|宣战|受降|光复|事变|爆发)/;
+
+/* 加于谱主或其部之动词：其事及身，故居左 */
+var TO_HIM = /(电令|电|致|函|令|命|召见|接见|会见|晤|面告|告知|嘱|谕|授|给予|颁给|颁赠|颁发|派|调|免|对|向|与|偕|同|邀|约|访|见|表扬|斥责|惩办|批准|指定|编入|拨归|配属|改为)\s*(廖(?:耀湘|建楚)?|新(?:编)?(?:第)?(?:二十二|廿二|二二|22)师|新(?:编)?(?:第)?[六6]军|第[五5]军|第[九9]兵团|所部|该师|该军)/;
+
+/* 任免勋赏及于其身 */
+var ON_HIM = /(给予|颁给|颁赠|颁发|授予|晋任|升任|调任|调升|任命|免职|撤职|惩办|嘉奖|记功|申斥)[^。；]{0,8}廖/;
+
+/* 他人往还文书：报告、转述之词，谱主未必与闻 */
+var COMMS = /^[^，。；]{0,12}?(电告|电令|电|致电|致|函呈|函|呈|复电|复函|报告|汇报|转报|通报|通电|呈报|签呈|电陈|面陈|称)/;
+
+/* 前句他事，后句转述谱主行实 */
+var SELF_CLAUSE = /[，。；：]\s*(率|偕|与|电|致|呈|奉|赴|抵|返|作|题|挽|撰|著|书|函|寄|至|入|考|加入|参加|随|从|见|出席|主持|下令|命|派|升|获|遂|乃|因|被|旋|又|复|后|次日|当日|嗣)/;
+
+var MY_UNIT_LEAD = new RegExp('^(?:第[二]?批|所属|所部)?(?:' + MY_UNIT.source + ')');
+
+function leadOf(text){ return String(text).split(/[，。；、（(「《：:]/)[0]; }
+
+/* '左' 谱主所与 · '右' 时局旁事 */
+function classify(text, posthumous){
+  if (posthumous) return '右';
+  var t = String(text), lead = leadOf(t);
+
+  /* 一、谱主或其部自为主语 */
+  if (/^(Liao|廖)/.test(lead)) return '左';
+  if (MY_UNIT_LEAD.test(lead)) return '左';   /* 番号居首，即以其部为主语 */
+  if (ELIDED.test(lead)) return '左';
+
+  /* 二、他人为主语 */
+  /* 他人须领起首句，见于次句者不算 */
+  var third = PERSON_LEAD.test(lead) || ORG_LEAD.test(lead) || TITLE_LEAD.test(lead) ||
+              PERSON_ANY.test(lead.slice(0, 8));
+  if (third){
+    if (TO_HIM.test(t)) return '左';        /* 事加于其身、其部 */
+    if (ON_HIM.test(t)) return '左';        /* 任免勋赏及其身 */
+    if (COMMS.test(lead)) return '右';      /* 他人往还文书，虽及其部，亦不与闻 */
+    if (MY_UNIT.test(t)) return '左';       /* 非文书而处分其部者 */
+    return '右';
+  }
+
+  /* 三、主语不显者 */
+  if (SELF_CLAUSE.test(t)) return '左';     /* 后句转述其行实 */
+  if (LIAO.test(t) || MY_UNIT.test(t) || MY_CIRCLE.test(t)) return '左';
+  if (EVENT.test(t)) return '右';
+  return '左';
+}
+
+var DEATH_YEAR = 1968, DEATH_DATE = '1968-12-02';
+YEARS.forEach(function(y){
+  var death = -1;
+  if (y.year === DEATH_YEAR){
+    for (var i = 0; i < y.entries.length; i++)
+      if (y.entries[i].d === DEATH_DATE){ death = i; break; }
+  }
+  y.entries.forEach(function(e, i){
+    if (e.k === '左' || e.k === '右') return;      /* 谱中已注者，从其所注 */
+    e.k = classify(e.c, y.year > DEATH_YEAR || (y.year === DEATH_YEAR && death >= 0 && i > death));
+  });
+});
+
+/* 隶书系统字体，未必人人皆有；无则退为黑体，凡例所标随之 */
+function hasFont(family){
+  try {
+    var c = document.createElement('canvas').getContext('2d');
+    var probe = '廖耀湘年谱时事一二三';
+    var widths = ['monospace', 'serif'].map(function(base){
+      c.font = '48px ' + base;                     var a = c.measureText(probe).width;
+      c.font = '48px "' + family + '", ' + base;   var b = c.measureText(probe).width;
+      return b !== a;
+    });
+    return widths.some(Boolean);
+  } catch (err){ return false; }
+}
+var HAS_LISHU = ['LiSu', 'SimLi', 'STLiti', 'Baoli SC', '隶书'].some(hasFont);
+
+var LANE_NAME = { 左:'谱主所与', 右:'时局旁事' };
+var KIND_DEF = [
+  ['谱主所与', '左栏', '谱主知其事，或身受其影响：己所行、所受，所统部队之动止，与之往还之言谈电文，任免勋赏，亲属之事', '左'],
+  ['时局旁事', '右栏', '谱主不与其事、未必与闻：时局之变、他人行止、机关沿革', '右']
+];
+var KIND_CLASS = { 左:'', 右:'ent--aux ent--li' };
+function isSelf(e){ return !e.k || e.k === '左'; }
+var KIND_COUNTS = {};
+YEARS.forEach(function(y){ y.entries.forEach(function(e){ KIND_COUNTS[e.k] = (KIND_COUNTS[e.k] || 0) + 1; }); });
+var KIND_KEY = { '谱主所与':'左', '时局旁事':'右' };
+
 var TOTAL_ENTRIES = YEARS.reduce(function(n,y){ return n + y.entries.length; }, 0);
+
+/* 取一等自成一幅：全部 / 仅谱主行实 / 仅附见 */
+var VIEW = YEARS;
+var VIEW_LABEL = { all:'', self:'仅录谱主所与', aux:'仅录时局旁事' };
+function applyView(){
+  if (state.view === 'all'){ VIEW = YEARS; return; }
+  var want = state.view === 'self';
+  VIEW = YEARS.map(function(y){
+    return { year:y.year, entries:y.entries.filter(function(e){ return isSelf(e) === want; }) };
+  }).filter(function(y){ return y.entries.length > 0; });
+}
 var FIRST_YEAR = YEARS.length ? YEARS[0].year : 0;
 var LAST_YEAR  = YEARS.length ? YEARS[YEARS.length-1].year : 0;
 var BIRTH_YEAR = 1906;
@@ -523,6 +837,8 @@ var state = {
   idx: 0,
   showSource: load('lyx.card.src', '1') === '1',
   showNote:   load('lyx.card.note', '0') === '1',
+  showKind:   load('lyx.card.kind', '1') === '1',
+  view:       load('lyx.card.view', 'all'),
   theme:      load('lyx.card.theme', 'paper'),
   hud:        true
 };
@@ -558,16 +874,67 @@ function headerHTML(year, sub, cont){
     eraOf(year), cont ? '' : ageOf(year), cont);
 }
 
-function entryHTML(e){
-  var h = '<div class="ent"><div class="ent__date">' + dateLabel(e) + '</div><div class="ent__body">';
-  h += '<p class="ent__text">' + esc(e.c) + '</p>';
+/* 左七右三分栏，唯全录而分目时用之；专取一等则通栏 */
+function isSplit(){ return state.showKind && state.view === 'all'; }
+
+function bodyHTML(e){
+  var h = '<p class="ent__text">' + esc(e.c) + '</p>';
   if (state.showNote && e.n) h += '<p class="ent__note"><b>按</b>' + esc(e.n.replace(/^按[：:]\s*/, '')) + '</p>';
   if (state.showSource && e.s) h += '<p class="ent__src"><b>来源</b>' + joinSources(e.s) + '</p>';
-  return h + '</div></div>';
+  return h;
+}
+
+function entryHTML(e, lane){
+  var k = state.showKind ? (e.k || '左') : '左';
+  var cls = KIND_CLASS[k] || '';
+
+  if (!lane){                                   /* 通栏：日期居左，正文次之 */
+    return '<div class="ent' + (cls ? ' ' + cls : '') + '">' +
+      '<div class="ent__date">' + dateLabel(e) + '</div>' +
+      '<div class="ent__body">' + bodyHTML(e) + '</div></div>';
+  }
+  return '<div class="ent ent--lane-' + lane + (cls ? ' ' + cls : '') + '">' +
+    '<div class="ent__body">' + bodyHTML(e) + '</div></div>';
+}
+
+/* 一日一节：同日之条并为一节，左右各归其栏，齐首于日下 */
+function bandKey(e){ return (e.p || '') + '|' + (e.d || ''); }
+
+function bandShell(e){
+  return '<div class="band"><div class="band__date">' + dateLabel(e) + '</div>' +
+    '<div class="band__cols"><div class="lane lane--l"></div>' +
+    '<div class="lane lane--r"></div></div></div>';
+}
+
+function laneHeadHTML(){
+  return '<div class="band band--head"><div class="band__date">&nbsp;</div>' +
+    '<div class="band__cols"><div class="lane__title lane__title--l">' + LANE_NAME['左'] + '</div>' +
+    '<div class="lane__title lane__title--r">' + LANE_NAME['右'] + '</div></div></div>';
+}
+
+function colsHTML(entries, split){
+  if (!split){
+    return '<div class="cols">' + entries.map(function(e){ return entryHTML(e); }).join('') + '</div>';
+  }
+  var html = '', key = null, l = '', r = '', date = '';
+  function flush(){
+    if (key === null) return;
+    html += '<div class="band"><div class="band__date">' + date + '</div>' +
+      '<div class="band__cols"><div class="lane lane--l">' + l + '</div>' +
+      '<div class="lane lane--r">' + r + '</div></div></div>';
+  }
+  entries.forEach(function(e){
+    var k = bandKey(e);
+    if (k !== key){ flush(); key = k; l = ''; r = ''; date = dateLabel(e); }
+    if (isSelf(e)) l += entryHTML(e, 'l'); else r += entryHTML(e, 'r');
+  });
+  flush();
+  return '<div class="cols cols--split">' + laneHeadHTML() + html + '</div>';
 }
 
 function footerHTML(right){
-  return '<div class="ft"><div class="ft__l">liaoyaoxiang.com　·　廖耀湘史料档案</div>' +
+  var note = VIEW_LABEL[state.view] || '廖耀湘史料档案';
+  return '<div class="ft"><div class="ft__l">liaoyaoxiang.com　·　' + note + '</div>' +
          '<div class="ft__r">' + right + '</div></div>';
 }
 
@@ -577,40 +944,80 @@ var paginateRuns = 0;
 /* Fill one card at a given type scale and report what fitted. Heights are
    summed per entry: a flex container's scrollHeight is floored at its own
    height, so it cannot tell us how much room is left. */
-function fillAt(y, sub, start, fs){
+/* 两栏共一时序：逐条分入左右，任一栏满则止，故两栏所纪同其时段 */
+function fillAt(y, sub, start, fs, split){
   measure.style.setProperty('--fs', fs);
-  measure.innerHTML = headerHTML(y.year, sub, sub > 1) + '<div class="bd"></div>' + footerHTML('&nbsp;');
-  var bd = measure.querySelector('.bd');
+  measure.innerHTML = headerHTML(y.year, sub, sub > 1) +
+    '<div class="bd">' + colsHTML([], split) + '</div>' + footerHTML('&nbsp;');
+  var bd = measure.querySelector('.bd'), cols = measure.querySelector('.cols');
   var avail = bd.clientHeight - (parseFloat(getComputedStyle(bd).paddingTop) || 0);
-  var count = 0, used = 0, j = start;
+  var count = 0, used = 0, j = start, key = null, band = null;
   while (j < y.entries.length){
-    bd.insertAdjacentHTML('beforeend', entryHTML(y.entries[j]));
-    var h = bd.lastElementChild.offsetHeight;
-    if (used + h > avail){
-      if (count === 0){ count = 1; used += h; }   /* one entry taller than a card */
+    var e = y.entries[j], fresh = false, box;
+    if (split){
+      var k = bandKey(e);
+      if (k !== key){
+        cols.insertAdjacentHTML('beforeend', bandShell(e));
+        band = cols.lastElementChild; key = k; fresh = true;
+      }
+      box = band.querySelector(isSelf(e) ? '.lane--l' : '.lane--r');
+    } else box = cols;
+    box.insertAdjacentHTML('beforeend', entryHTML(e, split ? (isSelf(e) ? 'l' : 'r') : null));
+    var h = cols.offsetHeight;
+    if (h > avail){
+      if (count === 0){ count = 1; used = h; }    /* one entry taller than a card */
+      else {
+        box.removeChild(box.lastElementChild);
+        if (fresh) cols.removeChild(band);
+      }
       break;
     }
-    used += h; count += 1; j += 1;
+    used = h; count += 1; j += 1;
   }
   return { count:count, used:used, avail:avail };
 }
 
+/* 一页之中两栏俱有事则分栏；一栏独行则通栏，且止于其栏之末 */
+function runEndOf(y, start){
+  var same = isSelf(y.entries[start]), i = start + 1;
+  while (i < y.entries.length && isSelf(y.entries[i]) === same) i++;
+  return i;
+}
+
+function fitPage(y, sub, start, fs){
+  if (!isSplit()) return fillAt(y, sub, start, fs, false);
+
+  /* 一幅之中两栏俱有事，即分栏书之 */
+  var r = fillAt(y, sub, start, fs, true);
+  var runEnd = runEndOf(y, start);
+  if (start + r.count > runEnd){ r.split = true; return r; }
+
+  /* 通篇止于一栏：通栏书之，而止于其栏之末，留他栏之事与下幅分书 */
+  var w = fillAt(y, sub, start, fs, false);
+  w.count = Math.min(w.count, runEnd - start);
+  w.split = false;
+  return w;
+}
+
 function paginate(){
   paginateRuns += 1;
-  pages = [{ type:'cover' }, { type:'toc' }];
+  applyView();
+  pages = [{ type:'cover' }];
+  if (state.showKind) pages.push({ type:'notes' });
+  pages.push({ type:'toc' });
 
-  YEARS.forEach(function(y, yi){
+  VIEW.forEach(function(y, yi){
     var i = 0, sub = 0, made = [];
     while (i < y.entries.length){
       sub += 1;
-      var fs = 1, r = fillAt(y, sub, i, 1), s, r2;
+      var fs = 1, r = fitPage(y, sub, i, 1), s, r2;
 
       /* Rather than leave a quarter of the card blank, tighten the type a
          little if that pulls the next entry onto this page. */
       if (i + r.count < y.entries.length && (r.avail - r.used) > r.avail * 0.18){
         var STEPS = [0.94, 0.88];
         for (s = 0; s < STEPS.length; s++){
-          r2 = fillAt(y, sub, i, STEPS[s]);
+          r2 = fitPage(y, sub, i, STEPS[s]);
           if (r2.count > r.count){ r = r2; fs = STEPS[s]; break; }
         }
       }
@@ -619,14 +1026,15 @@ function paginate(){
       if (r.used > r.avail){
         for (s = 0.94; s >= 0.7; s -= 0.06){
           var sc = Math.round(s * 100) / 100;
-          r2 = fillAt(y, sub, i, sc);
+          r2 = fitPage(y, sub, i, sc);
           if (r2.count >= 1 && r2.used <= r2.avail){ r = r2; fs = sc; break; }
           fs = sc;
         }
       }
 
       i += Math.max(1, r.count);
-      made.push({ type:'year', yi:yi, start:i - Math.max(1, r.count), end:i, sub:sub, fs:fs });
+      made.push({ type:'year', yi:yi, start:i - Math.max(1, r.count), end:i, sub:sub, fs:fs,
+                  split: !!r.split });
     }
     made.forEach(function(pg){ pg.subTotal = made.length; pages.push(pg); });
   });
@@ -659,9 +1067,28 @@ function coverHTML(){
   footerHTML('封 面');
 }
 
+function fanliHTML(){
+  var rows = KIND_DEF.map(function(d){
+    var n = KIND_COUNTS[KIND_KEY[d[0]]] || 0;
+    return '<div class="fl__row ' + (KIND_KEY[d[0]] === '右' ? 'ent--aux ent--li' : '') + '">' +
+      '<div class="fl__tag">' + d[0] + '</div>' +
+      '<div class="fl__desc">' + d[2] + '　<i>' + d[1] + '</i></div>' +
+      '<div class="fl__n">' + n + '</div>' +
+    '</div>';
+  }).join('');
+  return mastheadHTML('凡 例', 'Editorial Note', '两栏 · ' + TOTAL_ENTRIES + ' 条', false) +
+    '<div class="bd bd--fanli">' +
+      '<div><p class="fl__lead">年谱以谱主为纲，事系于人。每幅分两栏，中缝为时间轴：谱主知其事、或身受其影响者，列于左栏，字大墨书；谱主不与其事、未必与闻者，列于右栏，字小色淡' +
+        (HAS_LISHU ? '而书以隶体' : '') + '。逐日为节，日系于中缝，其日之事左右齐首而下；一幅之中惟一栏有事者，则通栏书之。按 V 键可专取一栏。</p>' +
+      rows + '</div>' +
+      '<p class="fl__foot">左右已著录于谱中，可径改；未注者乃依条目文字判定。如有未安，以正文及所注出处为准。按 K 键去分栏，则不问左右，通栏一律墨书。</p>' +
+    '</div>' +
+    footerHTML('凡 例');
+}
+
 function histHTML(){
   var by = {}, max = 0;
-  YEARS.forEach(function(y){ by[y.year] = y.entries.length; max = Math.max(max, y.entries.length); });
+  VIEW.forEach(function(y){ by[y.year] = y.entries.length; max = Math.max(max, y.entries.length); });
   var bars = '', axis = '';
   for (var y = FIRST_YEAR; y <= LAST_YEAR; y++){
     var c = by[y] || 0;
@@ -678,12 +1105,13 @@ function histHTML(){
 }
 
 function tocHTML(){
-  var max = YEARS.reduce(function(m,y){ return Math.max(m, y.entries.length); }, 0);
-  var cells = YEARS.map(function(y){
+  var max = VIEW.reduce(function(m,y){ return Math.max(m, y.entries.length); }, 0);
+  var shown = VIEW.reduce(function(n,y){ return n + y.entries.length; }, 0);
+  var cells = VIEW.map(function(y){
     var peak = y.entries.length >= max * 0.5 ? ' peak' : '';
     return '<div class="toc__cell' + peak + '"><b>' + y.year + '</b><span>' + y.entries.length + '</span></div>';
   }).join('');
-  return mastheadHTML('目 录', 'Contents', YEARS.length + ' 年 · ' + TOTAL_ENTRIES + ' 条', false) +
+  return mastheadHTML('目 录', 'Contents', VIEW.length + ' 年 · ' + shown + ' 条', false) +
     '<div class="bd bd--toc">' +
       '<div><p class="toc__lead">下列为存有纪事之年份，小字为该年条目数；朱色标示条目最密之年。</p>' +
       '<div class="toc__grid">' + cells + '</div></div>' +
@@ -693,19 +1121,19 @@ function tocHTML(){
 }
 
 function yearPageHTML(p){
-  var y = YEARS[p.yi];
-  var html = headerHTML(y.year, p.sub, p.sub > 1) + '<div class="bd">';
-  for (var i = p.start; i < p.end; i++) html += entryHTML(y.entries[i]);
-  html += '</div>';
+  var y = VIEW[p.yi];
+  var html = headerHTML(y.year, p.sub, p.sub > 1) +
+    '<div class="bd">' + colsHTML(y.entries.slice(p.start, p.end), !!p.split) + '</div>';
   return html + footerHTML('<b>' + y.year + '</b>　' + p.sub + ' / ' + p.subTotal);
 }
 
 function render(){
   var p = pages[state.idx];
   card.style.setProperty('--fs', p.fs || 1);
-  if (p.type === 'cover')    card.innerHTML = coverHTML();
-  else if (p.type === 'toc') card.innerHTML = tocHTML();
-  else                       card.innerHTML = yearPageHTML(p);
+  if (p.type === 'cover')        card.innerHTML = coverHTML();
+  else if (p.type === 'notes')   card.innerHTML = fanliHTML();
+  else if (p.type === 'toc')     card.innerHTML = tocHTML();
+  else                           card.innerHTML = yearPageHTML(p);
   balance();
   syncHash();
 }
@@ -715,15 +1143,22 @@ function render(){
    two-entry page never turns into a double-spaced one). */
 function balance(){
   var bd = card.querySelector('.bd');
-  if (!bd || bd.classList.contains('bd--cover') || bd.classList.contains('bd--toc')) return;
-  var kids = bd.children, n = kids.length;
+  if (!bd || bd.classList.contains('bd--cover') || bd.classList.contains('bd--toc')
+      || bd.classList.contains('bd--fanli')) return;
+  var cols = bd.querySelector('.cols');
+  if (!cols) return;
+  var n = cols.children.length;
   if (!n) return;
-  var used = 0;
-  for (var i = 0; i < n; i++) used += kids[i].offsetHeight;
-  var slack = bd.clientHeight - parseFloat(getComputedStyle(bd).paddingTop || 0) - used;
+  var slack = bd.clientHeight - parseFloat(getComputedStyle(bd).paddingTop || 0) - cols.offsetHeight;
   if (slack < 12) return;
   if (n === 1){ bd.classList.add('bd--center'); return; }
-  bd.style.setProperty('--slack', Math.min(46, Math.floor(slack / (2 * n))) + 'px');
+  if (cols.classList.contains('cols--split')){
+    var gaps = cols.children.length - 1;   /* .band + .band 之数，栏题亦在其中 */
+    if (gaps > 0) cols.style.setProperty('--band-gap',
+      Math.min(60, Math.floor(slack / gaps)) + 'px');
+  } else {
+    bd.style.setProperty('--slack', Math.min(46, Math.floor(slack / (2 * n))) + 'px');
+  }
 }
 
 /* ============================ navigation ============================ */
@@ -750,25 +1185,31 @@ function stepYear(dir){
   if (dir < 0 && p.sub > 1){ go(firstPageOfYear(p.yi)); return; }
   var yi = p.yi + dir;
   if (yi < 0){ go(0); return; }
-  if (yi >= YEARS.length){ go(pages.length - 1); return; }
+  if (yi >= VIEW.length){ go(pages.length - 1); return; }
   go(firstPageOfYear(yi));
 }
 function gotoYear(year){
   var best = -1;
-  for (var i = 0; i < YEARS.length; i++){
-    if (YEARS[i].year === year){ best = i; break; }
-    if (YEARS[i].year < year) best = i;          /* nearest earlier year */
+  for (var i = 0; i < VIEW.length; i++){
+    if (VIEW[i].year === year){ best = i; break; }
+    if (VIEW[i].year < year) best = i;          /* nearest earlier year */
   }
   if (best < 0) best = 0;
   go(firstPageOfYear(best));
-  if (YEARS[best].year !== year) toast('无 ' + year + ' 年纪事，已跳至 ' + YEARS[best].year + ' 年');
+  if (VIEW[best].year !== year) toast('无 ' + year + ' 年纪事，已跳至 ' + VIEW[best].year + ' 年');
+}
+
+function indexOfType(t){
+  for (var i = 0; i < pages.length; i++) if (pages[i].type === t) return i;
+  return 0;
 }
 
 function syncHash(){
   var p = pages[state.idx], h;
   if (p.type === 'cover') h = '#cover';
+  else if (p.type === 'notes') h = '#notes';
   else if (p.type === 'toc') h = '#contents';
-  else h = '#' + YEARS[p.yi].year + (p.sub > 1 ? '-' + p.sub : '');
+  else h = '#' + VIEW[p.yi].year + (p.sub > 1 ? '-' + p.sub : '');
   if (location.hash !== h){
     try { history.replaceState(null, '', h); } catch(err){}
   }
@@ -776,11 +1217,12 @@ function syncHash(){
 function fromHash(){
   var h = decodeURIComponent(location.hash || '').replace(/^#/, '');
   if (!h || h === 'cover') return 0;
-  if (h === 'contents' || h === 'toc') return 1;
+  if (h === 'notes' || h === 'style') return indexOfType('notes');
+  if (h === 'contents' || h === 'toc') return indexOfType('toc');
   var m = h.match(/^(\d{4})(?:-(\d+))?$/);
   if (!m) return 0;
   var yi = -1;
-  for (var i = 0; i < YEARS.length; i++) if (YEARS[i].year === +m[1]){ yi = i; break; }
+  for (var i = 0; i < VIEW.length; i++) if (VIEW[i].year === +m[1]){ yi = i; break; }
   if (yi < 0) return 0;
   var base = firstPageOfYear(yi);
   var sub = m[2] ? Math.max(1, +m[2]) : 1;
@@ -819,17 +1261,22 @@ function fit(){
 
 function repaginate(){
   var p = pages[state.idx], anchor = null;
-  if (p && p.type === 'year') anchor = { yi: p.yi, start: p.start };
+  /* anchor on the year itself: filtering reshuffles the indices */
+  if (p && p.type === 'year' && VIEW[p.yi]) anchor = { year: VIEW[p.yi].year, start: p.start };
   paginate();
   if (anchor){
-    var found = 0;
+    var found = 0, best = -1;
     for (var i = 0; i < pages.length; i++){
-      if (pages[i].type === 'year' && pages[i].yi === anchor.yi){
+      if (pages[i].type !== 'year') continue;
+      var yr = VIEW[pages[i].yi].year;
+      if (yr === anchor.year){
         found = i;
         if (pages[i].end > anchor.start) break;
+      } else if (best < 0 && yr > anchor.year){
+        best = i;                       /* that year is gone: take the next one */
       }
     }
-    state.idx = found;
+    state.idx = found || (best < 0 ? 0 : best);
   }
   go(state.idx);
 }
@@ -867,7 +1314,7 @@ function exportPNG(){
       card.style.boxShadow = prevShadow;
       var p = pages[state.idx];
       var name = p.type === 'year'
-        ? '廖耀湘年谱-' + YEARS[p.yi].year + '-' + p.sub + '.png'
+        ? '廖耀湘年谱-' + VIEW[p.yi].year + '-' + p.sub + '.png'
         : '廖耀湘年谱-' + p.type + '.png';
       var a = document.createElement('a');
       a.href = canvas.toDataURL('image/png');
@@ -923,6 +1370,15 @@ document.addEventListener('keydown', function(e){
     case 'n': case 'N':
       state.showNote = !state.showNote; save('lyx.card.note', state.showNote ? '1' : '0');
       repaginate(); toast(state.showNote ? '显示按语' : '隐藏按语'); break;
+    case 'v': case 'V':
+      var views = ['all','self','aux'];
+      state.view = views[(views.indexOf(state.view) + 1) % views.length];
+      save('lyx.card.view', state.view);
+      repaginate();
+      toast({ all:'全部条目', self:'仅谱主所与', aux:'仅时局旁事' }[state.view]); break;
+    case 'k': case 'K':
+      state.showKind = !state.showKind; save('lyx.card.kind', state.showKind ? '1' : '0');
+      repaginate(); toast(state.showKind ? '显示体例分目' : '不分目，一律顶格'); break;
     case 'd': case 'D':
       var order = ['paper','ivory','ink'];
       setTheme(order[(order.indexOf(state.theme) + 1) % order.length]);
@@ -972,11 +1428,12 @@ window.addEventListener('hashchange', function(){ go(fromHash()); });
    glyphs are used. Paginating before they land measures fallback metrics and
    leaves every card short, so ask for the whole corpus up front — and
    re-paginate if a subset still shows up late. */
-function corpusProbe(){
+function corpusProbe(pred){
   var seen = Object.create(null), out = [];
   for (var a = 0; a < YEARS.length; a++){
     var es = YEARS[a].entries;
     for (var b = 0; b < es.length; b++){
+      if (pred && !pred(es[b])) continue;
       var t = es[b].c + (es[b].s || '') + (es[b].n || '');
       for (var c = 0; c < t.length; c++){
         var ch = t.charAt(c);
@@ -993,6 +1450,7 @@ function warmFonts(){
   var jobs = [
     ['400 33px "Noto Serif SC"', probe],
     ['400 22px "Noto Serif SC"', probe],
+    ['400 31px "Noto Serif SC"', probe],
     ['600 23px "Noto Serif SC"', '廖耀湘年谱目录封面续是年月日'],
     ['700 104px "Noto Serif SC"', '年谱目录'],
     ['600 78px "Inter"', '0123456789'],
