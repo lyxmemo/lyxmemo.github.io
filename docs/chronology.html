@@ -418,9 +418,18 @@ document.addEventListener('DOMContentLoaded', function() {
     if (nav) nav.classList.add('is-collapsed');
   }
 
-  // Default to 1947
-  var defaultLink = document.querySelector('#chronology-year-nav .chronology-year-link[data-year="1947"]');
-  if (!defaultLink) defaultLink = document.querySelector('#chronology-year-nav .chronology-year-link[data-year]');
-  if (defaultLink) filterByYear(defaultLink.getAttribute('data-year'), defaultLink);
+  var match = window.location.hash.match(/^#year-(\d{4})$/);
+  var year = match ? match[1] : '1947';
+  var defaultLink = document.querySelector(
+    '#chronology-year-nav .chronology-year-link[data-year="' + year + '"]'
+  );
+  if (!defaultLink) {
+    defaultLink = document.querySelector(
+      '#chronology-year-nav .chronology-year-link[data-year]'
+    );
+  }
+  if (defaultLink) {
+    filterByYear(defaultLink.getAttribute('data-year'), defaultLink);
+  }
 });
 </script>
