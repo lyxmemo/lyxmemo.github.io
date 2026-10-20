@@ -1,3 +1,8 @@
+- date: 2026-10-20
+  commit_message: "+ 1 新文章"
+  changes:
+    - title: "战犯管理所目击记（方英）"
+      url: "/newspapers/战犯管理所目击记（方英）.html"
 - date: 2026-10-19
   commit_message: "+ 1 新文章"
   changes:
