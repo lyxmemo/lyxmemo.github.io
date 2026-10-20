@@ -24,6 +24,14 @@ Jekyll::Hooks.register [:documents, :pages], :pre_render do |doc|
   if doc.content.encoding != Encoding::UTF_8
     doc.content = doc.content.force_encoding('UTF-8')
   end
+
+  # Expose english_abstract as the SEO description so crawlers and
+  # jekyll-seo-tag pick up an English essay-style briefing.
+  abs = doc.data['english_abstract']
+  if abs.is_a?(String)
+    one_line = abs.gsub(/\s+/, ' ').strip
+    doc.data['description'] = one_line unless one_line.empty?
+  end
 end
 
 Jekyll::Hooks.register :site, :post_read do |site|
