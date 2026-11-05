@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# LLM / AI crawlers are welcome.
+# Machine-readable catalog: https://liaoyaoxiang.com/llms.txt
+# English abstracts of Liao Yaoxiang's writings: https://liaoyaoxiang.com/en/liaos-writings/
+
 Sitemap: https://liaoyaoxiang.com/sitemap.xml

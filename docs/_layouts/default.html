@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "zh-CN" }}">
+<html lang="{{ page.lang | default: site.lang | default: "zh-CN" }}">
 
 <head>
   <meta charset="UTF-8">
   <title>{% if page.title and page.title != site.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index, follow">
+  {%- if page.keywords_en %}
+  <meta name="keywords" content="{{ page.keywords_en | strip | normalize_whitespace | escape }}">
+  {%- endif %}
   <link rel="icon" href="/assets/images/favicon5.png" type="image/png">
   <link rel="apple-touch-icon" href="/assets/images/favicon5.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,6 +58,9 @@
         const options = {
           keys: [
             { name: 'title', weight: 2 },
+            { name: 'title_en', weight: 1.5 },
+            { name: 'keywords_en', weight: 1.4 },
+            { name: 'english_abstract', weight: 1.2 },
             { name: 'content', weight: 1 }
           ],
           includeScore: true,
@@ -199,6 +205,10 @@
             <a href="/data-analysis.html">数据看板</a>
             <span class="footer-sep">&middot;</span>
             <a href="/photos/">图片站</a>
+            <span class="footer-sep">&middot;</span>
+            <a href="/en/liaos-writings/">English abstracts</a>
+            <span class="footer-sep">&middot;</span>
+            <a href="/llms.txt">llms.txt</a>
           </div>
         </div>
       </div>
